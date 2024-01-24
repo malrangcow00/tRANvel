@@ -1,4 +1,4 @@
-package com.ssafy.tranvel.ui.theme
+package com.ssafy.tranvel.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
