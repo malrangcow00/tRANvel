@@ -1,0 +1,26 @@
+spring:
+
+  profiles:
+    #    active: tmp
+    include:
+      - tmp
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+# change for commit
+
+#  security:
+#    user:
+#      name: admin
+#      password: admin
+
+jwt:
+  secret: YourJWTSecretKey
+  expiration: 604800 # 7 days in seconds
+  token-prefix: "Bearer "
+  header-string: "Authorization"

@@ -5,12 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fcb3a193-2171-42a1-bc20-e622f290c9af" name="Changes" comment="Test: &quot;commit test&quot;">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/tranvel.main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/tranvel/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/tranvel/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/Backend/tranvel">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/Frontend">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -29,8 +56,13 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Gradle.C:/Users/SSAFY/Desktop/project01/S10P12D203/Backend/tranvel/build.gradle.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "feat/emailAuth",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
@@ -41,7 +73,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Spring Boot.TranvelApplication">
     <configuration name="C:/Users/SSAFY/Desktop/project01/S10P12D203/Backend/tranvel/build.gradle" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -62,8 +94,22 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="TranvelApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="tranvel.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ssafy.tranvel.TranvelApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ssafy.tranvel.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.TranvelApplication" />
         <item itemvalue="Gradle.C:/Users/SSAFY/Desktop/project01/S10P12D203/Backend/tranvel/build.gradle" />
       </list>
     </recent_temporary>

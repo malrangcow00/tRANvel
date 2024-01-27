@@ -8,4 +8,6 @@ import lombok.Setter;
 public class EmailDto {
     @NotEmpty
     private String email;
+
+    private String verificationCode;
 }
