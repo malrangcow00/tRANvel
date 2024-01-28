@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.ssafy.tranvel.presentation.screen.login.LoginScreen
+import com.ssafy.tranvel.presentation.screen.userWithdrawal.UserWithdrawalScreen
 import com.ssafy.tranvel.presentation.ui.theme.TRANvelTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    LoginScreen()
+                    UserWithdrawalScreen()
                 }
             }
         }
