@@ -9,10 +9,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.ssafy.tranvel.R
 
+val bmjua = FontFamily(
+    Font(R.font.bmjua,FontWeight.Normal, FontStyle.Normal)
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = bmjua,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
@@ -34,8 +38,4 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     )
     */
-)
-
-val bmjua = FontFamily(
-    Font(R.font.bmjua,FontWeight.Normal, FontStyle.Normal)
 )

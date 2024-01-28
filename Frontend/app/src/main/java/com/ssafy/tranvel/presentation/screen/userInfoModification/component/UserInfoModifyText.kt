@@ -33,6 +33,7 @@ fun UserInfoModifyText(
         modifier = modifier,
         color = color,
         fontSize = fontSize,
+        fontFamily = bmjua,
         letterSpacing = letterSpacing,
         textAlign = textAlign,
         style = style,
