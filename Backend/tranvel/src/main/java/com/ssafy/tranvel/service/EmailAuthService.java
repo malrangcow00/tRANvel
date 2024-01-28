@@ -4,11 +4,11 @@ import com.ssafy.tranvel.repository.EmailAuthDao;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
-import java.security.Key;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -20,6 +20,9 @@ public class EmailAuthService {
     private final EmailAuthDao emailAuthDao;
     private final JavaMailSender emailSender;
     private String verificationCode;
+    @Value("${spring.mail.username}")
+    private String setFrom;
+
 
     public String createVerificationCode() {
         Random random = new Random();
@@ -41,29 +44,50 @@ public class EmailAuthService {
 
     public MimeMessage createEmailForm(String email) throws MessagingException, UnsupportedEncodingException {
 
-        String setFrom = "gumissafy00@gmail.com";
+        String createdCode =createVerificationCode();
         String toEmail = email;
         String title = "[Tranvel] 회원가입 인증을 완료해주세요.";
 
         MimeMessage message = emailSender.createMimeMessage();
         message.addRecipients(MimeMessage.RecipientType.TO, toEmail);
+        message.setSubject(title);
+
 
         String msgOfEmail = "안녕하세요, Tranvel 입니다."
                 + "<br>"
                 + "이메일 인증을 완료하시려면 아래의 인증 코드를 입력해주세요."
                 + "<br>"
                 + "인증 번호 : <strong>"
-                + createVerificationCode()
+                + createdCode
                 + "</strong>"
                 + "<br>";
 
-        message.setFrom();
+        message.setFrom(setFrom);
         message.setText(msgOfEmail, "utf-8", "html");
-
+        createCodeInRedis(email, createdCode);
+        emailSender.send(message);
         return message;
-
-
-
     }
 
+
+
+    public void createCodeInRedis(String email, String verificationCode) {
+        emailAuthDao.createEmailAuthentication(email, verificationCode);
+    }
+
+    public String verifyEmail(String email, String verificationCode) {
+        if (isVerify(email, verificationCode)) {
+            return "failed";
+        }
+        // 인증 코드 유효성 통과 시, 해당 인증 코드가 사라지기 때문에 재접근 시 새로운 코드 발급 필요
+        emailAuthDao.removeEmailAuthentication(email);
+        return "successed";
+    }
+
+
+    private boolean isVerify(String email, String verificationCode) {
+        return !(emailAuthDao.hasKey(email) &&
+                emailAuthDao.getEmailAuthentication(email)
+                        .equals(verificationCode));
+    }
 }

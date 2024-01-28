@@ -1,9 +1,9 @@
 spring:
-  profiles:
-    active: local
-    include:
-      - secret
 
+  profiles:
+    #    active: tmp
+    include:
+      - tmp
   jpa:
     hibernate:
       ddl-auto: update
@@ -12,11 +12,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
-
-  data:
-    redis:
-      host: localhost
-      port: 6379
 # change for commit
 
 #  security:
@@ -29,4 +24,3 @@ jwt:
   expiration: 604800 # 7 days in seconds
   token-prefix: "Bearer "
   header-string: "Authorization"
-
