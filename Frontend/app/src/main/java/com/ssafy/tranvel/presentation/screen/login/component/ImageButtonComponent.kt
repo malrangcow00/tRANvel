@@ -16,7 +16,6 @@ fun ImageButtonComponent(
     Image(
         painter = painterResource(id = id),
         contentDescription = info,
-        contentScale = ContentScale.FillHeight,
-        modifier = Modifier.fillMaxWidth(0.5f).clickable { }
+        contentScale = ContentScale.FillBounds
     )
 }

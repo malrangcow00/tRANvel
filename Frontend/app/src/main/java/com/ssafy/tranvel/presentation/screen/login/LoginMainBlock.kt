@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -40,7 +41,7 @@ fun LoginMainBlock() {
                 .fillMaxWidth()
                 .fillMaxHeight(0.3f)
         )
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
         LoginTextFieldComponent(info = "아이디")
         LoginTextFieldComponent(info = "비밀번호")
@@ -49,6 +50,7 @@ fun LoginMainBlock() {
             onClick = {},
             modifier = Modifier
                 .wrapContentHeight()
+                .padding(top = 10.dp)
                 .fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor)
         ) {
