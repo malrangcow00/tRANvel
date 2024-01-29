@@ -34,13 +34,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun UserInfoModifyMainBlock(
-    paddingValues: PaddingValues,
-    drawerState: DrawerState
 ) {
     val scope = rememberCoroutineScope()
 
     Column(
-        modifier = Modifier.padding(paddingValues).padding(20.dp),
+        modifier = Modifier.padding(20.dp),
         horizontalAlignment = Alignment.Start
     )
     {
@@ -54,11 +52,6 @@ fun UserInfoModifyMainBlock(
             Spacer(modifier = Modifier.width(10.dp))
             Button(
                 onClick = {
-                          scope.launch {
-                              drawerState.apply {
-                                  if(isClosed) open() else close()
-                              }
-                          }
                 },
                 modifier = Modifier
                     .wrapContentWidth(),
