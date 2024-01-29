@@ -18,14 +18,14 @@ fun ButtonComponent(
     onClick: () -> Unit
 ) {
     Button(
-    onClick = {
-              onClick()
-    },
-    modifier = Modifier
-    .wrapContentHeight()
-    .padding(top = 10.dp)
-    .fillMaxWidth(),
-    colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor)
+        onClick = {
+            onClick()
+        },
+        modifier = Modifier
+            .wrapContentHeight()
+            .padding(top = 10.dp)
+            .fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor)
     ) {
         Text(text = "Sign in", color = TextColor, fontSize = 18.sp)
     }
