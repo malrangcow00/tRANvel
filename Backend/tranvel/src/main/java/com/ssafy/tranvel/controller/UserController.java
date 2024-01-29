@@ -1,7 +1,10 @@
 package com.ssafy.tranvel.controller;
 
+import com.ssafy.tranvel.dto.UserSignInDto;
+import com.ssafy.tranvel.entity.User;
 import com.ssafy.tranvel.repository.EmailAuthDao;
 import com.ssafy.tranvel.repository.NickNameDao;
+import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.EmailAuthService;
 import com.ssafy.tranvel.service.UserSignService;
 import lombok.Getter;
@@ -12,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 
 @Getter
 @Setter
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserSignService userSignService;
+    private final UserRepository userRepository;
     private final EmailAuthDao emailAuthDao;
     private final NickNameDao nickNameDao;
     private final EmailAuthService emailAuthService;
@@ -28,13 +34,22 @@ public class UserController {
     @GetMapping("/duplication/{nickname}")
     public ResponseEntity<String> nickNameCheck(@RequestBody @Validated
                                                 @RequestParam("nickname") String nickName) {
-//        if (!userSignService.nickNameDuplicationCheck(nickNameDto.getNickName(), nickNameDto.getEmail())) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 닉네임 입니다.");
-//        }
         if (!userSignService.nickNameDuplicationCheck(nickName, emailAuthService.accessEmail)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 닉네임 입니다.");
         }
         return ResponseEntity.status(HttpStatus.OK).body("사용 가능한 닉네임 입니다.");
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<String> signinUser(@RequestBody @Validated UserSignInDto userSignInDto) {
+        Optional<User> user = userRepository.findByEmail(userSignInDto.getEmail());
+        if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원 정보가 없습니다.");
+        }
+        if (!user.get().getPassword().equals(userSignInDto.getPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호가 일치하지 않습니다.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
     }
 
 

@@ -13,7 +13,7 @@ public class NickNameDao {
     // redis 에 저장되는 Key 값이 중복되지 않도록 상수를 선언
     private final String CONST = "nickName:";
     // 이메일 인증 코드 유효시간 10분
-    private final int LIMIT_TIME = 100 * 60;
+    private final int LIMIT_TIME = 10 * 60;
 
     private final StringRedisTemplate stringRedisTemplate;
 
