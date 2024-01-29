@@ -2,6 +2,7 @@ package com.ssafy.tranvel.presentation.screen.login.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 import com.ssafy.tranvel.presentation.ui.theme.TextColor
@@ -16,7 +18,8 @@ import com.ssafy.tranvel.presentation.ui.theme.TextColor
 @Composable
 fun LoginTextFieldComponent(
     info: String,
-    value: MutableState<String>
+    value: MutableState<String>,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
 ) {
     OutlinedTextField(
         modifier = Modifier
@@ -26,7 +29,8 @@ fun LoginTextFieldComponent(
         onValueChange = {
             value.value = it
         },
-        label = { Text(text = info)},
+        keyboardOptions = keyboardOptions,
+        label = { Text(text = info) },
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = PrimaryColor,
             focusedContainerColor = Color.White,

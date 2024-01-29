@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -55,7 +57,8 @@ fun LoginScreen(
     }
 
     Column(
-        modifier = Modifier.padding(50.dp)
+        modifier = Modifier.padding(50.dp),
+        verticalArrangement = Arrangement.Center
     ) {
         Image(
             painter = painterResource(id = R.drawable.logo),
@@ -68,20 +71,27 @@ fun LoginScreen(
         )
         Spacer(modifier = Modifier.height(30.dp))
 
-        LoginTextFieldComponent(info = "아이디", loginViewModel.id)
-        LoginTextFieldComponent(info = "비밀번호", loginViewModel.password)
+        LoginTextFieldComponent(
+            info = "아이디", loginViewModel.id,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+        )
+        LoginTextFieldComponent(
+            info = "비밀번호", loginViewModel.password,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+        )
 
-        ButtonComponent() {
+        ButtonComponent("sign in") {
             loginViewModel.loginUser()
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
         ) {
-            TextButtonComponent(info = "회원가입"){
+            TextButtonComponent(info = "회원가입") {
                 // 회원가입 화면으로 이동
             }
-            TextButtonComponent(info = "비밀번호 찾기"){
+            TextButtonComponent(info = "비밀번호 찾기") {
                 // 비밀번호 찾기 화면으로 이동
             }
         }
