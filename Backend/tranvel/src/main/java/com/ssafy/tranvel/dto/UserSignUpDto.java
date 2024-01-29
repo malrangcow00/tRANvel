@@ -1,16 +1,13 @@
 package com.ssafy.tranvel.dto;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class UserDto {
+public class UserSignUpDto {
 
     @NotEmpty
     private String email;
@@ -21,7 +18,7 @@ public class UserDto {
     @NotEmpty
     private String password;
 
-    private int profileImage;
+    private String profileImage;
 
     private int balance;
 }
