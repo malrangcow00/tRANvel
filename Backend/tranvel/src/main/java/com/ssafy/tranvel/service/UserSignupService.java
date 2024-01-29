@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Getter @Setter
 @RequiredArgsConstructor
-public class UserSignService {
+public class UserSignupService {
 
     private final UserRepository userRepository;
     private final NickNameDao nickNameDao;

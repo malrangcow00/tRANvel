@@ -6,7 +6,7 @@ import com.ssafy.tranvel.dto.UserSignUpDto;
 import com.ssafy.tranvel.repository.EmailAuthDao;
 import com.ssafy.tranvel.repository.NickNameDao;
 import com.ssafy.tranvel.service.EmailAuthService;
-import com.ssafy.tranvel.service.UserSignService;
+import com.ssafy.tranvel.service.UserSignupService;
 import jakarta.mail.MessagingException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import java.io.UnsupportedEncodingException;
 public class EmailController {
 
     private final EmailAuthService emailAuthService;
-    private final UserSignService userSignService;
+    private final UserSignupService userSignupService;
     private final EmailAuthDao emailAuthDao;
     private final NickNameDao nickNameDao;
 
@@ -51,10 +51,10 @@ public class EmailController {
         if (!emailAuthDao.hasAuth(userSignUpDto.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이메일 인증에 실패하였습니다.");
         }
-        if (!userSignService.nickNameDuplicationCheck(userSignUpDto.getNickName(), userSignUpDto.getEmail())) {
+        if (!userSignupService.nickNameDuplicationCheck(userSignUpDto.getNickName(), userSignUpDto.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복된 닉네임입니다.");
         }
-        userSignService.saveUserInfo(userSignUpDto);
+        userSignupService.saveUserInfo(userSignUpDto);
         return ResponseEntity.status(HttpStatus.OK).body("회원가입에 성공하였습니다.");
     }
 }

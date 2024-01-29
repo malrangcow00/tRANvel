@@ -8,7 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
+import java.util.List;
+
+@Entity(name = "user")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,4 +37,6 @@ public class User {
     @Column(name = "Balance")
     private int balance;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Inquiry> inquiryList;
 }
