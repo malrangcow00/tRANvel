@@ -14,12 +14,13 @@ import com.ssafy.tranvel.presentation.ui.theme.TextColor
 
 @Composable
 fun TextButtonComponent(
-    info: String
+    info: String,
+    onClick: () -> Unit
 ) {
     CompositionLocalProvider(LocalRippleTheme provides RippleCustomTheme) {
         TextButton(
             onClick = {
-                Log.d("MYTAG", "눌렸음1")
+                onClick()
             },
             modifier = Modifier.background(color = Color.White)
         ) {
