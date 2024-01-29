@@ -14,13 +14,14 @@ import com.ssafy.tranvel.presentation.ui.theme.TextColor
 
 @Composable
 fun LoginTextFieldComponent(
-    info: String
+    info: String,
+    value: String
 ) {
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 5.dp),
-        value = "",
+        value = value,
         onValueChange = {
 
         },
