@@ -12,7 +12,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
-# change for commit
+
+
+# 브랜치 테스트를 위한 수정사항입니다.
+
 
 #  security:
 #    user:
