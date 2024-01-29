@@ -44,7 +44,7 @@ fun UserWithdrawalMainBlock() {
     var selectedOptionText by remember { mutableStateOf(reasons[0]) }
 
     Column(
-        modifier = Modifier.padding(40.dp),
+        modifier = Modifier.fillMaxWidth().padding(40.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(100.dp))
@@ -54,7 +54,7 @@ fun UserWithdrawalMainBlock() {
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = bmjua,
-            textAlign = TextAlign.Left
+            textAlign = TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(60.dp))
