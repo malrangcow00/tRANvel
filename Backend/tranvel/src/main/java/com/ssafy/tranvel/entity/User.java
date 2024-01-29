@@ -1,6 +1,7 @@
 package com.ssafy.tranvel.entity;
 
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +29,8 @@ public class User {
     private String password;
 
     @Column(name = "ProfileImage")
-    private int profileImage;
+    @Nullable
+    private String profileImage;
 
     @Column(name = "Balance")
     private int balance;

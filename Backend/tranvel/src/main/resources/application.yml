@@ -1,9 +1,9 @@
 spring:
-  profiles:
-    active: local
-    include:
-      - secret
 
+  profiles:
+    #    active: tmp
+    include:
+      - tmp
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,12 +13,9 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
 
-  data:
-    redis:
-      host: localhost
-      port: 6379
 
 # 브랜치 테스트를 위한 수정사항입니다.
+
 
 #  security:
 #    user:
@@ -30,4 +27,3 @@ jwt:
   expiration: 604800 # 7 days in seconds
   token-prefix: "Bearer "
   header-string: "Authorization"
-

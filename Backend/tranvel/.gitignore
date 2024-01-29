@@ -37,6 +37,7 @@ out/
 .vscode/
 
 ### yml ###
+<<<<<<< Backend/tranvel/.gitignore
 *.yml
 
 # Created by https://www.toptal.com/developers/gitignore/api/intellij+all,java,kotlin,visualstudiocode,androidstudio
@@ -307,3 +308,7 @@ obj/
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,java,kotlin,visualstudiocode,androidstudio
+
+
+application-tmp.yml
+
