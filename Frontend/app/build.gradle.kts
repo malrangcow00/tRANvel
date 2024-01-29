@@ -96,9 +96,6 @@ dependencies {
     //viewmodel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
 
-    //firebase
-    implementation("com.firebaseui:firebase-ui-auth:7.2.0")
-
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
