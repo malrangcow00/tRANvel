@@ -1,6 +1,5 @@
 package com.ssafy.tranvel.presentation.screen.login.component
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
