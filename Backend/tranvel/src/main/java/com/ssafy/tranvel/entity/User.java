@@ -1,19 +1,23 @@
 package com.ssafy.tranvel.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.Set;
 
 @Entity
+@Table(name = "User")
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
+
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -22,11 +26,12 @@ public class User {
     @Column(length = 50, nullable = false, unique = true, name = "Email")
     private String email;
 
+    @JsonIgnore
+    @Column(nullable = false, name = "Password")
+    private String password;
+
     @Column(length = 8, nullable = false, name = "NickName")
     private String nickName;
-
-    @Column(length = 16, nullable = false, name = "Password")
-    private String password;
 
     @Column(name = "ProfileImage")
     @Nullable
@@ -35,4 +40,16 @@ public class User {
     @Column(name = "Balance")
     private int balance;
 
+//     ERD 추가
+    @JsonIgnore
+    @Column(name = "Activated")
+    private boolean activated;
+
+    // ERD 추가
+    @ManyToMany
+    @JoinTable(
+            name = "UserAuthority",
+            joinColumns = {@JoinColumn(name = "ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {@JoinColumn(name = "AuthorityName", referencedColumnName = "AuthorityName")})
+    private Set<Authority> authorities;
 }

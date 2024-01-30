@@ -2,12 +2,11 @@ package com.ssafy.tranvel.controller;
 
 
 import com.ssafy.tranvel.dto.EmailDto;
-import com.ssafy.tranvel.dto.ResponseDto;
-import com.ssafy.tranvel.dto.UserSignUpDto;
+import com.ssafy.tranvel.dto.UserDto;
 import com.ssafy.tranvel.repository.EmailAuthDao;
 import com.ssafy.tranvel.repository.NickNameDao;
 import com.ssafy.tranvel.service.EmailAuthService;
-import com.ssafy.tranvel.service.UserSignService;
+import com.ssafy.tranvel.service.UserService;
 import jakarta.mail.MessagingException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ import java.io.UnsupportedEncodingException;
 public class EmailController {
 
     private final EmailAuthService emailAuthService;
-    private final UserSignService userSignService;
+    private final UserService userService;
     private final EmailAuthDao emailAuthDao;
     private final NickNameDao nickNameDao;
 
@@ -48,17 +47,14 @@ public class EmailController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ResponseDto> signUp(@RequestBody @Validated UserSignUpDto userSignUpDto) {
-        if (!emailAuthDao.hasAuth(userSignUpDto.getEmail())) {
-            ResponseDto response = new ResponseDto(false, "이메일 인증에 실패하였습니다.");
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+    public ResponseEntity<String> signUp(@RequestBody @Validated UserDto userDto) {
+        if (!emailAuthDao.hasAuth(userDto.getEmail())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이메일 인증에 실패하였습니다.");
         }
-        if (!userSignService.nickNameDuplicationCheck(userSignUpDto.getNickName(), userSignUpDto.getEmail())) {
-            ResponseDto response = new ResponseDto(false, "중복된 닉네임입니다.");
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+        if (!userService.nickNameDuplicationCheck(userDto.getNickName(), userDto.getEmail())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복된 닉네임입니다.");
         }
-        userSignService.saveUserInfo(userSignUpDto);
-        ResponseDto response = new ResponseDto(true, "회원가입에 성공하였습니다.");
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        userService.saveUserInfo(userDto);
+        return ResponseEntity.status(HttpStatus.OK).body("회원가입에 성공하였습니다.");
     }
 }

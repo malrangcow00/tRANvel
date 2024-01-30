@@ -1,5 +1,3 @@
-
-
 spring:
 
   profiles:
@@ -14,18 +12,13 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
-
-
-# 브랜치 테스트를 위한 수정사항입니다.
-
-
 #  security:
 #    user:
 #      name: admin
 #      password: admin
 
 jwt:
-  secret: YourJWTSecretKey
-  expiration: 604800 # 7 days in seconds
-  token-prefix: "Bearer "
-  header-string: "Authorization"
+  header: Authorization
+  # must use over 512bit secret key, cause of HS512 algorithm
+  secret: a2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbQ==
+  token-validity-in-seconds: 86400 # ttl (초)
