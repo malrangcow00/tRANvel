@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "FoundPasswordViewModel"
+
 @HiltViewModel
 class FoundPasswordViewModel @Inject constructor(
     private val sendEmailAuthUseCase: SendEmailAuthUseCase,
@@ -27,8 +28,11 @@ class FoundPasswordViewModel @Inject constructor(
     val id: MutableState<String> = mutableStateOf("")
     val verificationCode: MutableState<String> = mutableStateOf("")
 
-    private val _uiState: MutableStateFlow<String> = MutableStateFlow("")
-    val uiState: StateFlow<String> = _uiState
+    private val _authButtonState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val authButtonState: StateFlow<Boolean> = _authButtonState
+
+    private val _resetButtonState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val resetButtonState: StateFlow<Boolean> = _resetButtonState
 
     private val _currentState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val currentState: StateFlow<Boolean> = _currentState
@@ -38,19 +42,7 @@ class FoundPasswordViewModel @Inject constructor(
         viewModelScope.launch {
             _currentState.emit(true)
             sendEmailAuthUseCase.execute(id.value).collect {
-                when (it) {
-                    is DataState.Success -> {
-                        _currentState.emit(false)
-                    }
-
-                    is DataState.Loading -> {
-                        _currentState.emit(true)
-                    }
-
-                    is DataState.Error -> {
-                        _currentState.emit(false)
-                    }
-                }
+                checkState(it)
             }
         }
     }
@@ -59,43 +51,32 @@ class FoundPasswordViewModel @Inject constructor(
         viewModelScope.launch {
             _currentState.emit(true)
             sendEmailAuthNumUseCase.execute(verificationCode.value, id.value).collect {
-                when (it) {
-                    is DataState.Success -> {
-                        _currentState.emit(false)
-                        Log.d("MYTAG", "sendEmailAuthNumSuccess: ${it.data}")
-                    }
-
-                    is DataState.Loading -> {
-                        _currentState.emit(true)
-                        Log.d("MYTAG", "sendEmailAuthNumLoading: ${it}")
-                    }
-
-                    is DataState.Error -> {
-                        _currentState.emit(false)
-                        Log.d("MYTAG", "sendEmailAuthNumError: ${it.apiError}")
-                    }
-                }
+                checkState(it)
             }
         }
     }
 
-    fun resetPassword(){
+    private suspend fun<T> checkState(data: DataState<T>) {
+            when (data) {
+                is DataState.Success -> {
+                    _currentState.emit(false)
+                }
+
+                is DataState.Loading -> {
+                    _currentState.emit(true)
+                }
+
+                is DataState.Error -> {
+                    _currentState.emit(false)
+                }
+            }
+    }
+
+    fun resetPassword() {
         viewModelScope.launch {
             _currentState.emit(true)
             resetPasswordUseCase.execute(id.value).collect {
-                when (it) {
-                    is DataState.Success -> {
-                        _currentState.emit(false)
-                    }
-
-                    is DataState.Loading -> {
-                        _currentState.emit(true)
-                    }
-
-                    is DataState.Error -> {
-                        _currentState.emit(false)
-                    }
-                }
+                checkState(it)
             }
         }
     }
