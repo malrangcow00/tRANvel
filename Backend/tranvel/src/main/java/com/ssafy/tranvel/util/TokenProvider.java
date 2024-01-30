@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.util;
 
+import com.ssafy.tranvel.entity.Authority;
 import com.ssafy.tranvel.entity.User;
 
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -74,7 +76,20 @@ public class TokenProvider implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        User principal = new User(claims.getSubject(), "", authorities);
+        Set<Authority> authoritySet = authorities.stream()
+                .map(authority -> new Authority(authority.getAuthority()))
+                .collect(Collectors.toSet());
+
+//        User principal = new User(claims.getSubject(), "", authorities);
+        User principal = User.builder()
+                .email(claims.getSubject())
+                .password("")
+                .nickName("")
+                .profileImage(null)
+                .balance(0)
+                .activated(true)
+                .authorities(authoritySet)
+                .build();
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }

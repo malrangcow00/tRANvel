@@ -2,6 +2,7 @@ package com.ssafy.tranvel.config;
 
 import com.ssafy.tranvel.security.JwtAccessDeniedHandler;
 import com.ssafy.tranvel.security.JwtAuthenticationEntryPoint;
+import com.ssafy.tranvel.security.JwtFilter;
 import com.ssafy.tranvel.util.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -49,7 +50,8 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
 
                 .and()
-                .apply(new JwtSecurityConfig(tokenProvider));
+//                .apply(new JwtSecurityConfig(tokenProvider)) //
+                .addFilterBefore(new JwtFilter(tokenProvider), JwtFilter.class);
 
         return httpSecurity.build();
     }

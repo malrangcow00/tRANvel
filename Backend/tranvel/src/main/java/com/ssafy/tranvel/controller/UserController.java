@@ -49,7 +49,4 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.OK).body("사용 가능한 닉네임 입니다.");
     }
-
-
-
 }
