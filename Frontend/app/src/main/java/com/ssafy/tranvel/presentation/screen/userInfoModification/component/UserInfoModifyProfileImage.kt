@@ -30,7 +30,7 @@ fun UserInfoModifyProfileImage(){
             modifier = Modifier.align(Alignment.CenterHorizontally)
                 .size(100.dp)
                 .clip(CircleShape)
-                .border(4.dp, Color(0xFFDEF5E5), CircleShape)
+                .border(1.dp, Color(0xFFDEF5E5), CircleShape)
         )
     }
 }
