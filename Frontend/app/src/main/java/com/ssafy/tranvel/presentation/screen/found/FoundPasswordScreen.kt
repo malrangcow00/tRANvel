@@ -7,19 +7,27 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.tranvel.presentation.screen.login.component.ButtonComponent
 import com.ssafy.tranvel.presentation.screen.login.component.LoginTextFieldComponent
 
 @SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
-fun FoundPassword() {
+fun FoundPasswordScreen(
+    viewModel: FoundPasswordViewModel = hiltViewModel()
+) {
+    val uiState: String by viewModel.uiState.collectAsState()
+    val currentState: Boolean by viewModel.currentState.collectAsState()
+
     Column(
         modifier = Modifier
             .padding(50.dp),
@@ -34,7 +42,7 @@ fun FoundPassword() {
                     .weight(5f)
                     .padding(end = 5.dp)
             ) {
-                LoginTextFieldComponent(info = "아이디", value = mutableStateOf(""))
+                LoginTextFieldComponent(info = "아이디", value = viewModel.id)
             }
             Box(
                 modifier = Modifier
@@ -42,6 +50,7 @@ fun FoundPassword() {
                     .padding(start = 5.dp)
             ) {
                 ButtonComponent(info = "보내기") {
+                    viewModel.sendEmailAuth()
                 }
             }
         }
@@ -51,7 +60,7 @@ fun FoundPassword() {
                     .weight(5f)
                     .padding(end = 5.dp)
             ) {
-                LoginTextFieldComponent(info = "인증번호", value = mutableStateOf(""))
+                LoginTextFieldComponent(info = "인증번호", value = viewModel.verificationCode)
             }
             Box(
                 modifier = Modifier
@@ -59,6 +68,7 @@ fun FoundPassword() {
                     .padding(start = 5.dp)
             ) {
                 ButtonComponent(info = "확인") {
+                    viewModel.sendEmailAuthNum()
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.data.remote.datasource
 
+import android.util.Log
 import com.google.gson.Gson
 import com.ssafy.tranvel.data.model.APIError
 import com.ssafy.tranvel.data.utils.DataState

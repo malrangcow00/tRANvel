@@ -23,18 +23,26 @@ class LoginViewModel @Inject constructor(
 
     private val _uiState: MutableStateFlow<String> = MutableStateFlow("")
     val uiState: StateFlow<String> = _uiState
+
+    private val _currentState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val currentState: StateFlow<Boolean> = _currentState
+
     fun loginUser() {
         viewModelScope.launch {
+            _currentState.emit(true)
             getUserUseCase.execute(LoginRequest(id.value, password.value)).collect{
                 when (it) {
                     is DataState.Success -> {
                         _uiState.emit("SUCCESS")
+                        _currentState.emit(false)
                     }
                     is DataState.Error -> {
                         _uiState.emit("ERROR")
+                        _currentState.emit(false)
                     }
                     is DataState.Loading -> {
                         _uiState.emit("LOADING")
+                        _currentState.emit(true)
                     }
                 }
             }
