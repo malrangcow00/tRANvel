@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "FoundPasswordViewModel"
-
 @HiltViewModel
 class FoundPasswordViewModel @Inject constructor(
     private val sendEmailAuthUseCase: SendEmailAuthUseCase,
@@ -42,7 +41,7 @@ class FoundPasswordViewModel @Inject constructor(
         viewModelScope.launch {
             _currentState.emit(true)
             sendEmailAuthUseCase.execute(id.value).collect {
-                checkState(it)
+                _authButtonState.emit(checkState(it))
             }
         }
     }
@@ -51,32 +50,38 @@ class FoundPasswordViewModel @Inject constructor(
         viewModelScope.launch {
             _currentState.emit(true)
             sendEmailAuthNumUseCase.execute(verificationCode.value, id.value).collect {
-                checkState(it)
+                _resetButtonState.emit(checkState(it))
             }
         }
-    }
-
-    private suspend fun<T> checkState(data: DataState<T>) {
-            when (data) {
-                is DataState.Success -> {
-                    _currentState.emit(false)
-                }
-
-                is DataState.Loading -> {
-                    _currentState.emit(true)
-                }
-
-                is DataState.Error -> {
-                    _currentState.emit(false)
-                }
-            }
     }
 
     fun resetPassword() {
         viewModelScope.launch {
             _currentState.emit(true)
             resetPasswordUseCase.execute(id.value).collect {
+                // ture 넘어오면 화면 이동을 위한 state 변경 진행 예정
                 checkState(it)
+            }
+        }
+    }
+
+    private suspend fun <T> checkState(data: DataState<T>): Boolean {
+        when (data) {
+            is DataState.Success -> {
+                Log.d(TAG, "checkState: ${data.data}")
+                _currentState.emit(false)
+                return true
+            }
+
+            is DataState.Loading -> {
+                _currentState.emit(true)
+                return false
+            }
+
+            is DataState.Error -> {
+                Log.d(TAG, "checkState: ${data.apiError}")
+                _currentState.emit(false)
+                return false
             }
         }
     }
