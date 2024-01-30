@@ -20,4 +20,7 @@ interface RegisterService {
 
     @POST("emailauth/verification")
     suspend fun sendAuthNum(@Body emailAuthRequest: EmailAuthRequest): Response<EmailAuthResponse>
+
+    @POST("user/reset-password")
+    suspend fun resetPassword(@Body emailInfoRequest: EmailInfoRequest): Response<EmailInfoResponse>
 }

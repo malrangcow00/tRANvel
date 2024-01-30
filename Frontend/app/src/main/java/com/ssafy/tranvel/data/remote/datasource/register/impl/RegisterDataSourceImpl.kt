@@ -30,4 +30,7 @@ class RegisterDataSourceImpl @Inject constructor(
 
     override suspend fun sendEmailAuthNum(emailAuthRequest: EmailAuthRequest): Flow<DataState<EmailAuthResponse>> =
         getResult { registerService.sendAuthNum(emailAuthRequest) }
+
+    override suspend fun resetPassword(emailInfoRequest: EmailInfoRequest): Flow<DataState<EmailInfoResponse>> =
+        getResult { registerService.resetPassword(emailInfoRequest) }
 }

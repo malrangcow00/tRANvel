@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.tranvel.data.utils.DataState
+import com.ssafy.tranvel.domain.usecase.register.ResetPasswordUseCase
 import com.ssafy.tranvel.domain.usecase.register.SendEmailAuthNumUseCase
 import com.ssafy.tranvel.domain.usecase.register.SendEmailAuthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,8 @@ private const val TAG = "FoundPasswordViewModel"
 @HiltViewModel
 class FoundPasswordViewModel @Inject constructor(
     private val sendEmailAuthUseCase: SendEmailAuthUseCase,
-    private val sendEmailAuthNumUseCase: SendEmailAuthNumUseCase
+    private val sendEmailAuthNumUseCase: SendEmailAuthNumUseCase,
+    private val resetPasswordUseCase: ResetPasswordUseCase
 ) : ViewModel() {
 
     val id: MutableState<String> = mutableStateOf("")
@@ -71,6 +73,27 @@ class FoundPasswordViewModel @Inject constructor(
                     is DataState.Error -> {
                         _currentState.emit(false)
                         Log.d("MYTAG", "sendEmailAuthNumError: ${it.apiError}")
+                    }
+                }
+            }
+        }
+    }
+
+    fun resetPassword(){
+        viewModelScope.launch {
+            _currentState.emit(true)
+            resetPasswordUseCase.execute(id.value).collect {
+                when (it) {
+                    is DataState.Success -> {
+                        _currentState.emit(false)
+                    }
+
+                    is DataState.Loading -> {
+                        _currentState.emit(true)
+                    }
+
+                    is DataState.Error -> {
+                        _currentState.emit(false)
                     }
                 }
             }

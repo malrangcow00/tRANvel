@@ -15,4 +15,5 @@ interface RegisterDataSource {
     suspend fun getUser(loginRequest: LoginRequest): Flow<DataState<DataResponse<TokenDto>>>
     suspend fun sendEmailAuth(emailInfoRequest: EmailInfoRequest): Flow<DataState<EmailInfoResponse>>
     suspend fun sendEmailAuthNum(emailAuthRequest: EmailAuthRequest): Flow<DataState<EmailAuthResponse>>
+    suspend fun resetPassword(emailInfoRequest: EmailInfoRequest): Flow<DataState<EmailInfoResponse>>
 }

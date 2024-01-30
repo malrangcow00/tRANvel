@@ -34,4 +34,8 @@ class RegisterRepositoryImpl @Inject constructor(
             emitAll(registerDataSource.sendEmailAuthNum(emailAuthRequest))
         }
 
+    override suspend fun resetPassword(emailInfoRequest: EmailInfoRequest): Flow<DataState<EmailInfoResponse>> =
+        flow {
+            emitAll(registerDataSource.resetPassword(emailInfoRequest))
+        }
 }
