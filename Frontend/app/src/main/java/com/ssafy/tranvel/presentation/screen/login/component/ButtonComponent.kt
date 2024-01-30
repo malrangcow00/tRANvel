@@ -15,18 +15,28 @@ import com.ssafy.tranvel.presentation.ui.theme.TextColor
 
 @Composable
 fun ButtonComponent(
+    info: String,
+    flag: Boolean = true,
     onClick: () -> Unit
 ) {
     Button(
-    onClick = {
-              onClick()
-    },
-    modifier = Modifier
-    .wrapContentHeight()
-    .padding(top = 10.dp)
-    .fillMaxWidth(),
-    colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor)
+        onClick = {
+            onClick()
+        },
+        enabled = flag,
+        modifier = Modifier
+            .wrapContentHeight()
+            .padding(top = 10.dp)
+            .fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = PrimaryColor,
+            disabledContainerColor = PrimaryColor
+        )
     ) {
-        Text(text = "Sign in", color = TextColor, fontSize = 18.sp)
+        Text(
+            text = info,
+            color = TextColor,
+            fontSize = 18.sp
+        )
     }
 }
