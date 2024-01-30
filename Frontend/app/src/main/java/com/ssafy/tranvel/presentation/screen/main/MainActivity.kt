@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.ssafy.tranvel.presentation.screen.found.FoundPasswordScreen
 import com.ssafy.tranvel.presentation.screen.login.LoginScreen
+import com.ssafy.tranvel.presentation.screen.register.RegisterUserScreen
 import com.ssafy.tranvel.presentation.screen.userWithdrawal.UserWithdrawalScreen
 import com.ssafy.tranvel.presentation.ui.theme.TRANvelTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color.White
                 ) {
-                    FoundPasswordScreen()
+                    RegisterUserScreen()
                 }
             }
         }
