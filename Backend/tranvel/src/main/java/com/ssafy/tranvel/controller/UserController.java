@@ -32,14 +32,16 @@ public class UserController {
     private final NickNameDao nickNameDao;
     private final EmailAuthService emailAuthService;
 
+    private ResponseDto response;
+
     @GetMapping("/duplication/{nickname}")
     public ResponseEntity<ResponseDto> nickNameCheck(@RequestBody @Validated
                                                      @RequestParam("nickname") String nickName) {
         if (!userSignService.nickNameDuplicationCheck(nickName, emailAuthService.accessEmail)) {
-            ResponseDto response = new ResponseDto(false, "이미 존재하는 닉네임 입니다.");
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            response = new ResponseDto(false, "이미 존재하는 닉네임 입니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
-        ResponseDto response = new ResponseDto(false, "사용 가능한 닉네임 입니다.");
+        response = new ResponseDto(true, "사용 가능한 닉네임 입니다.");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -47,14 +49,14 @@ public class UserController {
     public ResponseEntity<ResponseDto> signinUser(@RequestBody @Validated UserSignInDto userSignInDto) {
         Optional<User> user = userRepository.findByEmail(userSignInDto.getEmail());
         if (user.isEmpty()) {
-            ResponseDto response = new ResponseDto(false, "회원 정보가 없습니다.");
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            response = new ResponseDto(false, "회원 정보가 없습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
         if (!user.get().getPassword().equals(userSignInDto.getPassword())) {
-            ResponseDto response = new ResponseDto(false, "비밀번호가 일치하지 않습니다.");
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            response = new ResponseDto(false, "비밀번호가 일치하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
-        ResponseDto response = new ResponseDto(false, "로그인 성공");
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        response = new ResponseDto(true, "로그인 성공");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }
