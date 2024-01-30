@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.controller;
 
+import com.ssafy.tranvel.dto.ResponseDto;
 import com.ssafy.tranvel.dto.UserSignInDto;
 import com.ssafy.tranvel.entity.User;
 import com.ssafy.tranvel.repository.EmailAuthDao;
@@ -32,26 +33,28 @@ public class UserController {
     private final EmailAuthService emailAuthService;
 
     @GetMapping("/duplication/{nickname}")
-    public ResponseEntity<String> nickNameCheck(@RequestBody @Validated
-                                                @RequestParam("nickname") String nickName) {
+    public ResponseEntity<ResponseDto> nickNameCheck(@RequestBody @Validated
+                                                     @RequestParam("nickname") String nickName) {
         if (!userSignService.nickNameDuplicationCheck(nickName, emailAuthService.accessEmail)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 닉네임 입니다.");
+            ResponseDto response = new ResponseDto(false, "이미 존재하는 닉네임 입니다.");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
-        return ResponseEntity.status(HttpStatus.OK).body("사용 가능한 닉네임 입니다.");
+        ResponseDto response = new ResponseDto(false, "사용 가능한 닉네임 입니다.");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<String> signinUser(@RequestBody @Validated UserSignInDto userSignInDto) {
+    public ResponseEntity<ResponseDto> signinUser(@RequestBody @Validated UserSignInDto userSignInDto) {
         Optional<User> user = userRepository.findByEmail(userSignInDto.getEmail());
         if (user.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원 정보가 없습니다.");
+            ResponseDto response = new ResponseDto(false, "회원 정보가 없습니다.");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
         if (!user.get().getPassword().equals(userSignInDto.getPassword())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호가 일치하지 않습니다.");
+            ResponseDto response = new ResponseDto(false, "비밀번호가 일치하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
-        return ResponseEntity.status(HttpStatus.OK).body("로그인 성공");
+        ResponseDto response = new ResponseDto(false, "로그인 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
-
-
 }
