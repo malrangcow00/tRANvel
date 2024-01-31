@@ -45,7 +45,7 @@ public class EmailController {
      emailAuthService.verifyEmail() 의 리턴값에 따른 sign up 권한 부여
      redis 에 저장 예정 중 입니다. 변경 가능성 있습니다.
       **/
-    @PostMapping("email-auth/verification")
+    @PostMapping("/email-auth/verification")
     public ResponseEntity<ResponseDto> verifyCode(@RequestBody @Validated EmailDto emailDto) {
         if (!emailAuthService.verifyEmail(emailDto.getEmail(), emailDto.getVerificationCode())) {
             response = new ResponseDto(false, "인증 코드가 일치하지 않습니다.");

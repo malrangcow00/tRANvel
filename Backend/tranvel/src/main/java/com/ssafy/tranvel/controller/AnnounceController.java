@@ -1,6 +1,7 @@
 package com.ssafy.tranvel.controller;
 
 
+import com.ssafy.tranvel.dto.AnnouncementDto;
 import com.ssafy.tranvel.dto.ResponseDto;
 import com.ssafy.tranvel.entity.Announcement;
 import com.ssafy.tranvel.service.AnnouncementService;
@@ -11,10 +12,7 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,14 +27,46 @@ public class AnnounceController {
     private final AnnouncementService announcementService;
 
 
-    @GetMapping("/search")
-    public ResponseEntity<ResponseDto> searchAnnouncement() {
+    @GetMapping()
+    public ResponseEntity<ResponseDto> getAnnouncement() {
+//    public List<Announcement> getAnnouncement() {
         List<Announcement> announcementList = announcementService.getAllAnnouncement();
         if (announcementList.isEmpty()) {
             response = new ResponseDto(false, "작성된 공지사항이 없습니다.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
         response = new ResponseDto(true, "공지사항 전체 조회");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+//        return announcementList;
+    }
+
+    @PostMapping()
+    public ResponseEntity<ResponseDto> postAnnouncement(@RequestBody @Validated AnnouncementDto announcementDto){
+        announcementService.createAnnouncement(announcementDto);
+        response = new ResponseDto(true, "공지사항이 등록되었습니다.");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/{announcement-id}")
+    public ResponseEntity<ResponseDto> detailAnnouncement(@PathVariable("announcement-id") int announcementId) {
+        Announcement announcement = announcementService.findAnnouncement(announcementId);
+        response = new ResponseDto(true, "공지사항 조회.");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping("/{announcement-id}")
+    public ResponseEntity<ResponseDto> putAnnouncement(@PathVariable("announcement-id") int announcementId,
+                                                       @RequestBody @Validated
+                                                       AnnouncementDto announcementDto) {
+        announcementService.updateAnnouncement(announcementId, announcementDto);
+        response = new ResponseDto(true, "공지사항이 수정되었습니다.");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @DeleteMapping("/{announcement-id}")
+    public ResponseEntity<ResponseDto> deleteAnnouncement(@PathVariable("announcement-id") int announcementId) {
+        response = new ResponseDto(true, "공지사항이 삭제되었습니다.");
+        announcementService.deleteAnnouncement(announcementId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

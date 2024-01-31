@@ -1,6 +1,7 @@
 package com.ssafy.tranvel.controller;
 
 import com.ssafy.tranvel.dto.InquiryDto;
+import com.ssafy.tranvel.dto.NickNameCheckDto;
 import com.ssafy.tranvel.dto.ResponseDto;
 import com.ssafy.tranvel.dto.UserDto;
 import com.ssafy.tranvel.entity.Inquiry;
@@ -54,10 +55,10 @@ public class UserController {
 
     private ResponseDto response;
 
-    @GetMapping("/duplication/{nickname}")
+    @GetMapping("/duplication")
     public ResponseEntity<ResponseDto> nickNameCheck(@RequestBody @Validated
-                                                     @RequestParam("nickname") String nickName) {
-        if (!userService.nickNameDuplicationCheck(nickName, emailAuthService.accessEmail)) {
+                                                     NickNameCheckDto nickNameCheckDto) {
+        if (!userService.nickNameDuplicationCheck(nickNameCheckDto.getNickName(), nickNameCheckDto.getEmail())) {
             response = new ResponseDto(false, "이미 존재하는 닉네임 입니다.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
@@ -77,7 +78,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
         response = new ResponseDto(true, "로그인 성공");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 회원 문의글
@@ -91,7 +92,7 @@ public class UserController {
 
         inquiryRepository.save(inquiry);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("게시글 작성 완료");
+        return ResponseEntity.status(HttpStatus.OK).body("게시글 작성 완료");
     }
 
     // 나중에 토큰으로 바꿔주세요

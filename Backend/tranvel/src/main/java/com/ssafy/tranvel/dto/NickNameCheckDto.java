@@ -6,14 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class InquiryDto {
-    @NotEmpty
-    private int userId;
+public class NickNameCheckDto {
 
     @NotEmpty
-    private String title;
+    private String nickName;
 
     @NotEmpty
-    private String content;
+    private String email;
 
 }
