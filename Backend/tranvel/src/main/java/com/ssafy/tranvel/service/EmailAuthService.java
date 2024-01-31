@@ -4,9 +4,11 @@ import com.ssafy.tranvel.repository.EmailAuthDao;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -22,13 +24,13 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class EmailAuthService {
 
-    private final EmailAuthDao emailAuthDao;
-    private final JavaMailSender emailSender;
-    private String verificationCode;
     @Value("${spring.mail.username}")
     private String setFrom;
+    private String verificationCode;
     public String accessEmail;
 
+    private final EmailAuthDao emailAuthDao;
+    private final JavaMailSender emailSender;
 
     public String createVerificationCode() {
         Random random = new Random();
@@ -49,7 +51,6 @@ public class EmailAuthService {
     }
 
     public MimeMessage createEmailForm(String email) throws MessagingException, UnsupportedEncodingException {
-
         String createdCode =createVerificationCode();
         String toEmail = email;
         String title = "[Tranvel] 회원가입 인증을 완료해주세요.";
@@ -57,7 +58,6 @@ public class EmailAuthService {
         MimeMessage message = emailSender.createMimeMessage();
         message.addRecipients(MimeMessage.RecipientType.TO, toEmail);
         message.setSubject(title);
-
 
         String msgOfEmail = "안녕하세요, Tranvel 입니다."
                 + "<br>"
@@ -75,8 +75,6 @@ public class EmailAuthService {
         return message;
     }
 
-
-
     public void createCodeInRedis(String email, String verificationCode) {
         emailAuthDao.createEmailAuthentication(email, verificationCode);
     }
@@ -92,7 +90,6 @@ public class EmailAuthService {
         emailAuthDao.removeEmailAuthentication(email);
         return true;
     }
-
 
     private boolean isVerify(String email, String verificationCode) {
         return !(emailAuthDao.hasKey(email) &&

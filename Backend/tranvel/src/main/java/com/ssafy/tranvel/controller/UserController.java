@@ -11,9 +11,11 @@ import com.ssafy.tranvel.repository.NickNameDao;
 import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.EmailAuthService;
 import com.ssafy.tranvel.service.UserService;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +29,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@RequestMapping("/user") // API 수정 필요
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -42,14 +44,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getMyUserWithAuthorities().get());
     }
 
-//    @GetMapping("/user/auth/{email}/profile")
+//    @GetMapping("/auth/{email}/profile")
 //    @PreAuthorize("hasAnyRole('ADMIN')")
 //    public ResponseEntity<User> getUserInfo(@PathVariable String email) {
 //        return ResponseEntity.ok(userService.getUserWithAuthorities(email).get());
 //    }
 
     private final InquiryRepository inquiryRepository;
-
 
     private ResponseDto response;
 
@@ -78,7 +79,6 @@ public class UserController {
         response = new ResponseDto(true, "로그인 성공");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
-
 
     // 회원 문의글
     @PostMapping("/auth/{userid}/inquiry")

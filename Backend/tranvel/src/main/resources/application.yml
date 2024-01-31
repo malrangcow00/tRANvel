@@ -3,7 +3,7 @@ spring:
   profiles:
     include:
       - tmp
-      - JP
+#      - JP
 
   jpa:
     hibernate:

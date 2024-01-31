@@ -99,15 +99,24 @@ public class TokenProvider implements InitializingBean {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (io.jsonwebtoken.security.SignatureException | MalformedJwtException e) {
+        }
+
+        catch (io.jsonwebtoken.security.SignatureException | MalformedJwtException e) {
             logger.info("wrong JWT signature");
-        } catch (ExpiredJwtException e) {
+        }
+
+        catch (ExpiredJwtException e) {
             logger.info("expired JWT");
-        } catch (UnsupportedJwtException e) {
+        }
+
+        catch (UnsupportedJwtException e) {
             logger.info("unsupported JWT");
-        } catch (IllegalArgumentException e) {
+        }
+
+        catch (IllegalArgumentException e) {
             logger.info("wrong JWT");
         }
+
         return false;
     }
 }

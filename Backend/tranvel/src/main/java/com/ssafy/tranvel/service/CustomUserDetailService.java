@@ -2,8 +2,10 @@ package com.ssafy.tranvel.service;
 
 import com.ssafy.tranvel.entity.User;
 import com.ssafy.tranvel.repository.UserRepository;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
