@@ -29,6 +29,7 @@ fun NavGraph(){
         ){
             announcementScreen { navController.navigateAnnouncementDetail()}
 //            announcementDetailScreen { navController.navigateAnnou }
+
         }
     }
 }
