@@ -1,9 +1,10 @@
 spring:
 
-  profiles:
+#  profiles:
     #    active: tmp
-    include:
-      - tmp
+#    include:
+#      - tmp
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -11,6 +12,12 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/tranvel?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: ssafy0000
 
 #  security:
 #    user:

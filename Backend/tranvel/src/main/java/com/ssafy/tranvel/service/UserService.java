@@ -74,8 +74,7 @@ public class UserService {
     // method for bring user & authority info
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthorities(String email) {
-        User user = userRepository.findOneWithAuthoritiesByEmail(email);
-        return Optional.ofNullable(user);
+        return userRepository.findOneWithAuthoritiesByEmail(email);
     }
 
     // method for bring email from security context
@@ -85,5 +84,4 @@ public class UserService {
                 .getCurrentUserEmail()
                 .flatMap(userRepository::findOneWithAuthoritiesByEmail);
     }
-
 }
