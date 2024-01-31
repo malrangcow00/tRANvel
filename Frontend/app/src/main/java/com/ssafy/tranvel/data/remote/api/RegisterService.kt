@@ -18,10 +18,10 @@ interface RegisterService {
     @POST("user/signin")
     suspend fun login(@Body loginRequest: LoginRequest): Response<DataResponse<TokenDto>>
 
-    @POST("emailauth")
+    @POST("email-auth")
     suspend fun sendEmailAuth(@Body emailInfoRequest: EmailInfoRequest): Response<EmailInfoResponse>
 
-    @POST("emailauth/verification")
+    @POST("email-auth/verification")
     suspend fun sendAuthNum(@Body emailAuthRequest: EmailAuthRequest): Response<EmailAuthResponse>
 
     @POST("user/reset-password")
