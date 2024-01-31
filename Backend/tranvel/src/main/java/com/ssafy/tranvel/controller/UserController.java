@@ -27,7 +27,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@RequestMapping("/") // API 수정 필요
+@RequestMapping("/user") // API 수정 필요
 public class UserController {
 
     private final UserService userService;
@@ -36,17 +36,17 @@ public class UserController {
     private final NickNameDao nickNameDao;
     private final EmailAuthService emailAuthService;
 
-    @GetMapping("/user")
+    @GetMapping("/auth/{email}/profile")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<User> getMyUserInfo() {
         return ResponseEntity.ok(userService.getMyUserWithAuthorities().get());
     }
 
-    @GetMapping("/user/{email}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<User> getUserInfo(@PathVariable String email) {
-        return ResponseEntity.ok(userService.getUserWithAuthorities(email).get());
-    }
+//    @GetMapping("/user/auth/{email}/profile")
+//    @PreAuthorize("hasAnyRole('ADMIN')")
+//    public ResponseEntity<User> getUserInfo(@PathVariable String email) {
+//        return ResponseEntity.ok(userService.getUserWithAuthorities(email).get());
+//    }
 
     private final InquiryRepository inquiryRepository;
 
@@ -81,7 +81,7 @@ public class UserController {
 
 
     // 회원 문의글
-    @PostMapping("/inquiry")
+    @PostMapping("/auth/{userid}/inquiry")
     public ResponseEntity<String> createInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
 
         Inquiry inquiry = Inquiry.builder()
@@ -96,7 +96,7 @@ public class UserController {
 
     // 나중에 토큰으로 바꿔주세요
     // 바꿀 때 {userid} 삭제
-    @GetMapping("/inquiry/{userid}")
+    @GetMapping("/auth/{userid}/inquiry")
     public ResponseEntity<List<Inquiry>> searchAllInquiries(@RequestBody @Validated @PathVariable("userid") int userId) {
         // Optional<Inquiry> inquiries = inquiryRepository.findByUser_Id(userId);
         Optional<User> user = userRepository.findById(userId);
@@ -108,7 +108,7 @@ public class UserController {
 
     // 여기서부터 수정
 
-//    @GetMapping("/inquiry/{userid}/{inquiry-id}")
+//    @GetMapping("/auth/{userid}/inquiry/{inquiry-id}")
 //    public ResponseEntity<Optional<Inquiry>> searchInquiry(@RequestBody @Validated @PathVariable("userid") int userId,
 //        @PathVariable("inquiry-id") int inquiryId) {
 //        Optional<User> user = userRepository.findById(userId);

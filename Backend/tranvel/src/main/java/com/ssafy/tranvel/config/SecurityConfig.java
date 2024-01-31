@@ -24,7 +24,6 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-//    private final JwtFilter jwtFilter;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -33,7 +32,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain customFilterChain(HttpSecurity httpSecurity) throws Exception {
-//        JwtFilter jwtFilter = JwtFilter();
         JwtFilter jwtFilter = new JwtFilter(tokenProvider);
 
         httpSecurity

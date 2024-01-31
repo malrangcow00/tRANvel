@@ -53,9 +53,6 @@ public class EmailController {
         }
         response = new ResponseDto(true, "이메일 인증에 성공하였습니다.");
         return ResponseEntity.status(HttpStatus.OK).body(response);
-
-
-
     }
 
     @PostMapping("/signup")
