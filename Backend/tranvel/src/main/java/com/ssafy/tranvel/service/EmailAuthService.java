@@ -3,7 +3,9 @@ package com.ssafy.tranvel.service;
 import com.ssafy.tranvel.repository.EmailAuthDao;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.Random;
 import java.util.Set;
 
 @Service
+@Getter @Setter
 @RequiredArgsConstructor
 public class EmailAuthService {
 
@@ -76,16 +79,16 @@ public class EmailAuthService {
         emailAuthDao.createEmailAuthentication(email, verificationCode);
     }
 
-    public String verifyEmail(String email, String verificationCode) {
+    public boolean verifyEmail(String email, String verificationCode) {
         if (isVerify(email, verificationCode)) {
-            return "failed";
+            return false;
         }
         // 자격 부여 메서드 실행
         emailAuthDao.giveAuthority(email);
         accessEmail = email;
         // 인증 코드 유효성 통과 시, 해당 인증 코드가 사라지기 때문에 재접근 시 새로운 코드 발급 필요
         emailAuthDao.removeEmailAuthentication(email);
-        return "successed";
+        return true;
     }
 
 

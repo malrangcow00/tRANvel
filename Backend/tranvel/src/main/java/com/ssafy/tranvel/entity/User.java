@@ -7,8 +7,9 @@ import lombok.*;
 
 import java.util.Set;
 
-@Entity
+@Entity(name = "user")
 @Table(name = "User")
+import java.util.List;
 @Getter
 @Setter
 @Builder
@@ -51,4 +52,7 @@ public class User {
             joinColumns = {@JoinColumn(name = "ID", referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(name = "AuthorityName", referencedColumnName = "AuthorityName")})
     private Set<Authority> authorities;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Inquiry> inquiryList;
 }
