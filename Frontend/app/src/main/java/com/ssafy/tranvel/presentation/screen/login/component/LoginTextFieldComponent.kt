@@ -19,7 +19,8 @@ import com.ssafy.tranvel.presentation.ui.theme.TextColor
 fun LoginTextFieldComponent(
     info: String,
     value: MutableState<String>,
-    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+    flag: Boolean = true
 ) {
     OutlinedTextField(
         modifier = Modifier
@@ -29,6 +30,7 @@ fun LoginTextFieldComponent(
         onValueChange = {
             value.value = it
         },
+        enabled = flag,
         keyboardOptions = keyboardOptions,
         label = { Text(text = info) },
         colors = TextFieldDefaults.colors(

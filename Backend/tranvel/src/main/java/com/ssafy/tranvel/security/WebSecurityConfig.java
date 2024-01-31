@@ -26,7 +26,7 @@ public class WebSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable).cors(withDefaults())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/signup").permitAll()
-                        .requestMatchers("/emailauth").permitAll()
+                        .requestMatchers("/email-auth").permitAll()
                         .requestMatchers("/user").permitAll()
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                         .anyRequest().permitAll()

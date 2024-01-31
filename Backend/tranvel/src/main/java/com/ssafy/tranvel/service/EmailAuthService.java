@@ -76,16 +76,16 @@ public class EmailAuthService {
         emailAuthDao.createEmailAuthentication(email, verificationCode);
     }
 
-    public String verifyEmail(String email, String verificationCode) {
+    public boolean verifyEmail(String email, String verificationCode) {
         if (isVerify(email, verificationCode)) {
-            return "failed";
+            return false;
         }
         // 자격 부여 메서드 실행
         emailAuthDao.giveAuthority(email);
         accessEmail = email;
         // 인증 코드 유효성 통과 시, 해당 인증 코드가 사라지기 때문에 재접근 시 새로운 코드 발급 필요
         emailAuthDao.removeEmailAuthentication(email);
-        return "successed";
+        return true;
     }
 
 
