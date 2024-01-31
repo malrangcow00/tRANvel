@@ -28,6 +28,7 @@ fun NavGraph(){
             Modifier.padding(innerPadding)
         ){
             announcementScreen { navController.navigateAnnouncementDetail()}
+//            announcementDetailScreen { navController.navigateAnnou }
         }
     }
 }

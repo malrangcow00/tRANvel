@@ -10,9 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,9 +30,15 @@ import com.ssafy.tranvel.presentation.ui.theme.bmjua
 @Composable
 fun AnnouncementDetailScreen(
     dto: AnnouncementDto,
+    onDismiss: () -> Unit,
+    showDialog: Boolean
 ) {
-    Dialog(onDismissRequest = {}) {
-        DialogContent(dto)
+    if (showDialog) {
+        Dialog(
+            onDismissRequest = onDismiss,
+        ) {
+            DialogContent(dto)
+        }
     }
 }
 
@@ -47,7 +51,7 @@ fun DialogContent(
     ) {
         Image(
             modifier = Modifier
-                .align(Alignment.End)
+                .align(Alignment.Start)
                 .padding(10.dp)
                 .size(40.dp)
                 .clickable { },
@@ -112,6 +116,9 @@ fun showDialog() {
             "Hello",
             "asdflkqjwplvz;lxcmvl;zxkcjv;zlkxjcv;lkzas;dfjal;asdfalsdkf;asldkf;asldkfaskdfjalksdhjfaoisvlkzxncvaiosjdf;lkc;vaksdjfl;mzxviaowpierqlwkjfvla;kscmvlkajsdoifa;lcvzml;aksdjfioapqwek;lasjdfl;kj;lkksdjf;laksdjf;lkxcjv;lzkxjc;lvkzjx;lckvj;laksjedropiqwju;eorjlazxcv,n,m;laiksjdfoiasj;dlfkajmsdfxjc;lvkj;lakjsd;lfkjas;kldf",
             "20240131"
+        ),
+        onDismiss = { },
+        showDialog = true
+
         )
-    )
 }
