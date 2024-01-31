@@ -1,7 +1,6 @@
 package com.ssafy.tranvel.data.di
 
 import com.ssafy.tranvel.BuildConfig
-import com.ssafy.tranvel.data.remote.api.RegisterService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
