@@ -5,11 +5,11 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity(name = "user")
 @Table(name = "User")
-import java.util.List;
 @Getter
 @Setter
 @Builder

@@ -20,11 +20,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @RequiredArgsConstructor
-<<<<<<<< HEAD:Backend/tranvel/src/main/java/com/ssafy/tranvel/service/UserService.java
 public class UserService {
-========
-public class UserSignupService {
->>>>>>>> 858ec3e46f6b2e2a603e6c4ee63dc527cbf6bc02:Backend/tranvel/src/main/java/com/ssafy/tranvel/service/UserSignupService.java
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;

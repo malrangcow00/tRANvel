@@ -3,6 +3,7 @@ package com.ssafy.tranvel.controller;
 
 import com.ssafy.tranvel.dto.EmailDto;
 import com.ssafy.tranvel.dto.UserDto;
+import com.ssafy.tranvel.dto.ResponseDto;
 import com.ssafy.tranvel.repository.EmailAuthDao;
 import com.ssafy.tranvel.repository.NickNameDao;
 import com.ssafy.tranvel.service.EmailAuthService;
@@ -58,18 +59,18 @@ public class EmailController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ResponseDto> signUp(@RequestBody @Validated UserSignUpDto userSignUpDto) {
+    public ResponseEntity<ResponseDto> signUp(@RequestBody @Validated UserDto userDto) {
 
-        if (!emailAuthDao.hasAuth(userSignUpDto.getEmail())) {
+        if (!emailAuthDao.hasAuth(userDto.getEmail())) {
             response = new ResponseDto(false, "이메일 인증에 실패하였습니다.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
-        if (!userSignupService.nickNameDuplicationCheck(userSignUpDto.getNickName(), userSignUpDto.getEmail())) {
+        if (!userService.nickNameDuplicationCheck(userDto.getNickName(), userDto.getEmail())) {
             response = new ResponseDto(false, "중복된 닉네임입니다.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
-        userSignupService.saveUserInfo(userSignUpDto);
+        userService.saveUserInfo(userDto);
         response = new ResponseDto(true, "회원가입에 성공하였습니다.");
         return ResponseEntity.status(HttpStatus.OK).body(response);
 

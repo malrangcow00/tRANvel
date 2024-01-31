@@ -24,6 +24,21 @@ spring:
 #      name: admin
 #      password: admin
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: gumissafy00@gmail.com
+    password: rsruvchbezixaizh
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: smtp.gmail.com
+
 jwt:
   header: Authorization
   # must use over 512bit secret key, cause of HS512 algorithm

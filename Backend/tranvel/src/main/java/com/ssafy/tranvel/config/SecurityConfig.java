@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -23,42 +24,32 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+//    private final JwtFilter jwtFilter;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean(name = "customSecurityFilterChain")
+    @Bean
     public SecurityFilterChain customFilterChain(HttpSecurity httpSecurity) throws Exception {
+//        JwtFilter jwtFilter = JwtFilter();
+        JwtFilter jwtFilter = new JwtFilter(tokenProvider);
+
         httpSecurity
-//                .csrf().disable()
                 .csrf(AbstractHttpConfigurer::disable)
 
-//                .exceptionHandling()
-//                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-//                .accessDeniedHandler(jwtAccessDeniedHandler)
                 .exceptionHandling(configurer -> configurer
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                 )
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-//                .and()
-//                .authorizeRequests()
+
                 // api 수정 필요 (그 외 추가: 닉네임 중복 확인, 이메일 인증 요청/확인)
-//                .antMatchers("/signup", "/email-auth/", "/user/duplication/", "/user/signin").permitAll()
-//                .requestMatchers("/signup").permitAll()
-//                .requestMatchers("/email-auth/").permitAll()
-//                .requestMatchers("/user/duplication/").permitAll()
-//                .requestMatchers("/user/signin").permitAll()
-//                .anyRequest().authenticated()
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-//                        .antMatchers("/signup", "/email-auth/", "/user/duplication/", "/user/signin").permitAll()
                         .requestMatchers("/signup").permitAll()
                         .requestMatchers("/email-auth/").permitAll()
                         .requestMatchers("/user/duplication/").permitAll()
@@ -67,11 +58,15 @@ public class SecurityConfig {
                         .anyRequest().permitAll() // 개발 환경을 위해 임시로 모든 요청을 허용
                 )
 
-//                .apply(new JwtSecurityConfig(tokenProvider))
-                .addFilterBefore(new JwtFilter(tokenProvider), JwtFilter.class);
+//                .addFilterBefore(new JwtFilter(tokenProvider), JwtFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
 
         return httpSecurity.build();
     }
 
-
+    @Bean
+    public JwtFilter jwtFilter() {
+        return new JwtFilter(tokenProvider);
+    }
 }

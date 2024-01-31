@@ -8,6 +8,7 @@ import com.ssafy.tranvel.entity.User;
 import com.ssafy.tranvel.repository.EmailAuthDao;
 import com.ssafy.tranvel.repository.InquiryRepository;
 import com.ssafy.tranvel.repository.NickNameDao;
+import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.EmailAuthService;
 import com.ssafy.tranvel.service.UserService;
 import lombok.Getter;
@@ -19,10 +20,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
 import java.util.List;
 import java.util.Optional;
 
+@RestController
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -55,7 +56,7 @@ public class UserController {
     @GetMapping("/duplication/{nickname}")
     public ResponseEntity<ResponseDto> nickNameCheck(@RequestBody @Validated
                                                      @RequestParam("nickname") String nickName) {
-        if (!userSignupService.nickNameDuplicationCheck(nickName, emailAuthService.accessEmail)) {
+        if (!userService.nickNameDuplicationCheck(nickName, emailAuthService.accessEmail)) {
             response = new ResponseDto(false, "이미 존재하는 닉네임 입니다.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
@@ -64,13 +65,13 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<ResponseDto> signinUser(@RequestBody @Validated UserSignInDto userSignInDto) {
-        Optional<User> user = userRepository.findByEmail(userSignInDto.getEmail());
+    public ResponseEntity<ResponseDto> signinUser(@RequestBody @Validated UserDto userDto) {
+        Optional<User> user = userRepository.findByEmail(userDto.getEmail());
         if (user.isEmpty()) {
             response = new ResponseDto(false, "회원 정보가 없습니다.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
-        if (!user.get().getPassword().equals(userSignInDto.getPassword())) {
+        if (!user.get().getPassword().equals(userDto.getPassword())) {
             response = new ResponseDto(false, "비밀번호가 일치하지 않습니다.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
