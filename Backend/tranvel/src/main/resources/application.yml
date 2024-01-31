@@ -1,11 +1,10 @@
-
-
 spring:
 
   profiles:
-    #    active: tmp
     include:
       - tmp
+#      - JP
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,19 +12,3 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-
-
-
-# 브랜치 테스트를 위한 수정사항입니다.
-
-
-#  security:
-#    user:
-#      name: admin
-#      password: admin
-
-jwt:
-  secret: YourJWTSecretKey
-  expiration: 604800 # 7 days in seconds
-  token-prefix: "Bearer "
-  header-string: "Authorization"

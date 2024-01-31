@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 public class ResponseDto {
-    private boolean result;
 
+    private boolean result;
     private String msg;
 }
