@@ -1,11 +1,14 @@
 package com.ssafy.tranvel.entity;
 
 
+import com.ssafy.tranvel.repository.AnnouncementRepository;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -27,4 +30,11 @@ public class Announcement {
     @Column(length = 30, name = "DateTime")
     private String datetime;
 
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+        this.datetime = LocalDateTime.now().toString();
+
+    }
 }

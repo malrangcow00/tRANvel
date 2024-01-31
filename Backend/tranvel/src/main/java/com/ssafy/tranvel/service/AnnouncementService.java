@@ -26,7 +26,7 @@ public class AnnouncementService {
         return this.announcementRepository.findAll();
     }
 
-    public void createAnnouncement(AnnouncementDto announcementDto) {
+    public Announcement createAnnouncement(AnnouncementDto announcementDto) {
 
         Announcement announcement = Announcement.builder()
                 .title(announcementDto.getTitle())
@@ -35,6 +35,26 @@ public class AnnouncementService {
                 .build();
 
         announcementRepository.save(announcement);
+
+        return announcement;
+    }
+
+
+    public Announcement findAnnouncement(int announcementId) {
+        Announcement announcement = announcementRepository.findById(announcementId).get();
+        return announcement;
+
+    }
+
+    public Announcement updateAnnouncement(int announcementId, AnnouncementDto announcementDto) {
+        Announcement announcement = announcementRepository.findById(announcementId).get();
+        announcement.update(announcementDto.getTitle(), announcementDto.getContent());
+        announcementRepository.save(announcement);
+        return announcement;
+    }
+
+    public void deleteAnnouncement(int announcementId) {
+        announcementRepository.deleteById(announcementId);
     }
 
 }
