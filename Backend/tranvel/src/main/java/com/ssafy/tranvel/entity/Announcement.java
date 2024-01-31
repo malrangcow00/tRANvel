@@ -25,6 +25,6 @@ public class Announcement {
     private String content;
 
     @Column(length = 30, name = "DateTime")
-    private String datetiem;
+    private String datetime;
 
 }

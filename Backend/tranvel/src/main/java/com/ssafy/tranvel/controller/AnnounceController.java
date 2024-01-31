@@ -1,6 +1,7 @@
 package com.ssafy.tranvel.controller;
 
 
+import com.ssafy.tranvel.dto.AnnouncementDto;
 import com.ssafy.tranvel.dto.ResponseDto;
 import com.ssafy.tranvel.entity.Announcement;
 import com.ssafy.tranvel.service.AnnouncementService;
@@ -11,10 +12,7 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,13 +28,21 @@ public class AnnounceController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<ResponseDto> searchAnnouncement() {
+    public ResponseEntity<ResponseDto> getAnnouncement() {
         List<Announcement> announcementList = announcementService.getAllAnnouncement();
         if (announcementList.isEmpty()) {
             response = new ResponseDto(false, "작성된 공지사항이 없습니다.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
         response = new ResponseDto(true, "공지사항 전체 조회");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<ResponseDto> postAnnouncement(@RequestBody @Validated AnnouncementDto announcementDto){
+        announcementService.createAnnouncement(announcementDto);
+
+        response = new ResponseDto(true, "공지사항이 등록되었습니다.");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
