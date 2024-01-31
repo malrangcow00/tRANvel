@@ -3,7 +3,9 @@ package com.ssafy.tranvel.service;
 import com.ssafy.tranvel.repository.EmailAuthDao;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.Random;
 import java.util.Set;
 
 @Service
+@Getter @Setter
 @RequiredArgsConstructor
 public class EmailAuthService {
 
