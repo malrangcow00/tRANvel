@@ -92,9 +92,7 @@ public class UserController {
         inquiryRepository.save(inquiry);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("게시글 작성 완료");
-
     }
-
 
     // 나중에 토큰으로 바꿔주세요
     // 바꿀 때 {userid} 삭제
@@ -119,6 +117,4 @@ public class UserController {
 //
 //        return ResponseEntity.status(HttpStatus.OK).body();
 //    }
-
-
 }

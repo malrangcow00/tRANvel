@@ -13,34 +13,40 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/tranvel?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: ssafy0000
+##  내꺼
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/tranvel?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
+#    username: root
+#    password: ssafy0000
+
+##  바그정환
+#  //
 
 #  security:
 #    user:
 #      name: admin
 #      password: admin
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: gumissafy00@gmail.com
-    password: rsruvchbezixaizh
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          ssl:
-            trust: smtp.gmail.com
+##  내꺼
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: gumissafy00@gmail.com
+#    password: rsruvchbezixaizh
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+##            required: true
+##          ssl:
+##            trust: smtp.gmail.com
 
-jwt:
-  header: Authorization
-  # must use over 512bit secret key, cause of HS512 algorithm
-  secret: a2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbQ==
-  token-validity-in-seconds: 86400 # ttl (초)
+##내꺼
+#jwt:
+#  header: Authorization
+#  # must use over 512bit secret key, cause of HS512 algorithm
+#  secret: a2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbXRva2FyaW10b2thcmltdG9rYXJpbQ==
+#  token-validity-in-seconds: 86400 # ttl (초)
