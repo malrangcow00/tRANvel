@@ -12,12 +12,9 @@ import com.ssafy.tranvel.domain.usecase.register.SendEmailAuthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 import javax.inject.Inject
-
-private const val TAG = "FoundPasswordViewModel"
 
 @HiltViewModel
 class FoundPasswordViewModel @Inject constructor(
