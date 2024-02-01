@@ -15,6 +15,7 @@ import com.ssafy.tranvel.domain.usecase.register.SendEmailAuthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -46,38 +47,62 @@ class RegisterUserViewModel @Inject constructor(
         _bitmap.value = bitmap
     }
 
-    fun checkId():Boolean {
+    fun checkId(): Boolean {
         val validation = "[0-9a-zA-Z]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+\$"
-        if (id.value==""){
+        if (id.value == "") {
             return true
         }
         return Pattern.matches(validation, id.value)
     }
 
-    fun checkPassword():Boolean {
+    fun checkPassword(): Boolean {
         val validation = """^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^+\-=])(?=\S+$).*$"""
-        val vali = Pattern.compile(validation)
-        if (password.value==""){
+        val pattern = Pattern.compile(validation)
+        if (password.value == "") {
             return true
         }
-        return vali.matcher(password.value).matches()
+
+        return pattern.matcher(password.value).matches()
+    }
+
+    fun matchPassword(): Boolean {
+        if (verification.value == "") {
+            return true
+        }
+        return verification.value == password.value
     }
 
     fun registerUser() {
+        Log.d("MYTAG", "registerUser: ${id.value}  ${password.value}  ${nickname.value}")
         viewModelScope.launch {
-            registerUserUseCase.execute(UserRequest(id.value, nickname.value, password.value, null))
+            _currentState.emit(true)
+            registerUserUseCase.execute(
+                UserRequest(
+                    id.value,
+                    nickname.value,
+                    password.value,
+                    null,
+                    null
+                )
+            ).collect {
+                checkState(it)
+            }
         }
     }
 
     fun duplicateNickName() {
         viewModelScope.launch {
-            duplicateNickNameUseCase.execute(nickname.value)
+            _currentState.emit(true)
+            duplicateNickNameUseCase.execute(nickname.value).collect {
+                checkState(it)
+            }
         }
     }
 
     fun sendEmailAuth() {
         Log.d("MYTAG", "sendEmailAuth: ${id.value}")
         viewModelScope.launch {
+            _currentState.emit(true)
             sendEmailAuthUseCase.execute(id.value).collect {
                 _authButtonState.emit(checkState(it))
             }
@@ -86,6 +111,7 @@ class RegisterUserViewModel @Inject constructor(
 
     fun sendEmailAuthNum() {
         viewModelScope.launch {
+            _currentState.emit(true)
             sendEmailAuthNumUseCase.execute(verificationCode.value, id.value).collect {
                 _resetButtonState.emit(checkState(it))
             }

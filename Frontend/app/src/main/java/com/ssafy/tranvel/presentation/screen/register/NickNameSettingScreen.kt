@@ -4,13 +4,12 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.tranvel.presentation.screen.login.component.ButtonComponent
 import com.ssafy.tranvel.presentation.screen.login.component.LoginTextFieldComponent
 
@@ -19,14 +18,16 @@ import com.ssafy.tranvel.presentation.screen.login.component.LoginTextFieldCompo
 fun NickNameSettingScreen(
     viewModel: RegisterUserViewModel,
     onNextButtonClicked: () -> (Unit)
-){
+) {
+    Log.d("MYTAG", "PasswordSettingScreen: ${viewModel.id}")
+    val currentState: Boolean by viewModel.currentState.collectAsState()
     Column {
         Box(
             modifier = Modifier
                 .weight(5f)
                 .padding(end = 5.dp)
         ) {
-            LoginTextFieldComponent(info = "닉네임", value = mutableStateOf(""))
+            LoginTextFieldComponent(info = "닉네임", value = viewModel.nickname)
         }
         Box(
             modifier = Modifier
@@ -37,6 +38,7 @@ fun NickNameSettingScreen(
                 viewModel.duplicateNickName()
             }
         }
+
         ButtonComponent(info = "다음") {
             onNextButtonClicked()
         }

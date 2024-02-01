@@ -6,11 +6,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.tranvel.presentation.screen.announcement.navigation.announcementNavigationRoute
 import com.ssafy.tranvel.presentation.screen.announcement.navigation.announcementScreen
 import com.ssafy.tranvel.presentation.screen.announcement.navigation.navigateAnnouncementDetail
+import com.ssafy.tranvel.presentation.screen.login.LoginScreen
+import com.ssafy.tranvel.presentation.screen.register.navigation.registerGraph
 
 @Composable
 fun NavGraph(){
@@ -24,11 +27,17 @@ fun NavGraph(){
         innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = announcementNavigationRoute,
+            startDestination = "login_screen",
             Modifier.padding(innerPadding)
         ){
             announcementScreen { navController.navigateAnnouncementDetail()}
 //            announcementDetailScreen { navController.navigateAnnou }
+            composable(route = "login_screen") {
+                LoginScreen() {
+                    navController.navigate("register")
+                }
+            }
+            registerGraph(navController)
         }
     }
 }

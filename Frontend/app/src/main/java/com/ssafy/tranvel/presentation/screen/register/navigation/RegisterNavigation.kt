@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.ssafy.tranvel.presentation.screen.announcement.navigation.announcementNavigationRoute
 import com.ssafy.tranvel.presentation.screen.register.EmailAuthScreen
 import com.ssafy.tranvel.presentation.screen.register.NickNameSettingScreen
 import com.ssafy.tranvel.presentation.screen.register.PasswordSettingScreen
@@ -23,8 +24,11 @@ fun NavGraphBuilder.registerGraph(navController: NavController) {
         }
 
         composable(route = "password_setting_screen") {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry("email_auth_screen")
+            }
             PasswordSettingScreen(
-                viewModel = hiltViewModel(navController.previousBackStackEntry!!)
+                viewModel = hiltViewModel(parentEntry)
             ) {
                 navController.navigate("nickname_setting_screen") {
                 }
@@ -32,8 +36,11 @@ fun NavGraphBuilder.registerGraph(navController: NavController) {
         }
 
         composable(route = "nickname_setting_screen") {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry("email_auth_screen")
+            }
             NickNameSettingScreen(
-                viewModel = hiltViewModel(navController.previousBackStackEntry!!)
+                viewModel = hiltViewModel(parentEntry)
             ) {
                 navController.navigate("profile_image_setting_screen") {
                 }
@@ -41,10 +48,14 @@ fun NavGraphBuilder.registerGraph(navController: NavController) {
         }
 
         composable(route = "profile_image_setting_screen") {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry("email_auth_screen")
+            }
             ProfileImageSettingScreen(
-                viewModel = hiltViewModel(navController.previousBackStackEntry!!)
+                viewModel = hiltViewModel(parentEntry)
             ) {
                 navController.navigate("login_screen") {
+                    navController.navigate(announcementNavigationRoute)
                 }
             }
         }

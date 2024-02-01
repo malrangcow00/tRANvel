@@ -124,8 +124,7 @@ fun EmailAuthScreen(
                 }
             }
         }
-
-        if (!resetButtonState){
+        if (resetButtonState){
             ButtonComponent(info = "다음") {
                 onNextButtonClicked()
             }

@@ -1,7 +1,6 @@
 package com.ssafy.tranvel.presentation.screen.register
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,6 +8,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,15 +18,10 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.tranvel.presentation.screen.login.component.ButtonComponent
-import com.ssafy.tranvel.presentation.screen.login.component.LoginTextFieldComponent
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 import com.ssafy.tranvel.presentation.ui.theme.TextColor
-import java.util.regex.Pattern
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -34,7 +29,9 @@ fun PasswordSettingScreen(
     viewModel: RegisterUserViewModel,
     onNextButtonClicked: () -> (Unit)
 ) {
-    var isError by remember { mutableStateOf(false) }
+    var isErrorPassword by remember { mutableStateOf(false) }
+    var isErrorVerification by remember { mutableStateOf(false) }
+    val currentState: Boolean by viewModel.currentState.collectAsState()
 
     Column {
         OutlinedTextField(
@@ -42,7 +39,7 @@ fun PasswordSettingScreen(
                 .fillMaxWidth()
                 .padding(bottom = 5.dp)
                 .onFocusChanged {
-                    isError = if (it.isFocused) {
+                    isErrorPassword = if (it.isFocused) {
                         false
                     } else {
                         !viewModel.checkPassword()
@@ -54,7 +51,7 @@ fun PasswordSettingScreen(
             },
             textStyle = TextStyle(color = Color.Black),
             singleLine = true,
-            isError = isError,
+            isError = isErrorPassword,
             visualTransformation = PasswordVisualTransformation(),
             label = { Text(text = "비밀번호 입력") },
             colors = TextFieldDefaults.colors(
@@ -72,10 +69,10 @@ fun PasswordSettingScreen(
                 .fillMaxWidth()
                 .padding(bottom = 5.dp)
                 .onFocusChanged {
-                    isError = if (it.isFocused) {
+                    isErrorVerification = if (it.isFocused) {
                         false
                     } else {
-                        !viewModel.checkId()
+                        !viewModel.matchPassword()
                     }
                 },
             value = viewModel.verification.value,
@@ -85,7 +82,7 @@ fun PasswordSettingScreen(
                 }
             },
             singleLine = true,
-            isError = isError,
+            isError = isErrorVerification,
             label = { Text(text = "비밀번호 확인") },
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = PrimaryColor,

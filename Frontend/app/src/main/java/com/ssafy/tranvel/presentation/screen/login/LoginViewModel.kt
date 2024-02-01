@@ -30,7 +30,7 @@ class LoginViewModel @Inject constructor(
     fun loginUser() {
         viewModelScope.launch {
             _currentState.emit(true)
-            getUserUseCase.execute(LoginRequest(id.value, password.value)).collect{
+            getUserUseCase.execute(LoginRequest(email = id.value, password = password.value, balance = 0, profileImage = "")).collect{
                 when (it) {
                     is DataState.Success -> {
                         _uiState.emit("SUCCESS")
