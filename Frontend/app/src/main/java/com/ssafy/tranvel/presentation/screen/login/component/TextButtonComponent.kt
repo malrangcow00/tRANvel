@@ -22,7 +22,6 @@ fun TextButtonComponent(
             onClick = {
                 onClick()
             },
-            modifier = Modifier.background(color = Color.White)
         ) {
             Text(
                 text = info,

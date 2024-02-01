@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 private const val TAG = "FoundPasswordViewModel"
@@ -47,6 +48,13 @@ class FoundPasswordViewModel @Inject constructor(
         }
     }
 
+    fun checkId(): Boolean {
+        val validation = "[0-9a-zA-Z]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+\$"
+        if (id.value == "") {
+            return true
+        }
+        return Pattern.matches(validation, id.value)
+    }
     fun sendEmailAuthNum() {
         viewModelScope.launch {
             _currentState.emit(true)
@@ -56,20 +64,25 @@ class FoundPasswordViewModel @Inject constructor(
         }
     }
 
-    private suspend fun<T> checkState(data: DataState<T>) {
-            when (data) {
-                is DataState.Success -> {
-                    _currentState.emit(false)
-                }
-
-                is DataState.Loading -> {
-                    _currentState.emit(true)
-                }
-
-                is DataState.Error -> {
-                    _currentState.emit(false)
-                }
+    private suspend fun <T> checkState(data: DataState<T>): Boolean {
+        when (data) {
+            is DataState.Success -> {
+                Log.d("MYTAG", "checkState: ${data.data}")
+                _currentState.emit(false)
+                return true
             }
+
+            is DataState.Loading -> {
+                _currentState.emit(true)
+                return false
+            }
+
+            is DataState.Error -> {
+                Log.d("MYTAG", "checkState: ${data.apiError.toString()}")
+                _currentState.emit(false)
+                return false
+            }
+        }
     }
 
     fun resetPassword() {

@@ -102,9 +102,10 @@ class RegisterUserViewModel @Inject constructor(
     }
 
     fun duplicateNickName() {
+        Log.d("MYTAG", "duplicateNickName: ${id.value} ${nickname.value}")
         viewModelScope.launch {
             _currentState.emit(true)
-            duplicateNickNameUseCase.execute(nickname.value).collect {
+            duplicateNickNameUseCase.execute(nickname.value, id.value).collect {
                 checkState(it)
             }
         }
@@ -132,6 +133,7 @@ class RegisterUserViewModel @Inject constructor(
     private suspend fun <T> checkState(data: DataState<T>): Boolean {
         when (data) {
             is DataState.Success -> {
+                Log.d("MYTAG", "checkState: ${data.data}")
                 _currentState.emit(false)
                 return true
             }
@@ -142,6 +144,7 @@ class RegisterUserViewModel @Inject constructor(
             }
 
             is DataState.Error -> {
+                Log.d("MYTAG", "checkState: ${data.apiError.toString()}")
                 _currentState.emit(false)
                 return false
             }

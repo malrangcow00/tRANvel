@@ -80,7 +80,6 @@ fun EmailAuthScreen(
                         .wrapContentWidth(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = PrimaryColor,
-                        disabledContainerColor = PrimaryColor
                     ),
                     shape = RoundedCornerShape(5.dp),
                 ) {
@@ -110,55 +109,52 @@ fun EmailAuthScreen(
                 errorLabelColor = Color.Red
             )
         )
-        Row {
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 5.dp),
-                value = viewModel.verificationCode.value,
-                onValueChange = {
-                    if (it.length < 5) {
-                        viewModel.verificationCode.value = it
-                    }
-                },
-                shape = RoundedCornerShape(5.dp),
-                trailingIcon = {
-                    Button(
-                        onClick = {
-                            viewModel.sendEmailAuthNum()
-                        },
-                        enabled = !resetButtonState,
-                        modifier = Modifier
-                            .wrapContentHeight()
-                            .padding(end = 5.dp)
-                            .wrapContentWidth(),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = PrimaryColor,
-                            disabledContainerColor = PrimaryColor
-                        ),
-                        shape = RoundedCornerShape(5.dp)
-                    ) {
-                        Text(
-                            text = "확인",
-                            color = TextColor,
-                            fontSize = 14.sp
-                        )
-                    }
-                },
-                singleLine = true,
-                enabled = !resetButtonState,
-                label = { Text(text = "인증 코드") },
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = PrimaryColor,
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedLabelColor = TextColor,
-                    unfocusedLabelColor = TextColor,
-                    errorContainerColor = Color.White,
-                    errorLabelColor = Color.Red
-                )
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp),
+            value = viewModel.verificationCode.value,
+            onValueChange = {
+                if (it.length < 5) {
+                    viewModel.verificationCode.value = it
+                }
+            },
+            shape = RoundedCornerShape(5.dp),
+            trailingIcon = {
+                Button(
+                    onClick = {
+                        viewModel.sendEmailAuthNum()
+                    },
+                    enabled = authButtonState,
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .padding(end = 5.dp)
+                        .wrapContentWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = PrimaryColor,
+                    ),
+                    shape = RoundedCornerShape(5.dp)
+                ) {
+                    Text(
+                        text = "확인",
+                        color = TextColor,
+                        fontSize = 14.sp
+                    )
+                }
+            },
+            singleLine = true,
+            enabled = authButtonState,
+            label = { Text(text = "인증 코드") },
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = PrimaryColor,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                focusedLabelColor = TextColor,
+                unfocusedLabelColor = TextColor,
+                errorContainerColor = Color.White,
+                errorLabelColor = Color.Red
             )
-        }
+        )
         Button(
             onClick = {
                 onNextButtonClicked()
@@ -169,9 +165,8 @@ fun EmailAuthScreen(
                 .padding(top = 10.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = PrimaryColor,
-                disabledContainerColor = PrimaryColor
             ),
-            enabled = !resetButtonState
+            enabled = resetButtonState
         ) {
             Text(
                 text = "다음",
