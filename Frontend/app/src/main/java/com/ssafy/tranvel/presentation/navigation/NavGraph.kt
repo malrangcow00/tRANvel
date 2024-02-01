@@ -24,7 +24,7 @@ fun NavGraph(){
 
     Scaffold(
     ){
-        innerPadding ->
+            innerPadding ->
         NavHost(
             navController = navController,
             startDestination = "login_screen",

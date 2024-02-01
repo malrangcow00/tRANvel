@@ -60,7 +60,7 @@ public class UserController {
 
     private ResponseDto response;
 
-    @GetMapping("/duplication")
+    @PostMapping("/duplication")
     public ResponseEntity<ResponseDto> nickNameCheck(@RequestBody @Validated
                                                      NickNameCheckDto nickNameCheckDto) {
         if (!userService.nickNameDuplicationCheck(nickNameCheckDto.getNickName(), nickNameCheckDto.getEmail())) {
