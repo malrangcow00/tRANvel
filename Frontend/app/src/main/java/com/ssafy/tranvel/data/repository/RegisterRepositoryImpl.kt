@@ -5,6 +5,7 @@ import com.ssafy.tranvel.data.model.TokenDto
 import com.ssafy.tranvel.data.model.request.EmailAuthRequest
 import com.ssafy.tranvel.data.model.request.EmailInfoRequest
 import com.ssafy.tranvel.data.model.request.LoginRequest
+import com.ssafy.tranvel.data.model.request.UserRequest
 import com.ssafy.tranvel.data.model.response.DataResponse
 import com.ssafy.tranvel.data.model.response.EmailAuthResponse
 import com.ssafy.tranvel.data.model.response.EmailInfoResponse
@@ -37,5 +38,15 @@ class RegisterRepositoryImpl @Inject constructor(
     override suspend fun resetPassword(emailInfoRequest: EmailInfoRequest): Flow<DataState<EmailInfoResponse>> =
         flow {
             emitAll(registerDataSource.resetPassword(emailInfoRequest))
+        }
+
+    override suspend fun registerUser(userRequest: UserRequest): Flow<DataState<EmailInfoResponse>> =
+        flow {
+            emitAll(registerDataSource.registerUser(userRequest))
+        }
+
+    override suspend fun duplicateNickName(nickname: String): Flow<DataState<EmailInfoResponse>> =
+        flow {
+            emitAll(registerDataSource.duplicateNickName(nickname))
         }
 }

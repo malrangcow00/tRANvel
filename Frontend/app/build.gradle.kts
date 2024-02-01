@@ -90,6 +90,9 @@ dependencies {
     ksp("com.google.dagger:dagger-compiler:2.48") // Dagger compiler
     ksp("com.google.dagger:hilt-compiler:2.48")
 
+    // Icon
+    implementation("androidx.compose.material:material-icons-extended")
+
     //navermap
 
 

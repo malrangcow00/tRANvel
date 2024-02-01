@@ -25,16 +25,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import com.ssafy.tranvel.R
 import com.ssafy.tranvel.presentation.screen.login.component.ButtonComponent
 import com.ssafy.tranvel.presentation.screen.login.component.LoginTextFieldComponent
 import com.ssafy.tranvel.presentation.screen.login.component.TextButtonComponent
+import com.ssafy.tranvel.presentation.screen.register.navigation.registerGraph
 
-@Preview
+
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
-    context: Context = LocalContext.current
+    context: Context = LocalContext.current,
+    onNextButtonClicked: ()-> (Unit)
 ) {
     val uiState: String by loginViewModel.uiState.collectAsState(initial = "")
 
@@ -90,6 +95,7 @@ fun LoginScreen(
         ) {
             TextButtonComponent(info = "회원가입") {
                 // 회원가입 화면으로 이동
+                onNextButtonClicked()
             }
             TextButtonComponent(info = "비밀번호 찾기") {
                 // 비밀번호 찾기 화면으로 이동
