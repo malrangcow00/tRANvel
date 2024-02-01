@@ -23,7 +23,7 @@ public class User {
     @Column(name = "ID")
     private int id;
 
-    @Column(length = 50, nullable = false, unique = true, name = "Email")
+    @Column(length = 50, nullable = false, name = "Email")
     private String email;
 
     @JsonIgnore
@@ -40,12 +40,10 @@ public class User {
     @Column(name = "Balance")
     private int balance;
 
-//     ERD 추가
     @JsonIgnore
     @Column(name = "Activated")
     private boolean activated;
 
-    // ERD 추가
     @ManyToMany
     @JoinTable(
             name = "UserAuthority",
