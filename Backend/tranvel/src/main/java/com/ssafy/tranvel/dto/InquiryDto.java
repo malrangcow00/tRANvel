@@ -11,10 +11,10 @@ public class InquiryDto {
     @NotNull
     private int userId;
 
-    @NotEmpty
+    private int inquiryId;
+
     private String title;
 
-    @NotEmpty
     private String content;
 
 }

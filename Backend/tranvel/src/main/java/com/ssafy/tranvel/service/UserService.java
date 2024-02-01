@@ -80,4 +80,6 @@ public class UserService {
                 .map(Integer::parseInt)
                 .flatMap(userRepository::findOneWithAuthoritiesById);
     }
+
+
 }

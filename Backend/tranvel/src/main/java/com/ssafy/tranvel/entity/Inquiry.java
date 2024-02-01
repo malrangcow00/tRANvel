@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -32,5 +34,12 @@ public class Inquiry {
     @JsonBackReference
     private User user;
 
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+        this.datetime = LocalDateTime.now().toString();
+
+    }
 
 }

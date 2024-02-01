@@ -98,27 +98,33 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(inquiry);
     }
 
-    // 나중에 토큰으로 바꿔주세요
-    // 바꿀 때 {user-id} 삭제
-    @GetMapping("/auth/{user-id}/inquiry")
-    public ResponseEntity<List<Inquiry>> searchAllInquiries(@RequestBody @Validated @PathVariable("user-id") int userId) {
-        // Optional<Inquiry> inquiries = inquiryRepository.findByUser_Id(userId);
-        Optional<User> user = userRepository.findById(userId);
-        // get 대신 orElse 수정
-        List<Inquiry> inquiries = user.get().getInquiryList();
 
+    @PostMapping("/auth/inquiry/list")
+    public ResponseEntity<List<Inquiry>> getAllInquiries(@RequestBody @Validated InquiryDto inquiryDto) {
+        response = new ResponseDto(true, "전체 문의 글 조회");
+        List<Inquiry> inquiries = inquiryService.getAllInquiries(inquiryDto);
         return ResponseEntity.status(HttpStatus.OK).body(inquiries);
     }
 
-    // 여기서부터 수정
 
-//    @GetMapping("/auth/{userid}/inquiry/{inquiry-id}")
-//    public ResponseEntity<Optional<Inquiry>> searchInquiry(@RequestBody @Validated @PathVariable("userid") int userId,
-//        @PathVariable("inquiry-id") int inquiryId) {
-//        Optional<User> user = userRepository.findById(userId);
-//        List<Inquiry> inquiries = user.get().getInquiryList();
-//
-//
-//        return ResponseEntity.status(HttpStatus.OK).body();
-//    }
+    @PostMapping("/auth/inquiry/detail")
+    public ResponseEntity<Inquiry> getInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
+        Inquiry inquiry = inquiryService.getInquiry(inquiryDto);
+        return  ResponseEntity.status(HttpStatus.OK).body(inquiry);
+    }
+
+
+    @PutMapping("/auth/inquiry/detail")
+    public ResponseEntity<Inquiry> putInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
+        Inquiry inquiry = inquiryService.updateInquiry(inquiryDto);
+        return ResponseEntity.status(HttpStatus.OK).body(inquiry);
+    }
+
+
+    @DeleteMapping("/auth/inquiry/detail")
+    public ResponseEntity<ResponseDto> deleteInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
+        response = new ResponseDto(true, "문의 글이 삭제되었습니다.");
+        inquiryService.deleteInquiry(inquiryDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
