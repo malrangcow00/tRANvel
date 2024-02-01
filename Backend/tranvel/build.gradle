@@ -63,6 +63,10 @@ dependencies {
 	// DB Driver
 	implementation 'mysql:mysql-connector-java:8.0.26'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// S3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation 'software.amazon.awssdk:s3:2.17.285'
 }
 
 tasks.named('test') {
