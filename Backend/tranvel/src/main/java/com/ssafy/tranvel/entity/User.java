@@ -11,7 +11,6 @@ import java.util.Set;
 @Entity(name = "user")
 @Table(name = "User")
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,6 +39,7 @@ public class User {
     @Column(name = "Balance")
     private int balance;
 
+    // ERD 추가
     @JsonIgnore
     @Column(name = "Activated")
     private boolean activated;

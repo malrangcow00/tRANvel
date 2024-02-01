@@ -25,16 +25,22 @@ public class CustomUserDetailService implements UserDetailsService {
     @Override
     @Transactional
     // make return object of UserDetails from user and authority info
-    public UserDetails loadUserByUsername(final String email) {
+    public UserDetails loadUserByUsername(final String id) {
+        int userId;
+        try {
+            userId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException(id + " is not a valid user id");
+        }
 
-        return userRepository.findOneWithAuthoritiesByEmail(email)
-                .map(user -> createUser(email, user))
-                .orElseThrow(() -> new UsernameNotFoundException(email + " cannot found"));
+        return userRepository.findOneWithAuthoritiesById(userId)
+                .map(user -> createUser(id, user))
+                .orElseThrow(() -> new UsernameNotFoundException(id + " cannot found"));
     }
 
-    private org.springframework.security.core.userdetails.User createUser(String email, User user) {
+    private org.springframework.security.core.userdetails.User createUser(String id, User user) {
         if (!user.isActivated()) {
-            throw new RuntimeException(email + " is not activated");
+            throw new RuntimeException(id + " is not activated");
         }
 
         List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()

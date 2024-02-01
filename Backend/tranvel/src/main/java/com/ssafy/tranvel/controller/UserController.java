@@ -38,17 +38,11 @@ public class UserController {
     private final NickNameDao nickNameDao;
     private final EmailAuthService emailAuthService;
 
-    @GetMapping("/auth/{email}/profile")
+    @GetMapping("/auth/{user-id}/profile")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<User> getMyUserInfo() {
         return ResponseEntity.ok(userService.getMyUserWithAuthorities().get());
     }
-
-//    @GetMapping("/auth/{email}/profile")
-//    @PreAuthorize("hasAnyRole('ADMIN')")
-//    public ResponseEntity<User> getUserInfo(@PathVariable String email) {
-//        return ResponseEntity.ok(userService.getUserWithAuthorities(email).get());
-//    }
 
     private final InquiryRepository inquiryRepository;
 

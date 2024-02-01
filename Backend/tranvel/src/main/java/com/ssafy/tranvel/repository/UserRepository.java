@@ -6,11 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByEmail(String email);
     User findByNickName(String nickName);
-    Optional<User> findOneWithAuthoritiesByEmail(String email);
+    Optional<User> findOneWithAuthoritiesById(int Id);
 }

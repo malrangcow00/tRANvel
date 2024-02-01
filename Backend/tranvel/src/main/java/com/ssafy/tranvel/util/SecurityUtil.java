@@ -12,9 +12,29 @@ public class SecurityUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
 
+    // Prevent instantiation
     private SecurityUtil() {}
 
-    public static Optional<String> getCurrentUserEmail() {
+//    public static Optional<String> getCurrentUserEmail() {
+//
+//        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication == null) {
+//            logger.debug("there is no authentication in security context");
+//            return Optional.empty();
+//        }
+//
+//        String email = null;
+//        if (authentication.getPrincipal() instanceof UserDetails springSecurityUser) {
+//            email = springSecurityUser.getUsername();
+//        } else if (authentication.getPrincipal() instanceof String) {
+//            email = (String) authentication.getPrincipal();
+//        }
+//
+//        return Optional.ofNullable(email);
+//    }
+
+    public static Optional<String> getCurrentUserId() {
 
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -23,13 +43,13 @@ public class SecurityUtil {
             return Optional.empty();
         }
 
-        String email = null;
+        String id = null;
         if (authentication.getPrincipal() instanceof UserDetails springSecurityUser) {
-            email = springSecurityUser.getUsername();
+            id = springSecurityUser.getUsername();
         } else if (authentication.getPrincipal() instanceof String) {
-            email = (String) authentication.getPrincipal();
+            id = (String) authentication.getPrincipal();
         }
 
-        return Optional.ofNullable(email);
+        return Optional.ofNullable(id);
     }
 }
