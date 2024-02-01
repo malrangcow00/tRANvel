@@ -42,7 +42,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssafy.tranvel.R
 import com.ssafy.tranvel.presentation.screen.login.component.ButtonComponent
 import com.ssafy.tranvel.presentation.screen.login.component.TextButtonComponent
@@ -52,10 +51,11 @@ import com.ssafy.tranvel.presentation.ui.theme.TextColor
 
 @Composable
 fun LoginScreen(
-    loginViewModel: LoginViewModel = hiltViewModel(),
+    loginViewModel: LoginViewModel,
     context: Context = LocalContext.current,
     onNavigateToRegister: ()-> (Unit),
-    onNavigateToFound: () -> (Unit)
+    onNavigateToFound: () -> (Unit),
+    onNavigateToHome:() -> (Unit)
 ) {
     val uiState: String by loginViewModel.uiState.collectAsState(initial = "")
     var isError by remember { mutableStateOf(false) }
@@ -67,6 +67,7 @@ fun LoginScreen(
         "SUCCESS" -> {
             // 메인 화면으로 이동
             Log.d("MYTAG", "LoginScreen: success")
+            onNavigateToHome()
         }
         // 로그인 실패시
         "ERROR" -> {
