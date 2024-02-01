@@ -2,6 +2,7 @@ package com.ssafy.tranvel.presentation.screen.userInfoModification.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,19 +19,25 @@ import androidx.compose.ui.unit.dp
 import com.ssafy.tranvel.R
 
 @Composable
-fun UserInfoModifyProfileImage(){
+fun UserInfoModifyProfileImage() {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(top = 40.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 40.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id= R.drawable.logo),
+            painter = painterResource(id = R.drawable.logo),
             contentDescription = "default profile image",
             contentScale = ContentScale.Fit,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
                 .size(100.dp)
                 .clip(CircleShape)
                 .border(1.dp, Color(0xFFDEF5E5), CircleShape)
+                .clickable {
+
+                }
         )
     }
 }

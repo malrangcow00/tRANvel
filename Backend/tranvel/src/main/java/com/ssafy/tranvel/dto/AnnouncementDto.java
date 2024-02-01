@@ -4,12 +4,15 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter @Setter
-public class UserSignInDto {
+public class AnnouncementDto {
 
     @NotEmpty
-    private String email;
+    private String title;
 
     @NotEmpty
-    private String password;
+    private String content;
+
 }

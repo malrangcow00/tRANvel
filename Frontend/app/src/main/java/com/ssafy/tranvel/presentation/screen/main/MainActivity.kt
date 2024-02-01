@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.ssafy.tranvel.presentation.screen.DemoAppNavHost
-import com.ssafy.tranvel.presentation.screen.found.FoundPasswordScreen
-import com.ssafy.tranvel.presentation.screen.login.LoginScreen
+import com.ssafy.tranvel.presentation.navigation.NavGraph
 import com.ssafy.tranvel.presentation.ui.theme.TRANvelTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,7 +22,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color.White
                 ) {
-                    DemoAppNavHost()
+//                    FoundPasswordScreen()
+                    NavGraph()
                 }
             }
         }

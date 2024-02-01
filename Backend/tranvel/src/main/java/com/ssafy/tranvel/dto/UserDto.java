@@ -1,13 +1,15 @@
 package com.ssafy.tranvel.dto;
 
-
-import jakarta.annotation.Nullable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter @Setter
-public class UserSignUpDto {
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserDto {
 
     @NotEmpty
     private String email;
@@ -15,6 +17,7 @@ public class UserSignUpDto {
     @NotEmpty
     private String nickName;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotEmpty
     private String password;
 
