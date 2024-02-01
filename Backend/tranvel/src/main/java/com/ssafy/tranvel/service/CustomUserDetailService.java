@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,24 +26,34 @@ public class CustomUserDetailService implements UserDetailsService {
     @Override
     @Transactional
     // make return object of UserDetails from user and authority info
-    public UserDetails loadUserByUsername(final String email) {
-
-        return userRepository.findOneWithAuthoritiesByEmail(email)
-                .map(user -> createUser(email, user))
-                .orElseThrow(() -> new UsernameNotFoundException(email + " cannot found"));
-    }
-
-    private org.springframework.security.core.userdetails.User createUser(String email, User user) {
-        if (!user.isActivated()) {
-            throw new RuntimeException(email + " is not activated");
+    // 수정 필요
+    public UserDetails loadUserByUsername(final String id) {
+        int userId;
+        try {
+            userId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException(id + " is not a valid user id");
         }
 
-        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
-                .collect(Collectors.toList());
+        return userRepository.findOneWithAuthoritiesById(userId)
+                .map(user -> createUser(id, user))
+                .orElseThrow(() -> new UsernameNotFoundException(id + " cannot found"));
+    }
+
+    private org.springframework.security.core.userdetails.User createUser(String id, User user) {
+        if (!user.isActivated()) {
+            throw new RuntimeException(id + " is not activated");
+        }
+
+//        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
+//                .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
+//                .collect(Collectors.toList());
+        // 권한 삭제로 인해 임시로 빈 권한 제공
+        List<GrantedAuthority> grantedAuthorities = Collections.emptyList();
 
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
+//                user.getEmail(),
+                String.valueOf(user.getId()),
                 user.getPassword(),
                 grantedAuthorities);
     }

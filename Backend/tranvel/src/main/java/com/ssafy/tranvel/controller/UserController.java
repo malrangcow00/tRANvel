@@ -13,6 +13,8 @@ import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.EmailAuthService;
 import com.ssafy.tranvel.service.UserService;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -39,17 +41,20 @@ public class UserController {
     private final NickNameDao nickNameDao;
     private final EmailAuthService emailAuthService;
 
-    @GetMapping("/auth/{email}/profile")
+//    public Long getUserIdFromToken() {
+//        Claims claims = Jwts.parserBuilder()
+//                .setSigningKey()
+//                .build()
+//                .parseClaimsJws()
+//                .getBody();
+//        return claims.get("userId", Long.class);
+//    }
+
+    @GetMapping("/auth/{user-id}/profile")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<User> getMyUserInfo() {
         return ResponseEntity.ok(userService.getMyUserWithAuthorities().get());
     }
-
-//    @GetMapping("/auth/{email}/profile")
-//    @PreAuthorize("hasAnyRole('ADMIN')")
-//    public ResponseEntity<User> getUserInfo(@PathVariable String email) {
-//        return ResponseEntity.ok(userService.getUserWithAuthorities(email).get());
-//    }
 
     private final InquiryRepository inquiryRepository;
 
@@ -82,7 +87,7 @@ public class UserController {
     }
 
     // 회원 문의글
-    @PostMapping("/auth/{userid}/inquiry")
+    @PostMapping("/auth/{user-id}/inquiry")
     public ResponseEntity<String> createInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
 
         Inquiry inquiry = Inquiry.builder()
@@ -96,9 +101,9 @@ public class UserController {
     }
 
     // 나중에 토큰으로 바꿔주세요
-    // 바꿀 때 {userid} 삭제
-    @GetMapping("/auth/{userid}/inquiry")
-    public ResponseEntity<List<Inquiry>> searchAllInquiries(@RequestBody @Validated @PathVariable("userid") int userId) {
+    // 바꿀 때 {user-id} 삭제
+    @GetMapping("/auth/{user-id}/inquiry")
+    public ResponseEntity<List<Inquiry>> searchAllInquiries(@RequestBody @Validated @PathVariable("user-id") int userId) {
         // Optional<Inquiry> inquiries = inquiryRepository.findByUser_Id(userId);
         Optional<User> user = userRepository.findById(userId);
         // get 대신 orElse 수정

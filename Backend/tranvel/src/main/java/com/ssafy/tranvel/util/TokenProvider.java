@@ -1,6 +1,6 @@
 package com.ssafy.tranvel.util;
 
-import com.ssafy.tranvel.entity.Authority;
+//import com.ssafy.tranvel.entity.Authority;
 import com.ssafy.tranvel.entity.User;
 
 import org.slf4j.Logger;
@@ -14,9 +14,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,6 +29,9 @@ public class TokenProvider implements InitializingBean {
 
     private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
     private static final String AUTHORITIES_KEY = "auth";
+
+//    @Value("${jwt.secret}")
+//    private String secret;
     private final String secret;
     private final long tokenValidityInMilliseconds;
     private Key key;
@@ -42,7 +45,7 @@ public class TokenProvider implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -55,11 +58,14 @@ public class TokenProvider implements InitializingBean {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
+        User principal = (User) authentication.getPrincipal();
+
         return Jwts.builder()
                 .setSubject(authentication.getName())
+                .claim("userId", principal.getId())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
-                .setExpiration(validity) // default: non-expired token
+//                .setExpiration(validity) // temp: non-expired token
                 .compact();
     }
 
@@ -76,9 +82,9 @@ public class TokenProvider implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        Set<Authority> authoritySet = authorities.stream()
-                .map(authority -> new Authority(authority.getAuthority()))
-                .collect(Collectors.toSet());
+//        Set<Authority> authoritySet = authorities.stream()
+//                .map(authority -> new Authority(authority.getAuthority()))
+//                .collect(Collectors.toSet());
 
 //        User principal = new User(claims.getSubject(), "", authorities);
         User principal = User.builder()
@@ -88,7 +94,7 @@ public class TokenProvider implements InitializingBean {
                 .profileImage(null)
                 .balance(0)
                 .activated(true)
-                .authorities(authoritySet)
+//                .authorities(authoritySet)
                 .build();
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);

@@ -71,17 +71,13 @@ public class UserService {
         userRepository.save(user);
         }
 
-    // method for bring user & authority info
-    @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthorities(String email) {
-        return userRepository.findOneWithAuthoritiesByEmail(email);
-    }
-
     // method for bring email from security context
     @Transactional(readOnly = true)
     public Optional<User> getMyUserWithAuthorities() {
         return SecurityUtil
-                .getCurrentUserEmail()
-                .flatMap(userRepository::findOneWithAuthoritiesByEmail);
+                .getCurrentUserId()
+//                .getCurrentUserEmail()
+                .map(Integer::parseInt)
+                .flatMap(userRepository::findOneWithAuthoritiesById);
     }
 }

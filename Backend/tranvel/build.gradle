@@ -23,34 +23,46 @@ repositories {
 
 dependencies {
 
+	// Spring Boot Stater
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
   	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// Spring Security
 	implementation 'org.springframework.security:spring-security-web'
 	implementation 'org.springframework.security:spring-security-config'
+
+	// Spring Open API
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0' // http://localhost:8080/swagger-ui/index.html
+
+	// Apache Commons Lang
 	implementation 'org.apache.commons:commons-lang3'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'mysql:mysql-connector-java:8.0.26'
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
-	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
-	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
-	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// Lombok
 	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// Spring Boot DevTools
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// Spring Boot Configuration Processor
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	// Spring Boot Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 
 	// JWT
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
-
-	// DB
-
-
+	// DB Driver
+	implementation 'mysql:mysql-connector-java:8.0.26'
+	runtimeOnly 'com.mysql:mysql-connector-j'
 }
 
 tasks.named('test') {
