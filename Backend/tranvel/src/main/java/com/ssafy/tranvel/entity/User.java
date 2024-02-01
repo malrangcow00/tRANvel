@@ -1,6 +1,7 @@
 package com.ssafy.tranvel.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -52,5 +53,6 @@ public class User {
 //    private Set<Authority> authorities;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<Inquiry> inquiryList;
 }

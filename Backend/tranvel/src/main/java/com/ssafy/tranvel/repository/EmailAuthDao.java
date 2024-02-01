@@ -12,7 +12,7 @@ import java.time.Duration;
 public class EmailAuthDao {
     // redis 에 저장되는 Key 값이 중복되지 않도록 상수를 선언
     private final String CONST = "code:";
-    private final int LIMIT_TIME = 30 * 60; // 이메일 인증 코드 유효시간 30분(임시)
+    private final int LIMIT_TIME = 3 * 60; // 이메일 인증 코드 유효시간 3
 
     private final StringRedisTemplate stringRedisTemplate;
 

@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +29,7 @@ public class Inquiry {
     private String datetime;
 
     @ManyToOne
+    @JsonBackReference
     private User user;
 
 

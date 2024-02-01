@@ -11,6 +11,7 @@ import com.ssafy.tranvel.repository.InquiryRepository;
 import com.ssafy.tranvel.repository.NickNameDao;
 import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.EmailAuthService;
+import com.ssafy.tranvel.service.InquiryService;
 import com.ssafy.tranvel.service.UserService;
 
 import io.jsonwebtoken.Claims;
@@ -57,6 +58,7 @@ public class UserController {
     }
 
     private final InquiryRepository inquiryRepository;
+    private final InquiryService inquiryService;
 
     private ResponseDto response;
 
@@ -87,17 +89,13 @@ public class UserController {
     }
 
     // 회원 문의글
-    @PostMapping("/auth/{user-id}/inquiry")
-    public ResponseEntity<String> createInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
+    @PostMapping("/auth/inquiry")
+    public ResponseEntity<Inquiry> postInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
 
-        Inquiry inquiry = Inquiry.builder()
-                .title(inquiryDto.getTitle())
-                .content(inquiryDto.getContent())
-                .build();
+        response = new ResponseDto(true, "문의 작성 완료");
+        Inquiry inquiry = inquiryService.createInquiry(inquiryDto);
 
-        inquiryRepository.save(inquiry);
-
-        return ResponseEntity.status(HttpStatus.OK).body("게시글 작성 완료");
+        return ResponseEntity.status(HttpStatus.OK).body(inquiry);
     }
 
     // 나중에 토큰으로 바꿔주세요
