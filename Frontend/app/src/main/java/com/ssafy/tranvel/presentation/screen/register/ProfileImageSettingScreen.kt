@@ -89,7 +89,7 @@ fun ProfileImageSettingScreen(
         Button(
             onClick = {
                 onNextButtonClicked()
-//                viewModel.registerUser()
+                viewModel.registerUser()
             },
             modifier = Modifier
                 .wrapContentHeight()

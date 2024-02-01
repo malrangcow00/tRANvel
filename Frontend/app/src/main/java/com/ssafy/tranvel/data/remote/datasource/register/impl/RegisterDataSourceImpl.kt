@@ -3,8 +3,8 @@ package com.ssafy.tranvel.data.remote.datasource.register.impl
 import com.ssafy.tranvel.data.model.TokenDto
 import com.ssafy.tranvel.data.model.request.EmailAuthRequest
 import com.ssafy.tranvel.data.model.request.EmailInfoRequest
-import com.ssafy.tranvel.data.model.request.LoginRequest
 import com.ssafy.tranvel.data.model.request.UserRequest
+import com.ssafy.tranvel.data.model.request.NicknameRequest
 import com.ssafy.tranvel.data.model.response.DataResponse
 import com.ssafy.tranvel.data.model.response.EmailAuthResponse
 import com.ssafy.tranvel.data.model.response.EmailInfoResponse
@@ -20,9 +20,9 @@ class RegisterDataSourceImpl @Inject constructor(
 ) : RegisterDataSource, BaseDataSource() {
 
     override suspend fun getUser(
-        loginRequest: LoginRequest
+        userRequest: UserRequest
     ): Flow<DataState<DataResponse<TokenDto>>> =
-        getResult { registerService.login(loginRequest) }
+        getResult { registerService.login(userRequest) }
 
     override suspend fun sendEmailAuth(
         emailInfoRequest: EmailInfoRequest
@@ -38,7 +38,7 @@ class RegisterDataSourceImpl @Inject constructor(
     override suspend fun registerUser(userRequest: UserRequest): Flow<DataState<EmailInfoResponse>> =
         getResult { registerService.registerUser(userRequest) }
 
-    override suspend fun duplicateNickName(nickname: String): Flow<DataState<EmailInfoResponse>> =
-        getResult { registerService.duplicateNickName(nickname) }
+    override suspend fun duplicateNickName(nicknameRequest: NicknameRequest): Flow<DataState<EmailInfoResponse>> =
+        getResult { registerService.duplicateNickName(nicknameRequest) }
 
 }
