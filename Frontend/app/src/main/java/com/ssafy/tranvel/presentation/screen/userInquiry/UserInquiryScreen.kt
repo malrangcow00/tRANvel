@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun UserInquiryScreen(
-    viewModel: UserInquirViewModel,
-    navigateToDetail: (UserInquiryDto?) -> Unit
+//    viewModel: UserInquirViewModel,
+//    navigateToDetail: (UserInquiryDto?) -> Unit
 ){
 
 }

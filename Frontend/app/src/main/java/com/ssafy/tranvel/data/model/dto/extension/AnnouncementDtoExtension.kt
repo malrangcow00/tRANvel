@@ -4,7 +4,7 @@ import com.ssafy.tranvel.data.model.Result
 import com.ssafy.tranvel.data.model.dto.AnnouncementDto
 
 fun Result.toAnnouncementDto() = AnnouncementDto(
-    announcementTitle, announcementContents, announcementTime
+    title, content, time
 )
 
-fun List<Result>.toAnnouncementDtoList() = map { it.toAnnouncementDto()}
+fun List<Result>.toAnnouncementDtoList() = map { it.toAnnouncementDto() }

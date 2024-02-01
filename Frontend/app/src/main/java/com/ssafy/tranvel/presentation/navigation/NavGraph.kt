@@ -14,6 +14,7 @@ import com.ssafy.tranvel.presentation.screen.announcement.navigation.announcemen
 import com.ssafy.tranvel.presentation.screen.announcement.navigation.navigateAnnouncementDetail
 import com.ssafy.tranvel.presentation.screen.login.LoginScreen
 import com.ssafy.tranvel.presentation.screen.register.navigation.registerGraph
+//import com.ssafy.tranvel.presentation.screen.userInfoModification.navigation.userInfoModifyScreen
 
 @Composable
 fun NavGraph(){
@@ -24,10 +25,10 @@ fun NavGraph(){
 
     Scaffold(
     ){
-            innerPadding ->
+        innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "login_screen",
+            startDestination = "announcement_route",
             Modifier.padding(innerPadding)
         ){
             announcementScreen { navController.navigateAnnouncementDetail()}
@@ -38,6 +39,7 @@ fun NavGraph(){
                 }
             }
             registerGraph(navController)
+//            userInfoModifyScreen()
         }
     }
 }

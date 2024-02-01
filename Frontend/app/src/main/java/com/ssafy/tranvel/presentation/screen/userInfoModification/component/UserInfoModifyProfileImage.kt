@@ -41,3 +41,7 @@ fun UserInfoModifyProfileImage() {
         )
     }
 }
+
+fun loadImage(){
+
+}

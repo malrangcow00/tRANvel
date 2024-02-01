@@ -15,6 +15,7 @@ import com.ssafy.tranvel.domain.usecase.register.SendEmailAuthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -36,11 +37,6 @@ class RegisterUserViewModel @Inject constructor(
     val verification: MutableState<String> = mutableStateOf("")
     val verificationCode: MutableState<String> = mutableStateOf("")
 
-    private val _visibilityPassword: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val visibilityPassword: StateFlow<Boolean> = _visibilityPassword
-    private val _visibilityConfirmPassword: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val visibilityConfirmPassword: StateFlow<Boolean> = _visibilityConfirmPassword
-
     private val _currentState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val currentState: StateFlow<Boolean> = _currentState
     private val _authButtonState: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -49,14 +45,6 @@ class RegisterUserViewModel @Inject constructor(
     val resetButtonState: StateFlow<Boolean> = _resetButtonState
     fun setBitmap(bitmap: Bitmap) {
         _bitmap.value = bitmap
-    }
-
-    fun changePasswordVisibility() {
-        _visibilityPassword.value = !_visibilityPassword.value
-    }
-
-    fun changeConfirmPasswordVisibility() {
-        _visibilityConfirmPassword.value = !_visibilityConfirmPassword.value
     }
 
     fun checkId(): Boolean {
@@ -73,6 +61,7 @@ class RegisterUserViewModel @Inject constructor(
         if (password.value == "") {
             return true
         }
+
         return pattern.matcher(password.value).matches()
     }
 
