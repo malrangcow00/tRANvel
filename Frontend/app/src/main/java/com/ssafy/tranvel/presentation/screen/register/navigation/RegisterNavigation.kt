@@ -18,8 +18,7 @@ fun NavGraphBuilder.registerGraph(navController: NavController) {
             EmailAuthScreen(
                 viewModel = hiltViewModel(it)
             ) {
-                navController.navigate("password_setting_screen") {
-                }
+                navController.navigate("password_setting_screen")
             }
         }
 
@@ -30,8 +29,7 @@ fun NavGraphBuilder.registerGraph(navController: NavController) {
             PasswordSettingScreen(
                 viewModel = hiltViewModel(parentEntry)
             ) {
-                navController.navigate("nickname_setting_screen") {
-                }
+                navController.navigate("nickname_setting_screen")
             }
         }
 
@@ -42,8 +40,7 @@ fun NavGraphBuilder.registerGraph(navController: NavController) {
             NickNameSettingScreen(
                 viewModel = hiltViewModel(parentEntry)
             ) {
-                navController.navigate("profile_image_setting_screen") {
-                }
+                navController.navigate("profile_image_setting_screen")
             }
         }
 
@@ -54,9 +51,7 @@ fun NavGraphBuilder.registerGraph(navController: NavController) {
             ProfileImageSettingScreen(
                 viewModel = hiltViewModel(parentEntry)
             ) {
-                navController.navigate("login_screen") {
-                    navController.navigate(announcementNavigationRoute)
-                }
+                navController.popBackStack(route = "login_screen", inclusive = false)
             }
         }
     }
