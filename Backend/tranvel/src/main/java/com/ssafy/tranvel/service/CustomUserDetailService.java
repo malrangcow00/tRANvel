@@ -7,7 +7,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -25,7 +23,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     @Transactional
-    // make return object of UserDetails from user and authority info
+    // make return object of UserDetails from user and authority info (권한 정보 제거됨)
     // 수정 필요
     public UserDetails loadUserByUsername(final String id) {
         int userId;
@@ -35,7 +33,7 @@ public class CustomUserDetailService implements UserDetailsService {
             throw new RuntimeException(id + " is not a valid user id");
         }
 
-        return userRepository.findOneWithAuthoritiesById(userId)
+        return userRepository.findById(userId)
                 .map(user -> createUser(id, user))
                 .orElseThrow(() -> new UsernameNotFoundException(id + " cannot found"));
     }
@@ -45,14 +43,9 @@ public class CustomUserDetailService implements UserDetailsService {
             throw new RuntimeException(id + " is not activated");
         }
 
-//        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
-//                .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
-//                .collect(Collectors.toList());
-        // 권한 삭제로 인해 임시로 빈 권한 제공
         List<GrantedAuthority> grantedAuthorities = Collections.emptyList();
 
         return new org.springframework.security.core.userdetails.User(
-//                user.getEmail(),
                 String.valueOf(user.getId()),
                 user.getPassword(),
                 grantedAuthorities);

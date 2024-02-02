@@ -13,9 +13,10 @@ import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.EmailAuthService;
 import com.ssafy.tranvel.service.InquiryService;
 import com.ssafy.tranvel.service.UserService;
+import com.ssafy.tranvel.utility.TokenProvider;
+import com.ssafy.tranvel.security.JwtFilter;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,21 +43,32 @@ public class UserController {
     private final EmailAuthDao emailAuthDao;
     private final NickNameDao nickNameDao;
     private final EmailAuthService emailAuthService;
+    private final TokenProvider tokenProvider;
+    private final JwtFilter jwtFilter;
 
-//    public Long getUserIdFromToken() {
-//        Claims claims = Jwts.parserBuilder()
-//                .setSigningKey()
-//                .build()
-//                .parseClaimsJws()
-//                .getBody();
-//        return claims.get("userId", Long.class);
-//    }
-
-    @GetMapping("/auth/{user-id}/profile")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<User> getMyUserInfo() {
-        return ResponseEntity.ok(userService.getMyUserWithAuthorities().get());
+    // 헤더의 토큰에서 ID 가져오기
+    public Long getUserId(HttpServletRequest request) {
+        String jwt = jwtFilter.resolveToken(request);
+        return tokenProvider.getUserIdFromToken(jwt);
     }
+
+    @GetMapping("/auth/profile")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<UserDto> getUserProfile(HttpServletRequest request) {
+        Long userId = getUserId(request);
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Optional<User> user = userRepository.findById(userId);
+        if (!user.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        UserDto userDto = UserDto.fromEntity(user.get());
+        return ResponseEntity.ok(userDto);
+    }
+
 
     private final InquiryRepository inquiryRepository;
     private final InquiryService inquiryService;
