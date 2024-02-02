@@ -1,6 +1,5 @@
 package com.ssafy.tranvel.utility;
 
-//import com.ssafy.tranvel.entity.Authority;
 import com.ssafy.tranvel.entity.User;
 
 import org.slf4j.Logger;
@@ -72,7 +71,7 @@ public class TokenProvider implements InitializingBean {
                 .claim("userId", principal.getId())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
-//                .setExpiration(validity) // temp: non-expired token
+                .setExpiration(validity)
                 .compact();
     }
 

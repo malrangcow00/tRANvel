@@ -10,16 +10,26 @@ import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.EmailAuthService;
 import com.ssafy.tranvel.service.InquiryService;
 import com.ssafy.tranvel.service.UserService;
+import com.ssafy.tranvel.security.JwtFilter;
+import com.ssafy.tranvel.utility.TokenProvider;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,28 +48,66 @@ public class UserController {
     private final EmailAuthDao emailAuthDao;
     private final NickNameDao nickNameDao;
     private final EmailAuthService emailAuthService;
+    private final TokenProvider tokenProvider;
+    private final JwtFilter jwtFilter;
     private final InquiryRepository inquiryRepository;
     private final InquiryService inquiryService;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     private ResponseDto response;
 
+    // 헤더의 토큰에서 ID 가져오기
+    public Long getUserId(HttpServletRequest request) {
+        String jwt = jwtFilter.resolveToken(request);
+        return tokenProvider.getUserIdFromToken(jwt);
+    }
 
-//    public Long getUserIdFromToken() {
-//        Claims claims = Jwts.parserBuilder()
-//                .setSigningKey()
-//                .build()
-//                .parseClaimsJws()
-//                .getBody();
-//        return claims.get("userId", Long.class);
-//    }
-
-//    @GetMapping("/auth/{user-id}/profile")
+    @GetMapping("/auth/profile")
 //    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-//    public ResponseEntity<User> getMyUserInfo() {
-//        return ResponseEntity.ok(userService.getMyUserWithAuthorities().get());
+    public ResponseEntity<UserDto> getUserProfile(HttpServletRequest request) {
+
+        Long userId = getUserId(request);
+
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Optional<User> user = userRepository.findById(userId);
+
+        if (!user.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        UserDto userDto = UserDto.fromEntity(user.get());
+
+//        String jwt = tokenProvider.createToken(authentication);
+//
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+
+        return ResponseEntity.ok(userDto);
+    }
+
+//    @GetMapping("/auth/profile")
+//    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+//    public ResponseEntity<UserDto> getUserProfile() {
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+//
+//        Long userId = tokenProvider.getUserIdFromToken((String) authentication.getPrincipal());
+//
+//        Optional<User> user = userRepository.findById(userId);
+//        if (!user.isPresent()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
+//
+//        UserDto userDto = UserDto.fromEntity(user.get());
+//        return ResponseEntity.ok(userDto);
 //    }
-
-
 
     @PostMapping("/duplication")
     public ResponseEntity<ResponseDto> nickNameCheck(@RequestBody @Validated
@@ -72,6 +120,33 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+//    @PostMapping("/signin")
+//    public ResponseEntity<ResponseDto> signinUser(@RequestBody @Validated LoginDto loginDto) {
+//        Optional<User> user = userRepository.findByEmail(loginDto.getEmail());
+//        if (user.isEmpty()) {
+//            response = new ResponseDto(false, "회원 정보가 없습니다.", null);
+//            return ResponseEntity.status(HttpStatus.OK).body(response);
+//        }
+//        if (!user.get().getPassword().equals(loginDto.getPassword())) {
+//            response = new ResponseDto(false, "비밀번호가 일치하지 않습니다.", null);
+//            return ResponseEntity.status(HttpStatus.OK).body(response);
+//        }
+//
+//        UsernamePasswordAuthenticationToken authenticationToken =
+//                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+//
+//        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        String jwt = tokenProvider.createToken(authentication);
+//
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+//
+//        response = new ResponseDto(true, "로그인 성공", user.get().getId());
+//        return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(response);
+//    }
+
     @PostMapping("/signin")
     public ResponseEntity<ResponseDto> signinUser(@RequestBody @Validated LoginDto loginDto) {
         Optional<User> user = userRepository.findByEmail(loginDto.getEmail());
@@ -83,6 +158,7 @@ public class UserController {
             response = new ResponseDto(false, "비밀번호가 일치하지 않습니다.", null);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
+
         response = new ResponseDto(true, "로그인 성공", user.get().getId());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
