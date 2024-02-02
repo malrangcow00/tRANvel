@@ -13,10 +13,9 @@ import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.EmailAuthService;
 import com.ssafy.tranvel.service.InquiryService;
 import com.ssafy.tranvel.service.UserService;
-import com.ssafy.tranvel.utility.TokenProvider;
-import com.ssafy.tranvel.security.JwtFilter;
 
-import jakarta.servlet.http.HttpServletRequest;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -24,7 +23,6 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,46 +41,37 @@ public class UserController {
     private final EmailAuthDao emailAuthDao;
     private final NickNameDao nickNameDao;
     private final EmailAuthService emailAuthService;
-    private final TokenProvider tokenProvider;
-    private final JwtFilter jwtFilter;
-
-    // 헤더의 토큰에서 ID 가져오기
-    public Long getUserId(HttpServletRequest request) {
-        String jwt = jwtFilter.resolveToken(request);
-        return tokenProvider.getUserIdFromToken(jwt);
-    }
-
-    @GetMapping("/auth/profile")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<UserDto> getUserProfile(HttpServletRequest request) {
-        Long userId = getUserId(request);
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        Optional<User> user = userRepository.findById(userId);
-        if (!user.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        UserDto userDto = UserDto.fromEntity(user.get());
-        return ResponseEntity.ok(userDto);
-    }
-
-
     private final InquiryRepository inquiryRepository;
     private final InquiryService inquiryService;
 
     private ResponseDto response;
 
+
+//    public Long getUserIdFromToken() {
+//        Claims claims = Jwts.parserBuilder()
+//                .setSigningKey()
+//                .build()
+//                .parseClaimsJws()
+//                .getBody();
+//        return claims.get("userId", Long.class);
+//    }
+
+//    @GetMapping("/auth/{user-id}/profile")
+//    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+//    public ResponseEntity<User> getMyUserInfo() {
+//        return ResponseEntity.ok(userService.getMyUserWithAuthorities().get());
+//    }
+
+
+
     @PostMapping("/duplication")
     public ResponseEntity<ResponseDto> nickNameCheck(@RequestBody @Validated
                                                      NickNameCheckDto nickNameCheckDto) {
         if (!userService.nickNameDuplicationCheck(nickNameCheckDto.getNickName(), nickNameCheckDto.getEmail())) {
-            response = new ResponseDto(false, "이미 존재하는 닉네임 입니다.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            response = new ResponseDto(false, "이미 존재하는 닉네임 입니다.", null);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
-        response = new ResponseDto(true, "사용 가능한 닉네임 입니다.");
+        response = new ResponseDto(true, "사용 가능한 닉네임 입니다.", nickNameCheckDto.getNickName());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -90,54 +79,54 @@ public class UserController {
     public ResponseEntity<ResponseDto> signinUser(@RequestBody @Validated UserDto userDto) {
         Optional<User> user = userRepository.findByEmail(userDto.getEmail());
         if (user.isEmpty()) {
-            response = new ResponseDto(false, "회원 정보가 없습니다.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            response = new ResponseDto(false, "회원 정보가 없습니다.", null);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
         if (!user.get().getPassword().equals(userDto.getPassword())) {
-            response = new ResponseDto(false, "비밀번호가 일치하지 않습니다.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            response = new ResponseDto(false, "비밀번호가 일치하지 않습니다.", null);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
-        response = new ResponseDto(true, "로그인 성공");
+        response = new ResponseDto(true, "로그인 성공", user.get().getId());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 회원 문의글
     @PostMapping("/auth/inquiry")
-    public ResponseEntity<Inquiry> postInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
-
-        response = new ResponseDto(true, "문의 작성 완료");
+    public ResponseEntity<ResponseDto> postInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
         Inquiry inquiry = inquiryService.createInquiry(inquiryDto);
-
-        return ResponseEntity.status(HttpStatus.OK).body(inquiry);
+        response = new ResponseDto(true, "문의 작성 완료", inquiry);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
     @PostMapping("/auth/inquiry/list")
-    public ResponseEntity<List<Inquiry>> getAllInquiries(@RequestBody @Validated InquiryDto inquiryDto) {
-        response = new ResponseDto(true, "전체 문의 글 조회");
+    public ResponseEntity<ResponseDto> getAllInquiries(@RequestBody @Validated InquiryDto inquiryDto) {
         List<Inquiry> inquiries = inquiryService.getAllInquiries(inquiryDto);
-        return ResponseEntity.status(HttpStatus.OK).body(inquiries);
+        response = new ResponseDto(true, "전체 문의 글 조회", inquiries);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
     @PostMapping("/auth/inquiry/detail")
-    public ResponseEntity<Inquiry> getInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
+    public ResponseEntity<ResponseDto> getInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
         Inquiry inquiry = inquiryService.getInquiry(inquiryDto);
-        return  ResponseEntity.status(HttpStatus.OK).body(inquiry);
+        response = new ResponseDto(true, "상세 문의 글 조회", inquiry);
+        return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
     @PutMapping("/auth/inquiry/detail")
-    public ResponseEntity<Inquiry> putInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
+    public ResponseEntity<ResponseDto> putInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
         Inquiry inquiry = inquiryService.updateInquiry(inquiryDto);
-        return ResponseEntity.status(HttpStatus.OK).body(inquiry);
+        response = new ResponseDto(true, "상세 문의 글 수정", inquiry);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
     @DeleteMapping("/auth/inquiry/detail")
     public ResponseEntity<ResponseDto> deleteInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
-        response = new ResponseDto(true, "문의 글이 삭제되었습니다.");
         inquiryService.deleteInquiry(inquiryDto);
+        response = new ResponseDto(true, "문의 글이 삭제되었습니다.", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
