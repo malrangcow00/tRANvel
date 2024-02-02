@@ -4,6 +4,7 @@ spring:
     include:
       - tmp
 #      - JP
+#    active: JP
 
   jpa:
     hibernate:

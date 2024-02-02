@@ -9,5 +9,4 @@ public class TranvelApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TranvelApplication.class, args);
 	}
-
 }
