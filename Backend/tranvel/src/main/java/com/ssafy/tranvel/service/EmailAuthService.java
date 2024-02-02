@@ -1,7 +1,9 @@
 package com.ssafy.tranvel.service;
 
+import com.ssafy.tranvel.dto.EmailDto;
 import com.ssafy.tranvel.repository.EmailAuthDao;
 
+import com.ssafy.tranvel.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
@@ -31,6 +33,11 @@ public class EmailAuthService {
 
     private final EmailAuthDao emailAuthDao;
     private final JavaMailSender emailSender;
+    private final UserRepository userRepository;
+
+    public boolean emailDuplication(EmailDto emailDto) {
+        return userRepository.findByEmail(emailDto.getEmail()).isPresent();
+    }
 
     public String createVerificationCode() {
         Random random = new Random();

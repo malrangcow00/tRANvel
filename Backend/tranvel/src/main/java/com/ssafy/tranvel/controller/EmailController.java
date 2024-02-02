@@ -4,6 +4,7 @@ package com.ssafy.tranvel.controller;
 import com.ssafy.tranvel.dto.EmailDto;
 import com.ssafy.tranvel.dto.UserDto;
 import com.ssafy.tranvel.dto.ResponseDto;
+import com.ssafy.tranvel.entity.User;
 import com.ssafy.tranvel.repository.EmailAuthDao;
 import com.ssafy.tranvel.repository.NickNameDao;
 import com.ssafy.tranvel.service.EmailAuthService;
@@ -34,6 +35,10 @@ public class EmailController {
 
     @PostMapping("/email-auth")
     public ResponseEntity<ResponseDto> sendEmail(@RequestBody @Validated EmailDto emailDto) throws MessagingException, UnsupportedEncodingException {
+        if (emailAuthService.emailDuplication(emailDto)) {
+            response = new ResponseDto(false, "이미 회원가입 된 이메일입니다.", null);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
         emailAuthService.createEmailForm(emailDto.getEmail());
         response = new ResponseDto(true, "인증 코드를 전송하였습니다.", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);

@@ -1,9 +1,6 @@
 package com.ssafy.tranvel.controller;
 
-import com.ssafy.tranvel.dto.InquiryDto;
-import com.ssafy.tranvel.dto.NickNameCheckDto;
-import com.ssafy.tranvel.dto.ResponseDto;
-import com.ssafy.tranvel.dto.UserDto;
+import com.ssafy.tranvel.dto.*;
 import com.ssafy.tranvel.entity.Inquiry;
 import com.ssafy.tranvel.entity.User;
 import com.ssafy.tranvel.repository.EmailAuthDao;
@@ -76,13 +73,13 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<ResponseDto> signinUser(@RequestBody @Validated UserDto userDto) {
-        Optional<User> user = userRepository.findByEmail(userDto.getEmail());
+    public ResponseEntity<ResponseDto> signinUser(@RequestBody @Validated LoginDto loginDto) {
+        Optional<User> user = userRepository.findByEmail(loginDto.getEmail());
         if (user.isEmpty()) {
             response = new ResponseDto(false, "회원 정보가 없습니다.", null);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
-        if (!user.get().getPassword().equals(userDto.getPassword())) {
+        if (!user.get().getPassword().equals(loginDto.getPassword())) {
             response = new ResponseDto(false, "비밀번호가 일치하지 않습니다.", null);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
