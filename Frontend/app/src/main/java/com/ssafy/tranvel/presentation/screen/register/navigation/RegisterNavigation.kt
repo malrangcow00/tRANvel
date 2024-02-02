@@ -6,7 +6,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ssafy.tranvel.presentation.screen.announcement.navigation.announcementNavigationRoute
+import com.ssafy.tranvel.presentation.screen.announcement.navigation.announcementRoute
+import com.ssafy.tranvel.presentation.screen.history.navigation.historyScreen
 import com.ssafy.tranvel.presentation.screen.register.EmailAuthScreen
 import com.ssafy.tranvel.presentation.screen.register.NickNameSettingScreen
 import com.ssafy.tranvel.presentation.screen.register.PasswordSettingScreen
@@ -55,7 +56,7 @@ fun NavGraphBuilder.registerGraph(navController: NavController) {
                 viewModel = hiltViewModel(parentEntry)
             ) {
                 navController.navigate("login_screen") {
-                    navController.navigate(announcementNavigationRoute)
+                    navController.navigate("history_route")
                 }
             }
         }

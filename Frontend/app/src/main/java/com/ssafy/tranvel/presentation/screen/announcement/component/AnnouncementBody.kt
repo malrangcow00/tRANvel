@@ -9,19 +9,31 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.ssafy.tranvel.R
 import com.ssafy.tranvel.data.model.dto.AnnouncementDto
 import com.ssafy.tranvel.presentation.screen.announcement.AnnouncementViewModel
+import com.ssafy.tranvel.presentation.ui.theme.bmjua
 import kotlinx.coroutines.flow.Flow
 
 private const val TAG = "AnnouncementBody"
@@ -76,18 +88,47 @@ private fun Content(
                     AnnouncementShimmer()
                 }
             } else if (pagedData != null && pagingItems != null) {
-                Log.d(TAG, "pagedData : ${pagedData}  / pagingItems : ${pagingItems} / pagingItems.itemCount : ${pagingItems!!.itemCount}")
+                Log.d(
+                    TAG,
+                    "pagedData : ${pagedData}  / pagingItems : ${pagingItems} / pagingItems.itemCount : ${pagingItems!!.itemCount}"
+                )
                 items(count = pagingItems!!.itemCount, key = null) { index ->
                     AnnouncementCard(
-//                        detailClick = {
-//                            clickDetail.invoke(pagingItems!!.get(index))
-//                        },
+                        showDetailAnnouncementClick = {
+                            clickDetail.invoke(pagingItems!!.get(index))
+                        },
                         dto = pagingItems!!.get(index),
                     )
                 }
+            } else {
             }
         }
+        if (!isLoading && (pagedData != null || pagingItems != null)) {
+            Text(
+                modifier = Modifier.align(Alignment.TopCenter),
+                text = "현재 등록된 \n 공지사항이 없어요ㅠㅠ",
+                fontFamily = bmjua,
+                fontSize = 30.sp,
+                textAlign = TextAlign.Center
+            )
+            EmptyIndicator()
+        }
     }
+}
+
+@Composable
+fun EmptyIndicator(
+    modifier: Modifier = Modifier
+) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.emptyanimation))
+    val progress by animateLottieCompositionAsState(
+        composition, true, iterations = LottieConstants.IterateForever, restartOnPlay = false
+    )
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+        modifier = modifier.fillMaxSize()
+    )
 }
 
 @Composable

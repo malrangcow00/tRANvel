@@ -1,11 +1,9 @@
 package com.ssafy.tranvel.presentation.screen.mainMenuDrawer
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -41,7 +39,9 @@ import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 fun MainMenuDrawerScreen(
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     onSettingClicked: () -> Unit,
-    onChatClicked: (String) -> Unit,
+    onAnnouncementClicked: () -> Unit,
+    onInquiryClicked: () -> Unit,
+    onWithdrawalClicked: () -> Unit,
     content: @Composable () -> Unit
 ) {
     Column(
@@ -50,13 +50,13 @@ fun MainMenuDrawerScreen(
             .background(Color.White)
     ) {
         DrawerHeader(onSettingClicked)
-        DrawerMenus()
+        DrawerMenus(onAnnouncementClicked, onInquiryClicked, onWithdrawalClicked)
     }
 }
 
 @Composable
 private fun DrawerHeader(
-    onSettingClicked: () -> Unit
+    onSettingClicked: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -96,7 +96,11 @@ private fun DrawerHeader(
 }
 
 @Composable
-private fun DrawerMenus() {
+private fun DrawerMenus(
+    onAnnouncementClicked: () -> Unit,
+    onInquiryClicked: () -> Unit,
+    onWithdrawalClicked: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -105,8 +109,12 @@ private fun DrawerMenus() {
             .padding(top = 20.dp)
     ) {
         Button(
-            onClick = {},
-            modifier = Modifier.fillMaxWidth().align(Alignment.Start),
+            onClick = {
+                onAnnouncementClicked()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Start),
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color.White),
         ) {
@@ -121,11 +129,15 @@ private fun DrawerMenus() {
 
         Divider(
             color = Color.LightGray,
-            modifier = Modifier.fillMaxWidth().height(1.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
         )
         Spacer(modifier = Modifier.height(5.dp))
         Button(
-            onClick = {},
+            onClick = {
+                onInquiryClicked()
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color.White)
@@ -141,11 +153,15 @@ private fun DrawerMenus() {
 
         Divider(
             color = Color.LightGray,
-            modifier = Modifier.fillMaxWidth().height(1.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
         )
         Spacer(modifier = Modifier.height(5.dp))
         Button(
-            onClick = {},
+            onClick = {
+                onWithdrawalClicked()
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color.White)

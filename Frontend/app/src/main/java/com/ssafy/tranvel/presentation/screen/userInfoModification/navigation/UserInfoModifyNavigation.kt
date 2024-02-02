@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.presentation.screen.userInfoModification.navigation
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -8,16 +9,11 @@ import com.ssafy.tranvel.presentation.screen.userInfoModification.UserInfoModify
 
 const val userInfoModifyNavigationRoute = "userInfoModify_route"
 
-fun NavController.navigateUserInfoModify(
-    navOptions: NavOptions? = null
-){
-    this.navigate(userInfoModifyNavigationRoute)
-}
-
-fun NavGraphBuilder.userInfoModifyScreen(){
+fun NavGraphBuilder.userInfoModifyScreen(navController: NavController){
     composable(userInfoModifyNavigationRoute){
         UserInfoModifyScreen(
-//            hiltViewModel()
+            hiltViewModel(),
+
         )
     }
 }
