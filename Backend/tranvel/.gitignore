@@ -22,6 +22,8 @@ bin/
 *.iws
 *.iml
 *.ipr
+*.ids
+*.xml
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
@@ -311,5 +313,5 @@ obj/
 
 
 application-tmp.yml
-application-JP.yml
+application-secret.yml
 
