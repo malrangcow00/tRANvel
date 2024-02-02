@@ -39,17 +39,10 @@ public class User {
     @Column(name = "Balance")
     private int balance;
 
-    // ERD 추가
+    // ERD 수정
     @JsonIgnore
     @Column(name = "Activated")
     private boolean activated;
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "UserAuthority",
-//            joinColumns = {@JoinColumn(name = "ID", referencedColumnName = "ID")},
-//            inverseJoinColumns = {@JoinColumn(name = "AuthorityName", referencedColumnName = "AuthorityName")})
-//    private Set<Authority> authorities;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Inquiry> inquiryList;

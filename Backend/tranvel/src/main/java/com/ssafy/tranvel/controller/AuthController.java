@@ -3,7 +3,7 @@ package com.ssafy.tranvel.controller;
 import com.ssafy.tranvel.dto.LoginDto;
 import com.ssafy.tranvel.dto.TokenDto;
 import com.ssafy.tranvel.security.JwtFilter;
-import com.ssafy.tranvel.util.TokenProvider;
+import com.ssafy.tranvel.utility.TokenProvider;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;

@@ -2,7 +2,7 @@ package com.ssafy.tranvel.service;
 
 import com.ssafy.tranvel.dto.UserDto;
 import com.ssafy.tranvel.entity.User;
-import com.ssafy.tranvel.util.SecurityUtil;
+//import com.ssafy.tranvel.utility.SecurityUtility;
 import com.ssafy.tranvel.repository.NickNameDao;
 import com.ssafy.tranvel.repository.UserRepository;
 
@@ -71,13 +71,12 @@ public class UserService {
         userRepository.save(user);
         }
 
-    // method for bring email from security context
-    @Transactional(readOnly = true)
-    public Optional<User> getMyUserWithAuthorities() {
-        return SecurityUtil
-                .getCurrentUserId()
-//                .getCurrentUserEmail()
-                .map(Integer::parseInt)
-                .flatMap(userRepository::findOneWithAuthoritiesById);
-    }
+//    // method for bring userId from security context
+//    @Transactional(readOnly = true)
+//    public Optional<User> getUserInfo() {
+//        return SecurityUtility
+//                .getCurrentUserId()
+//                .map(Integer::parseInt)
+//                .flatMap(userRepository::findById);
+//    }
 }

@@ -3,7 +3,7 @@ package com.ssafy.tranvel.config;
 import com.ssafy.tranvel.security.JwtAccessDeniedHandler;
 import com.ssafy.tranvel.security.JwtAuthenticationEntryPoint;
 import com.ssafy.tranvel.security.JwtFilter;
-import com.ssafy.tranvel.util.TokenProvider;
+import com.ssafy.tranvel.utility.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 //import org.springframework.beans.factory.annotation.Configurable;

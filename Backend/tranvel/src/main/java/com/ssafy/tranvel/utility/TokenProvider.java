@@ -1,4 +1,4 @@
-package com.ssafy.tranvel.util;
+package com.ssafy.tranvel.utility;
 
 //import com.ssafy.tranvel.entity.Authority;
 import com.ssafy.tranvel.entity.User;
@@ -21,7 +21,6 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -30,11 +29,19 @@ public class TokenProvider implements InitializingBean {
     private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
     private static final String AUTHORITIES_KEY = "auth";
 
-//    @Value("${jwt.secret}")
-//    private String secret;
-    private final String secret;
+    @Value("${jwt.secret}")
+    private String secret;
     private final long tokenValidityInMilliseconds;
     private Key key;
+
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.get("userId", Long.class);
+    }
 
     public TokenProvider(
             @Value("${jwt.secret}") String secret,
@@ -44,7 +51,7 @@ public class TokenProvider implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() {
+    public void afterPropertiesSet() throws Exception {
         byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -82,11 +89,6 @@ public class TokenProvider implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-//        Set<Authority> authoritySet = authorities.stream()
-//                .map(authority -> new Authority(authority.getAuthority()))
-//                .collect(Collectors.toSet());
-
-//        User principal = new User(claims.getSubject(), "", authorities);
         User principal = User.builder()
                 .email(claims.getSubject())
                 .password("")
@@ -94,7 +96,6 @@ public class TokenProvider implements InitializingBean {
                 .profileImage(null)
                 .balance(0)
                 .activated(true)
-//                .authorities(authoritySet)
                 .build();
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
