@@ -28,8 +28,7 @@ public class S3Config {
     @Value("${cloud.aws.credentials.secret-key}")
     private String secretKey;
 
-    @Value("${cloud.aws.s3.bucketName}")
-    private String bucketName;
+
 
     @Bean
     public AmazonS3 s3Builder() {
