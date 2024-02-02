@@ -1,8 +1,11 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -20,6 +23,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "API_KEY",getApiKey("API_KEY"))
     }
 
     buildTypes {
@@ -40,6 +44,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -51,6 +56,9 @@ android {
     }
 }
 
+fun getApiKey(propertyKey: String): String = gradleLocalProperties(rootDir).getProperty(propertyKey)
+
+
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
@@ -59,6 +67,7 @@ dependencies {
 
     //retrofit2
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     //okhttp3
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
@@ -70,23 +79,27 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.paging:paging-runtime:3.2.1")
+    implementation("androidx.paging:paging-compose:3.3.0-alpha02")
 
     //glide
     ksp("com.github.bumptech.glide:glide:4.14.2")
+    implementation ("com.github.bumptech.glide:compose:1.0.0-beta01")
 
     //hilt
     implementation("com.google.dagger:hilt-android:2.48")
     ksp("com.google.dagger:dagger-compiler:2.48") // Dagger compiler
     ksp("com.google.dagger:hilt-compiler:2.48")
 
+    // Icon
+    implementation("androidx.compose.material:material-icons-extended")
+
     //navermap
 
 
     //viewmodel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
-
-    //firebase
-    implementation("com.firebaseui:firebase-ui-auth:7.2.0")
 
 
     testImplementation("junit:junit:4.13.2")
