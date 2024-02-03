@@ -1,16 +1,16 @@
-package com.ssafy.tranvel.presentation.screen.history.navigation
+package com.ssafy.tranvel.presentation.screen.home.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.ssafy.tranvel.presentation.screen.history.HistoryScreen
+import com.ssafy.tranvel.presentation.screen.home.HomeScreen
 
 
-const val historyRoute = "history_route"
+const val homeRoute = "home_route"
 
-fun NavGraphBuilder.historyScreen(navController: NavController) {
-    composable(historyRoute) {
-        HistoryScreen(
+fun NavGraphBuilder.homeScreen(navController: NavController) {
+    composable(homeRoute) {
+        HomeScreen(
             { navController.navigate("userInfoModify_route") },
             { navController.navigate("announcement_route") },
             { navController.navigate("userWithdrawal_route") }

@@ -12,7 +12,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.tranvel.presentation.screen.announcement.navigation.announcementScreen
 import com.ssafy.tranvel.presentation.screen.found.FoundPasswordScreen
-import com.ssafy.tranvel.presentation.screen.history.navigation.historyScreen
+import com.ssafy.tranvel.presentation.screen.home.navigation.homeScreen
 import com.ssafy.tranvel.presentation.screen.login.LoginScreen
 import com.ssafy.tranvel.presentation.screen.register.navigation.registerGraph
 import com.ssafy.tranvel.presentation.screen.userInfoModification.navigation.userInfoModifyScreen
@@ -42,7 +42,12 @@ fun NavGraph() {
                     onNavigateToFound = {
                         navController.navigate("found_screen")
                     },
-                    onLoginButtonClicked = { navController.navigate("history_route") }
+                    onLoginButtonClicked = {
+                        it.viewModelStore.clear()
+                        navController.navigate("home_route"){
+                            popUpTo("login_screen") { inclusive = true}
+                        }
+                    }
                 )
             }
 
@@ -52,7 +57,7 @@ fun NavGraph() {
                 }
             }
             registerGraph(navController)
-            historyScreen(navController)
+            homeScreen(navController)
             userInfoModifyScreen(navController)
             userWithdrawalScreen(navController)
         }

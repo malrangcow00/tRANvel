@@ -83,11 +83,12 @@ private fun Content(
             contentPadding = PaddingValues(vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            if (isLoading) {
-                items(10) {
-                    AnnouncementShimmer()
-                }
-            } else if (pagedData != null && pagingItems != null) {
+//            if (isLoading) {
+//                items(10) {
+//                    AnnouncementShimmer()
+//                }
+//            } else if (pagedData != null && pagingItems != null) {
+            if (!isLoading && pagedData != null && pagingItems != null) {
                 Log.d(
                     TAG,
                     "pagedData : ${pagedData}  / pagingItems : ${pagingItems} / pagingItems.itemCount : ${pagingItems!!.itemCount}"
@@ -100,8 +101,10 @@ private fun Content(
                         dto = pagingItems!!.get(index),
                     )
                 }
-            } else {
             }
+        }
+        if (isLoading) {
+            AnnouncementLoadingIndicator()
         }
         if (!isLoading && (pagedData != null || pagingItems != null)) {
             Text(
@@ -114,6 +117,21 @@ private fun Content(
             EmptyIndicator()
         }
     }
+}
+
+@Composable
+fun AnnouncementLoadingIndicator(
+    modifier: Modifier = Modifier
+) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loadinganimation))
+    val progress by animateLottieCompositionAsState(
+        composition, true, iterations = LottieConstants.IterateForever, restartOnPlay = false
+    )
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+        modifier = modifier.fillMaxSize()
+    )
 }
 
 @Composable

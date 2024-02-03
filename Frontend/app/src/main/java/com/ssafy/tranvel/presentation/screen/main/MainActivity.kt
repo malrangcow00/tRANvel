@@ -9,7 +9,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.ssafy.tranvel.presentation.navigation.NavGraph
-import com.ssafy.tranvel.presentation.screen.history.HistoryScreen
 import com.ssafy.tranvel.presentation.ui.theme.TRANvelTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,7 +23,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .background(color = Color.White)
                         .fillMaxSize(),
-                    color = Color.White
                 ) {
                     NavGraph()
                 }
