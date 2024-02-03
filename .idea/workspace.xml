@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fcb3a193-2171-42a1-bc20-e622f290c9af" name="Changes" comment="Test: &quot;commit test&quot;" />
+    <list default="true" id="fcb3a193-2171-42a1-bc20-e622f290c9af" name="Changes" comment="Test: &quot;commit test&quot;">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/tranvel/src/main/java/com/ssafy/tranvel/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/tranvel/src/main/java/com/ssafy/tranvel/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/tranvel/src/main/java/com/ssafy/tranvel/service/ImageUploadService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/tranvel/src/main/java/com/ssafy/tranvel/service/ImageUploadService.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -54,8 +62,9 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "feat/s3connect",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/SSAFY/Desktop/GitHub/S10P12D203/Backend/tranvel",
     "node.js.detected.package.eslint": "true",
@@ -124,6 +133,7 @@
       <updated>1705997502945</updated>
       <workItem from="1705997504590" duration="2341000" />
       <workItem from="1706054231201" duration="222000" />
+      <workItem from="1706937964228" duration="603000" />
     </task>
     <task id="LOCAL-00001" summary="Test: &quot;test01.txt created&quot;">
       <option name="closed" value="true" />

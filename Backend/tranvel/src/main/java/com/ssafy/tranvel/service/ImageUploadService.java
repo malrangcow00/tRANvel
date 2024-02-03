@@ -25,9 +25,9 @@ public class ImageUploadService {
 
     @Value("${cloud.aws.s3.bucketName}")
     private String bucketName;
-    public String uploadImage(MultipartFile image, String category, String email) throws IOException {
+    public String uploadImage(MultipartFile image, String category, String imageName) throws IOException {
 //        String fileName = image.getOriginalFilename();
-        String fileName = email;
+        String fileName = imageName;
         InputStream inputStream = image.getInputStream();
 
         ObjectMetadata metadata =  new ObjectMetadata();
