@@ -3,12 +3,12 @@ package com.ssafy.tranvel.presentation.screen.login
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,30 +18,36 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import com.ssafy.tranvel.R
 import com.ssafy.tranvel.presentation.screen.login.component.ButtonComponent
 import com.ssafy.tranvel.presentation.screen.login.component.LoginTextFieldComponent
 import com.ssafy.tranvel.presentation.screen.login.component.TextButtonComponent
+import com.ssafy.tranvel.presentation.screen.register.navigation.registerGraph
 
 
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel,
     context: Context = LocalContext.current,
-    onNextButtonClicked: () -> (Unit),
-    onLoginButtonClicked: () -> (Unit),
+    onNavigateToRegister: ()-> (Unit),
+    onNavigateToFound: () -> (Unit),
+    onNavigateToHome:() -> (Unit),
+    onLoginButtonClicked: () -> (Unit)
 ) {
     val uiState: String by loginViewModel.uiState.collectAsState(initial = "")
+    var isError by remember { mutableStateOf(false) }
+    var isErrorPassword by remember { mutableStateOf(false) }
+    val visibilityPassword: Boolean by loginViewModel.visibilityPassword.collectAsState()
 
     when (uiState) {
         // 로그인 성공시
@@ -67,14 +73,99 @@ fun LoginScreen(
     ) {
         LoginLogo(modifier = Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.height(30.dp))
-
-        LoginTextFieldComponent(
-            info = "아이디", loginViewModel.id,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp)
+                .onFocusChanged {
+                    isError = if (it.isFocused) {
+                        false
+                    } else {
+                        !loginViewModel.checkId()
+                    }
+                },
+            shape = RoundedCornerShape(5.dp),
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Mail,
+                    contentDescription = "mail",
+                    tint = TextColor
+                )
+            },
+            value = loginViewModel.id.value,
+            onValueChange = {
+                loginViewModel.id.value = it
+            },
+            isError = isError,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            label = { Text(text = "아이디") },
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = PrimaryColor,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                focusedLabelColor = TextColor,
+                unfocusedLabelColor = TextColor,
+                errorContainerColor = Color.White,
+                errorLabelColor = Color.Red
+            )
         )
-        LoginTextFieldComponent(
-            info = "비밀번호", loginViewModel.password,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp)
+                .onFocusChanged {
+                    isErrorPassword = if (it.isFocused) {
+                        false
+                    } else {
+                        !loginViewModel.checkPassword()
+                    }
+                },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Lock,
+                    contentDescription = "비밀번호"
+                )
+            },
+            trailingIcon = {
+                if (!visibilityPassword) {
+                    Icon(
+                        imageVector = Icons.Default.VisibilityOff,
+                        contentDescription = "비밀번호",
+                        modifier = Modifier.clickable {
+                            loginViewModel.changePasswordVisibility()
+                        }
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Visibility,
+                        contentDescription = "비밀번호",
+                        modifier = Modifier.clickable {
+                            loginViewModel.changePasswordVisibility()
+                        }
+                    )
+                }
+            },
+            value = loginViewModel.password.value,
+            onValueChange = {
+                loginViewModel.password.value = it
+            },
+            textStyle = TextStyle(color = TextColor),
+            singleLine = true,
+            isError = isErrorPassword,
+            visualTransformation = if (visibilityPassword) VisualTransformation.None else PasswordVisualTransformation(),
+            label = { Text(text = "비밀번호 입력") },
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = PrimaryColor,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                focusedLabelColor = TextColor,
+                unfocusedLabelColor = TextColor,
+                errorContainerColor = Color.White,
+                errorLabelColor = Color.Red,
+                errorTrailingIconColor = TextColor,
+                errorLeadingIconColor = TextColor
+            )
         )
 
         ButtonComponent("sign in") {
@@ -88,10 +179,11 @@ fun LoginScreen(
         ) {
             TextButtonComponent(info = "회원가입") {
                 // 회원가입 화면으로 이동
-                onNextButtonClicked()
+                onNavigateToRegister()
             }
             TextButtonComponent(info = "비밀번호 찾기") {
                 // 비밀번호 찾기 화면으로 이동
+                onNavigateToFound()
             }
         }
     }

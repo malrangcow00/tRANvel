@@ -1,7 +1,7 @@
 package com.ssafy.tranvel.domain.usecase.register
 
 import com.ssafy.tranvel.data.model.TokenDto
-import com.ssafy.tranvel.data.model.request.LoginRequest
+import com.ssafy.tranvel.data.model.request.UserRequest
 import com.ssafy.tranvel.data.model.response.DataResponse
 import com.ssafy.tranvel.data.utils.DataState
 import com.ssafy.tranvel.domain.repository.RegisterRepository
@@ -12,6 +12,6 @@ import javax.inject.Inject
 class GetUserUseCase @Inject constructor(
     private val registerRepository: RegisterRepository
 ) {
-    suspend fun execute(loginRequest: LoginRequest): Flow<DataState<DataResponse<TokenDto>>> =
-        registerRepository.getUser(loginRequest)
+    suspend fun execute(userRequest: UserRequest): Flow<DataState<DataResponse<TokenDto>>> =
+        registerRepository.getUser(userRequest)
 }
