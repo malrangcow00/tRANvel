@@ -5,15 +5,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ssafy.tranvel.presentation.screen.announcement.navigation.announcementNavigationRoute
 import com.ssafy.tranvel.presentation.screen.announcement.navigation.announcementScreen
-import com.ssafy.tranvel.presentation.screen.announcement.navigation.navigateAnnouncementDetail
+import com.ssafy.tranvel.presentation.screen.found.FoundPasswordScreen
+import com.ssafy.tranvel.presentation.screen.history.navigation.historyScreen
 import com.ssafy.tranvel.presentation.screen.login.LoginScreen
 import com.ssafy.tranvel.presentation.screen.register.navigation.registerGraph
+import com.ssafy.tranvel.presentation.screen.userInfoModification.navigation.userInfoModifyScreen
+import com.ssafy.tranvel.presentation.screen.userWithdrawal.navigation.userWithdrawalScreen
 
 @Composable
 fun NavGraph() {
@@ -38,10 +41,6 @@ fun NavGraph() {
                     },
                     onNavigateToFound = {
                         navController.navigate("found_screen")
-                    },
-                    onNavigateToHome = {
-                        navController.navigate("home_screen") {
-                        }
                     },
                     onLoginButtonClicked = { navController.navigate("history_route") }
                 )
