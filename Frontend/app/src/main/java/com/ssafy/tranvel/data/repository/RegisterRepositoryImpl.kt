@@ -1,6 +1,5 @@
 package com.ssafy.tranvel.data.repository
 
-import com.ssafy.tranvel.data.model.TokenDto
 import com.ssafy.tranvel.data.model.request.EmailAuthRequest
 import com.ssafy.tranvel.data.model.request.EmailInfoRequest
 import com.ssafy.tranvel.data.model.request.UserRequest
@@ -19,7 +18,7 @@ import javax.inject.Inject
 class RegisterRepositoryImpl @Inject constructor(
     private val registerDataSource: RegisterDataSource
 ) : RegisterRepository {
-    override suspend fun getUser(userRequest: UserRequest): Flow<DataState<DataResponse<TokenDto>>> =
+    override suspend fun getUser(userRequest: UserRequest): Flow<DataState<DataResponse<Int>>> =
         flow {
             emitAll(registerDataSource.getUser(userRequest))
         }

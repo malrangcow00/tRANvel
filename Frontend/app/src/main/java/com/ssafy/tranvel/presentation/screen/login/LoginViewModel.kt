@@ -26,10 +26,16 @@ class LoginViewModel @Inject constructor(
     val uiState: StateFlow<String> = _uiState
 
     private val _currentState: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val currentState: StateFlow<Boolean> = _currentState
+//    val currentState: StateFlow<Boolean> = _currentState
 
     private val _visibilityPassword: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val visibilityPassword: StateFlow<Boolean> = _visibilityPassword
+
+    fun setUiState() {
+        viewModelScope.launch {
+            _uiState.emit("")
+        }
+    }
 
     fun checkId(): Boolean {
         val validation = "[0-9a-zA-Z]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+\$"
@@ -56,7 +62,11 @@ class LoginViewModel @Inject constructor(
             getUserUseCase.execute(UserRequest(email = id.value, password = password.value, balance = 0, profileImage = "", nickName = "asdf")).collect{
                 when (it) {
                     is DataState.Success -> {
-                        _uiState.emit("SUCCESS")
+                        if (it.data.result) {
+                            _uiState.emit("SUCCESS")
+                        } else {
+                            _uiState.emit("ERROR")
+                        }
                         _currentState.emit(false)
                     }
                     is DataState.Error -> {

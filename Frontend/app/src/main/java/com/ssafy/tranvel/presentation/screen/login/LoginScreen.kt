@@ -3,14 +3,12 @@ package com.ssafy.tranvel.presentation.screen.login
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +20,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -36,19 +35,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.window.Dialog
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -56,9 +49,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ssafy.tranvel.R
 import com.ssafy.tranvel.presentation.screen.login.component.ButtonComponent
-import com.ssafy.tranvel.presentation.screen.login.component.LoginTextFieldComponent
 import com.ssafy.tranvel.presentation.screen.login.component.TextButtonComponent
-import com.ssafy.tranvel.presentation.screen.register.navigation.registerGraph
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 import com.ssafy.tranvel.presentation.ui.theme.TextColor
 
@@ -86,17 +77,23 @@ fun LoginScreen(
         // 로그인 실패시
         "ERROR" -> {
             // 현재 페이지 그대로
-            Toast.makeText(context, "Please, enter your value", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "로그인에 실패하였습니다.", Toast.LENGTH_LONG).show()
+            loginViewModel.setUiState()
         }
         // 통신중
         "LOADING" -> {
             // 로딩 화면 재생
             Log.d("MYTAG", "LoginScreen: loading")
+            LoadingDialog {
+
+            }
         }
     }
 
     Column(
-        modifier = Modifier.padding(50.dp).background(color = Color.White),
+        modifier = Modifier
+            .padding(50.dp)
+            .background(color = Color.White),
         verticalArrangement = Arrangement.Center
     ) {
         LoginLogo(modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -229,4 +226,30 @@ fun LoginLogo(
         progress = { progress },
         modifier = modifier.fillMaxSize(0.5f)
     )
+}
+
+@Composable
+fun LoadingDialog(
+    modifier: Modifier = Modifier,
+    onDismissRequest: () -> Unit
+) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.emptyanimation))
+    val progress by animateLottieCompositionAsState(
+        composition, true, iterations = LottieConstants.IterateForever, restartOnPlay = false
+    )
+    Dialog(onDismissRequest = { onDismissRequest() }) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(16.dp),
+            shape = RoundedCornerShape(16.dp),
+        ) {
+            LottieAnimation(
+                composition = composition,
+                progress = { progress },
+                modifier = modifier.fillMaxSize()
+            )
+        }
+    }
 }
