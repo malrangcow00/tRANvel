@@ -1,6 +1,5 @@
 package com.ssafy.tranvel.data.remote.datasource.register
 
-import com.ssafy.tranvel.data.model.TokenDto
 import com.ssafy.tranvel.data.model.request.EmailAuthRequest
 import com.ssafy.tranvel.data.model.request.EmailInfoRequest
 import com.ssafy.tranvel.data.model.request.UserRequest
@@ -13,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface RegisterDataSource {
 
-    suspend fun getUser(userRequest: UserRequest): Flow<DataState<DataResponse<TokenDto>>>
+    suspend fun getUser(userRequest: UserRequest): Flow<DataState<DataResponse<Int>>>
     suspend fun sendEmailAuth(emailInfoRequest: EmailInfoRequest): Flow<DataState<EmailInfoResponse>>
     suspend fun sendEmailAuthNum(emailAuthRequest: EmailAuthRequest): Flow<DataState<EmailAuthResponse>>
     suspend fun resetPassword(emailInfoRequest: EmailInfoRequest): Flow<DataState<EmailInfoResponse>>
