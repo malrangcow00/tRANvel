@@ -27,7 +27,7 @@ import com.ssafy.tranvel.presentation.screen.announcement.AnnouncementDetailScre
 @Composable
 fun AnnouncementCard(
     dto: AnnouncementDto?,
-//    showDetailAnnouncementClick: () -> Unit
+    showDetailAnnouncementClick: () -> (Unit)
 ) {
     val showDialog = remember { mutableStateOf(false) }
     if(showDialog.value){

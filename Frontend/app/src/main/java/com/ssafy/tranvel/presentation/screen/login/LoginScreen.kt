@@ -4,12 +4,14 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -41,10 +43,22 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ssafy.tranvel.R
 import com.ssafy.tranvel.presentation.screen.login.component.ButtonComponent
+import com.ssafy.tranvel.presentation.screen.login.component.LoginTextFieldComponent
 import com.ssafy.tranvel.presentation.screen.login.component.TextButtonComponent
+import com.ssafy.tranvel.presentation.screen.register.navigation.registerGraph
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 import com.ssafy.tranvel.presentation.ui.theme.TextColor
 
@@ -55,7 +69,7 @@ fun LoginScreen(
     context: Context = LocalContext.current,
     onNavigateToRegister: ()-> (Unit),
     onNavigateToFound: () -> (Unit),
-    onNavigateToHome:() -> (Unit)
+    onLoginButtonClicked: () -> (Unit)
 ) {
     val uiState: String by loginViewModel.uiState.collectAsState(initial = "")
     var isError by remember { mutableStateOf(false) }
@@ -67,7 +81,7 @@ fun LoginScreen(
         "SUCCESS" -> {
             // 메인 화면으로 이동
             Log.d("MYTAG", "LoginScreen: success")
-            onNavigateToHome()
+            onLoginButtonClicked()
         }
         // 로그인 실패시
         "ERROR" -> {
@@ -82,18 +96,10 @@ fun LoginScreen(
     }
 
     Column(
-        modifier = Modifier.padding(50.dp),
+        modifier = Modifier.padding(50.dp).background(color = Color.White),
         verticalArrangement = Arrangement.Center
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = "로고 이미지",
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth()
-                .fillMaxHeight(0.3f)
-        )
+        LoginLogo(modifier = Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.height(30.dp))
         OutlinedTextField(
             modifier = Modifier
@@ -208,4 +214,19 @@ fun LoginScreen(
             }
         }
     }
+}
+
+@Composable
+fun LoginLogo(
+    modifier: Modifier = Modifier
+) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.logorotation))
+    val progress by animateLottieCompositionAsState(
+        composition, true, iterations = LottieConstants.IterateForever, restartOnPlay = false
+    )
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+        modifier = modifier.fillMaxSize(0.5f)
+    )
 }

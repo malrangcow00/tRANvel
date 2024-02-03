@@ -6,7 +6,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ssafy.tranvel.presentation.screen.announcement.navigation.announcementNavigationRoute
+import com.ssafy.tranvel.presentation.screen.announcement.navigation.announcementRoute
+import com.ssafy.tranvel.presentation.screen.history.navigation.historyScreen
 import com.ssafy.tranvel.presentation.screen.register.EmailAuthScreen
 import com.ssafy.tranvel.presentation.screen.register.NickNameSettingScreen
 import com.ssafy.tranvel.presentation.screen.register.PasswordSettingScreen
@@ -18,7 +19,8 @@ fun NavGraphBuilder.registerGraph(navController: NavController) {
             EmailAuthScreen(
                 viewModel = hiltViewModel(it)
             ) {
-                navController.navigate("password_setting_screen")
+                navController.navigate("password_setting_screen") {
+                }
             }
         }
 
@@ -29,7 +31,8 @@ fun NavGraphBuilder.registerGraph(navController: NavController) {
             PasswordSettingScreen(
                 viewModel = hiltViewModel(parentEntry)
             ) {
-                navController.navigate("nickname_setting_screen")
+                navController.navigate("nickname_setting_screen") {
+                }
             }
         }
 
@@ -40,7 +43,8 @@ fun NavGraphBuilder.registerGraph(navController: NavController) {
             NickNameSettingScreen(
                 viewModel = hiltViewModel(parentEntry)
             ) {
-                navController.navigate("profile_image_setting_screen")
+                navController.navigate("profile_image_setting_screen") {
+                }
             }
         }
 
@@ -51,7 +55,9 @@ fun NavGraphBuilder.registerGraph(navController: NavController) {
             ProfileImageSettingScreen(
                 viewModel = hiltViewModel(parentEntry)
             ) {
-                navController.popBackStack(route = "login_screen", inclusive = false)
+                navController.navigate("login_screen") {
+                    navController.navigate("history_route")
+                }
             }
         }
     }

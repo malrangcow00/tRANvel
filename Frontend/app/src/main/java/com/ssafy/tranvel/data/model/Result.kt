@@ -6,9 +6,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Result(
-    val announcementTitle: String,
-    val announcementContents: String,
-    val announcementTime: String
+    val title: String,
+    val content: String,
+    val time: String
 ) : Parcelable {
     companion object{
         fun create(jsonString: String): Result? {
