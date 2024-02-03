@@ -79,6 +79,7 @@ fun ProfileImageSettingScreen(
         }
         ButtonComponent(info = "회원 가입") {
             viewModel.registerUser()
+            onNextButtonClicked()
         }
     }
 }

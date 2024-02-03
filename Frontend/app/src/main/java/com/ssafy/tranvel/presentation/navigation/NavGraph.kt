@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -19,7 +20,7 @@ import com.ssafy.tranvel.presentation.screen.userInfoModification.navigation.use
 import com.ssafy.tranvel.presentation.screen.userWithdrawal.navigation.userWithdrawalScreen
 
 @Composable
-fun NavGraph(){
+fun NavGraph() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -27,18 +28,19 @@ fun NavGraph(){
 
     Scaffold(
         modifier = Modifier.background(color = Color.White)
-    ){
-        innerPadding ->
+    ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = "login_screen",
             Modifier.padding(innerPadding)
-        ){
+        ) {
             announcementScreen { }
             composable(route = "login_screen") {
-                LoginScreen() {
-                    navController.navigate("register")
-                }
+                LoginScreen(
+                    hiltViewModel(),
+                    onNextButtonClicked = { navController.navigate("register") },
+                    onLoginButtonClicked = { navController.navigate("history_route") }
+                )
             }
             registerGraph(navController)
             historyScreen(navController)

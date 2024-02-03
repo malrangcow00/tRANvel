@@ -15,9 +15,9 @@ fun DemoAppNavHost(
     NavHost(navController = navController, startDestination = "login_screen") {
 
         composable(route = "login_screen") {
-            LoginScreen() {
-                navController.navigate("register")
-            }
+//            LoginScreen() {
+//                navController.navigate("register")
+//            }
         }
 
         registerGraph(navController)
