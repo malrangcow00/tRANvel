@@ -15,5 +15,4 @@ public class HistoryImageDto {
     @NotNull
     private String category;
 
-
 }

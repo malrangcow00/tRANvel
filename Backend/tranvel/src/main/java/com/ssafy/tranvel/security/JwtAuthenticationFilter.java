@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String requestUri = httpRequest.getRequestURI();
 
         try {
-            if (isAllowedPath(requestUri)) {
+            if (!isAllowedPath(requestUri)) {
                 // 허용된 경로인 경우 필터 체인 진행
                 chain.doFilter(request, response);
                 return;
@@ -78,10 +78,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private boolean isAllowedPath(String requestUri) {
         // 허용된 경로 리스트
-        List<String> allowedPaths = Arrays.asList("/signup", "/email-auth", "/user/duplication/", "/user/signin");
-//        return allowedPaths.contains(requestUri) || requestUri.startsWith("/swagger") || requestUri.isEmpty();
-        return allowedPaths.stream().anyMatch(requestUri::startsWith);
-
+        List<String> allowedPaths = Arrays.asList("signup", "email-auth", "email-auth/verification", "user/duplication/", "user/signin", "swagger-ui/index.html");
+        return allowedPaths.contains(requestUri) || requestUri.isEmpty();
     }
 
     private String resolveToken(HttpServletRequest request) {
