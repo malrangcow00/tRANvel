@@ -13,6 +13,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 
@@ -28,7 +29,7 @@ public class InquiryService {
         Inquiry inquiry = Inquiry.builder()
                 .title(inquiryDto.getTitle())
                 .content(inquiryDto.getContent())
-                .datetime(LocalDateTime.now().toString())
+                .datetime(LocalDateTime.now(ZoneId.of("Asia/Seoul")).toString())
                 .user(userRepository.findById(inquiryDto.getUserId()).get())
                 .build();
 

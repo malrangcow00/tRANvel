@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class AnnouncementService {
         Announcement announcement = Announcement.builder()
                 .title(announcementDto.getTitle())
                 .content(announcementDto.getContent())
-                .dateTime(LocalDateTime.now().toString())
+                .dateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")).toString())
                 .build();
 
         announcementRepository.save(announcement);
