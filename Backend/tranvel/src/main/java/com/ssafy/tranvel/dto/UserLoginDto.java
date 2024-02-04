@@ -1,6 +1,5 @@
 package com.ssafy.tranvel.dto;
 
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -8,11 +7,13 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginDto {
+@Data
+public class UserLoginDto {
 
     @NotNull
     private String email;
 
     @NotNull
     private String password;
+
 }

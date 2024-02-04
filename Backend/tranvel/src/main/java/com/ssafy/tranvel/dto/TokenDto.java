@@ -1,15 +1,18 @@
 package com.ssafy.tranvel.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
+// 로그인 성공 시, JWT를 반환하는 DTO
+
+@Builder
+@Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class TokenDto {
 
-    private String token;
+    private String grantType; // prefix: Bearer
+    private String accessToken;
+    private String refreshToken;
+
 }

@@ -19,7 +19,7 @@ public class Inquiry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private int id;
+    private Long userId;
 
     @Column(length = 30, nullable = false, name = "Title")
     private String title;
