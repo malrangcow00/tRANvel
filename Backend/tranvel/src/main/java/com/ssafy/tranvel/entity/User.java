@@ -59,7 +59,12 @@ public class User implements UserDetails {
     // UserDetails
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
-    private List<String> roles = new ArrayList<>(Arrays.asList("ADMIN", "USER"));
+    private List<String> roles = new ArrayList<>(Arrays.asList("USER"));
+
+    // 권한 추가
+    public void addRole(String role) {
+        this.roles.add(role);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

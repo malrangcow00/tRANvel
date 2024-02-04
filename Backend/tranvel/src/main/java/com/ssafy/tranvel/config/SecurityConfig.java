@@ -30,9 +30,9 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/signup", "/email-auth", "/user/duplication/", "/user/signin", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/", "/signup", "/email-auth", "/email-auth/verification", "/user/duplication", "/user/signin", "/swagger-ui/**").permitAll()
 //                        .requestMatchers("//").hasRole("USER") // 게임 내 유저 권한 (방장, 총무, 일반)
-//                        .anyRequest().authenticated())
+//                        .anyRequest().authenticated()
                         .anyRequest().permitAll() // 개발 환경을 위해 임시로 모든 요청을 허용
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);

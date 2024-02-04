@@ -97,24 +97,27 @@ public class UserController {
     }
 
     // 사용자 프로필 조회
-//    @GetMapping("/auth/profile")
-//    public ResponseEntity<ResponseDto> getUserProfile() {
-//        try {
-//            String email = SecurityUtility.getCurrentUserId();
-//            Optional<User> user = userRepository.findByEmail(email);
-//
-//            if (!user.isPresent()) {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//            }
-//
-//            UserDto userDto = UserDto.fromEntity(user.get());
-//            return ResponseEntity.ok(new ResponseDto(true, "사용자 프로필 정보", userDto));
-//        } catch (Exception e) {
-//            log.error("프로필 조회 중 오류 발생", e);
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(new ResponseDto(false, "서버 오류 발생", null));
-//        }
-//    }
+    @GetMapping("/auth/profile")
+    public ResponseEntity<ResponseDto> getProfile() {
+        try {
+            // 현재 인증된 사용자의 ID(이메일) 조회
+            String userId = SecurityUtility.getCurrentUserId();
+            // UserRepository 또는 UserService를 통해 사용자 정보 조회
+            Optional<User> userOptional = userRepository.findByEmail(userId);
+            if (!userOptional.isPresent()) {
+                response = new ResponseDto(false, "사용자를 찾을 수 없습니다.", null);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+            User user = userOptional.get();
+            // 필요한 사용자 정보만 ResponseDto에 포함하여 반환
+            // 여기서는 예시로 전체 User 엔티티를 반환하고 있지만, 필요한 정보만 DTO로 전송하는 것이 좋습니다.
+            response = new ResponseDto(true, "사용자 정보 조회 성공", user);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            response = new ResponseDto(false, "오류 발생: " + e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 
     // 회원 문의글 작성
     @PostMapping("/auth/inquiry")

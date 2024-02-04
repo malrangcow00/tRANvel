@@ -25,7 +25,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
