@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface InquiryRepository extends JpaRepository<Inquiry, Integer> {
 
-    Optional<Inquiry> findByUser_Id(int userId);
+    Optional<Inquiry> findByUserId(Long userId);
 }

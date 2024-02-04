@@ -7,20 +7,27 @@ import com.ssafy.tranvel.repository.EmailAuthDao;
 import com.ssafy.tranvel.repository.InquiryRepository;
 import com.ssafy.tranvel.repository.NickNameDao;
 import com.ssafy.tranvel.repository.UserRepository;
+import com.ssafy.tranvel.security.JwtAuthenticationFilter;
 import com.ssafy.tranvel.service.EmailAuthService;
 import com.ssafy.tranvel.service.ImageUploadService;
 import com.ssafy.tranvel.service.InquiryService;
 import com.ssafy.tranvel.service.UserService;
+import com.ssafy.tranvel.utility.JwtProvider;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import com.ssafy.tranvel.utility.SecurityUtility;
+import jakarta.servlet.http.HttpServletRequest;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,9 +35,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
-@Getter
-@Setter
+@Getter @Setter
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
@@ -40,28 +47,18 @@ public class UserController {
     private final EmailAuthDao emailAuthDao;
     private final NickNameDao nickNameDao;
     private final EmailAuthService emailAuthService;
+    private final JwtProvider jwtProvider;
     private final InquiryRepository inquiryRepository;
     private final InquiryService inquiryService;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final ImageUploadService imageUploadService;
 
     private ResponseDto response;
 
-
-//    public Long getUserIdFromToken() {
-//        Claims claims = Jwts.parserBuilder()
-//                .setSigningKey()
-//                .build()
-//                .parseClaimsJws()
-//                .getBody();
-//        return claims.get("userId", Long.class);
-//    }
-
-//    @GetMapping("/auth/{user-id}/profile")
-//    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-//    public ResponseEntity<User> getMyUserInfo() {
-//        return ResponseEntity.ok(userService.getMyUserWithAuthorities().get());
-//    }
-
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtProvider);
+    }
 
     // 닉네임 유효성 검사
     @PostMapping("/duplication")
@@ -85,22 +82,39 @@ public class UserController {
     }
 
 
-    // 로그인 ( 임시 )
+    // 로그인
     @PostMapping("/signin")
-    public ResponseEntity<ResponseDto> signinUser(@RequestBody @Validated LoginDto loginDto) {
-        Optional<User> user = userRepository.findByEmail(loginDto.getEmail());
-        if (user.isEmpty()) {
-            response = new ResponseDto(false, "회원 정보가 없습니다.", null);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
-        if (!user.get().getPassword().equals(loginDto.getPassword())) {
-            response = new ResponseDto(false, "비밀번호가 일치하지 않습니다.", null);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
-        response = new ResponseDto(true, "로그인 성공", user.get().getId());
+    public ResponseEntity<ResponseDto> login(@RequestBody UserLoginDto userLoginDto) {
+        TokenDto tokenDto = userService.login(userLoginDto.getEmail(), userLoginDto.getPassword());
+        ResponseDto response = new ResponseDto(true, "로그인 성공", tokenDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    // JWT 테스트
+    @PostMapping("/test")
+    public String test() {
+        return "인증 성공";
+    }
+
+    // 사용자 프로필 조회
+//    @GetMapping("/auth/profile")
+//    public ResponseEntity<ResponseDto> getUserProfile() {
+//        try {
+//            String email = SecurityUtility.getCurrentUserId();
+//            Optional<User> user = userRepository.findByEmail(email);
+//
+//            if (!user.isPresent()) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//            }
+//
+//            UserDto userDto = UserDto.fromEntity(user.get());
+//            return ResponseEntity.ok(new ResponseDto(true, "사용자 프로필 정보", userDto));
+//        } catch (Exception e) {
+//            log.error("프로필 조회 중 오류 발생", e);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body(new ResponseDto(false, "서버 오류 발생", null));
+//        }
+//    }
 
     // 회원 문의글 작성
     @PostMapping("/auth/inquiry")
@@ -109,7 +123,6 @@ public class UserController {
         response = new ResponseDto(true, "문의 작성 완료", inquiry);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 
     // 회원 문의글 전체 조회
     @PostMapping("/auth/inquiry/list")

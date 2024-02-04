@@ -39,6 +39,12 @@ public class EmailAuthDao {
     }
 
     public boolean hasAuth(String email) {
-        return stringRedisTemplate.opsForValue().get("Authority:" + email).equals("true");
+        String authValue = stringRedisTemplate.opsForValue().get("Authority:" + email);
+        if (authValue != null) {
+            return authValue.equals("true");
+        } else {
+            return false;
+            //            return stringRedisTemplate.opsForValue().get("Authority:" + email).equals("true");
+        }
     }
 }

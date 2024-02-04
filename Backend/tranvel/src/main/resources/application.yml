@@ -2,8 +2,7 @@ spring:
 
   profiles:
     include:
-      - tmp
-#      - JP
+      - secret
 
   jpa:
     hibernate:
