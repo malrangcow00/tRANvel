@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Entity
 @NoArgsConstructor
@@ -29,4 +31,12 @@ public class Answer {
     @ManyToOne
     @JsonBackReference
     private Inquiry inquiry;
+
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+        this.dateTime = LocalDateTime.now().toString();
+
+    }
 }

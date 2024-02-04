@@ -10,15 +10,12 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class AnswerDto {
 
-
     private int inquiryId;
 
-    private int token;
+    private int answerId;
 
-    @NotNull
     private String title;
 
-    @NotNull
     private String content;
 
 }

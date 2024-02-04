@@ -14,23 +14,20 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Getter @Setter
 @RequiredArgsConstructor
 public class AnswerService {
 
-    private InquiryRepository inquiryRepository;
-    private UserRepository userRepository;
-    private AnswerRepository answerRepository;
+    private final InquiryRepository inquiryRepository;
+    private final UserRepository userRepository;
+    private final AnswerRepository answerRepository;
 
     public Answer createAnswer(AnswerDto answerDto) {
         Inquiry inquiry = inquiryRepository.findById(answerDto.getInquiryId()).get();
-        String user = inquiry.getUser().getEmail();
-        // 토큰에 담긴 email 과 일치하지 않으면 error
-//        if (!user.equals(answerDto.getToken())) {
-//
-//        }
+
         Answer answer = Answer.builder()
                 .title(answerDto.getTitle())
                 .content(answerDto.getContent())
@@ -41,5 +38,25 @@ public class AnswerService {
         answerRepository.save(answer);
         
         return answer;
+    }
+
+
+
+    public Answer getAnswer(AnswerDto answerDto) {
+        Answer answer = answerRepository.findById(answerDto.getAnswerId()).get();
+        return answer;
+    }
+
+
+    public Answer updateAnswer(AnswerDto answerDto) {
+        Answer answer = answerRepository.findById(answerDto.getInquiryId()).get();
+        answer.update(answerDto.getTitle(), answerDto.getContent());
+        answerRepository.save(answer);
+        return answer;
+    }
+
+
+    public void deleteAnswer(AnswerDto answerDto) {
+        answerRepository.deleteById(answerDto.getAnswerId());
     }
 }

@@ -28,13 +28,13 @@ public class Announcement {
     private String content;
 
     @Column(length = 30, name = "DateTime")
-    private String datetime;
+    private String dateTime;
 
 
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
-        this.datetime = LocalDateTime.now().toString();
+        this.dateTime = LocalDateTime.now().toString();
 
     }
 }

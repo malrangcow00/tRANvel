@@ -34,7 +34,7 @@ public class UserService {
     // 현재는 Redis 에서 회원가입 시 동시 확인 중복체크만 적용
     // 회원가입 시 Redis 의 nickName key 삭제
     public boolean nickNameDuplicationCheck(String nickName, String email) {
-        if (userRepository.findByNickName(nickName) != null) {
+        if (userRepository.findByNickName(nickName).isPresent()) {
             // "이미 존재하는 닉네임 입니다."
             return false;
         }

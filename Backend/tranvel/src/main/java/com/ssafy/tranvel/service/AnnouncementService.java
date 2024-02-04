@@ -31,7 +31,7 @@ public class AnnouncementService {
         Announcement announcement = Announcement.builder()
                 .title(announcementDto.getTitle())
                 .content(announcementDto.getContent())
-                .datetime(LocalDateTime.now().toString())
+                .dateTime(LocalDateTime.now().toString())
                 .build();
 
         announcementRepository.save(announcement);
