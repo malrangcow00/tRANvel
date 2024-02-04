@@ -57,31 +57,6 @@ public class EmailAuthService {
         return tmpCode.toString();
     }
 
-//    public MimeMessage createEmailForm(String email) throws MessagingException, UnsupportedEncodingException {
-//        String createdCode =createVerificationCode();
-//        String toEmail = email;
-//        String title = "[tRANvel] 회원가입 인증";
-//
-//        MimeMessage message = emailSender.createMimeMessage();
-//        message.addRecipients(MimeMessage.RecipientType.TO, toEmail);
-//        message.setSubject(title);
-//
-//        String msgOfEmail = "안녕하세요, tRANvel 입니다."
-//                + "<br>"
-//                + "이메일 인증을 완료하시려면 아래의 인증 코드를 입력해주세요."
-//                + "<br>"
-//                + "인증 번호 : <strong>"
-//                + createdCode
-//                + "</strong>"
-//                + "<br>";
-//
-//        message.setFrom(setFrom);
-//        message.setText(msgOfEmail, "utf-8", "html");
-//        createCodeInRedis(email, createdCode);
-//        emailSender.send(message);
-//        return message;
-//    }
-
     public MimeMessage createEmailForm(String email) throws MessagingException, UnsupportedEncodingException {
         String createdCode = createVerificationCode();
         String toEmail = email;
