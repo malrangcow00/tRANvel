@@ -57,26 +57,61 @@ public class EmailAuthService {
         return tmpCode.toString();
     }
 
+//    public MimeMessage createEmailForm(String email) throws MessagingException, UnsupportedEncodingException {
+//        String createdCode =createVerificationCode();
+//        String toEmail = email;
+//        String title = "[tRANvel] 회원가입 인증";
+//
+//        MimeMessage message = emailSender.createMimeMessage();
+//        message.addRecipients(MimeMessage.RecipientType.TO, toEmail);
+//        message.setSubject(title);
+//
+//        String msgOfEmail = "안녕하세요, tRANvel 입니다."
+//                + "<br>"
+//                + "이메일 인증을 완료하시려면 아래의 인증 코드를 입력해주세요."
+//                + "<br>"
+//                + "인증 번호 : <strong>"
+//                + createdCode
+//                + "</strong>"
+//                + "<br>";
+//
+//        message.setFrom(setFrom);
+//        message.setText(msgOfEmail, "utf-8", "html");
+//        createCodeInRedis(email, createdCode);
+//        emailSender.send(message);
+//        return message;
+//    }
+
     public MimeMessage createEmailForm(String email) throws MessagingException, UnsupportedEncodingException {
-        String createdCode =createVerificationCode();
+        String createdCode = createVerificationCode();
         String toEmail = email;
-        String title = "[Tranvel] 회원가입 인증을 완료해주세요.";
+        String title = "[tRANvel] 회원가입 인증";
 
         MimeMessage message = emailSender.createMimeMessage();
         message.addRecipients(MimeMessage.RecipientType.TO, toEmail);
         message.setSubject(title);
 
-        String msgOfEmail = "안녕하세요, Tranvel 입니다."
-                + "<br>"
-                + "이메일 인증을 완료하시려면 아래의 인증 코드를 입력해주세요."
-                + "<br>"
-                + "인증 번호 : <strong>"
+        String msgOfEmail =
+                "<div class=\"container\" style=\"text-align: center; width: 25%; position: relative;\">"
+//                + "<img class=\"overlay-img responsive-img\" style=\"width: 40%;\" src=\"https://lh3.google.com/u/0/d/15K0WC6R8L23zDxpFVkzbZSTBK6cjCRSn=w2560-h1271-iv1\" alt=\"tRANvel Logo\"/>"
+                + "<p class=\"overlay-text\" style=\"top: 50%; left: 50%; color: #5caad2; font-size: 70px; margin: 0; z-index: 1;\"><strong>tRANvel</strong></p>"
+                + "<p style=\"margin: 10px 0; font-size: 20px;\"><strong>랜덤 여행지 추천 서비스</strong></p>"
+                + "<p> </p>"
+                + "<p style=\"font-size: 15px;\"><strong>안녕하세요, tRANvel 여행자님!</strong></p>"
+                + "<p style=\"font-size: 15px;\"><strong>아래의 인증 코드를 입력하여 회원가입을 완료해주세요.</strong></p>"
+                + "<div style=\"background-color: #5caad2; color: #ffffff; padding: 20px; width: 40%; height: 50%; font-size: 50px; font-family: 'Work Sans', Calibri, sans-serif; border-radius: 20px; margin: 0 auto;\">"
+                + "<strong>"
                 + createdCode
                 + "</strong>"
-                + "<br>";
+                + "</div>"
+                + "<p style=\"font-size: 15px;\"><strong>tRANvel과 함께 더 멋진 여행을 떠나보세요!</strong></p>"
+                + "<p style=\"font-size: 15px;\"><strong>감사합니다!</strong></p>"
+                + "<br>"
+                + "<p style=\"text-align: right; margin-right: 40px;\"><strong>tRANvel 팀</strong></p>"
+                + "</div>";
 
         message.setFrom(setFrom);
-        message.setText(msgOfEmail, "utf-8", "html");
+        message.setContent(msgOfEmail, "text/html; charset=utf-8");
         createCodeInRedis(email, createdCode);
         emailSender.send(message);
         return message;

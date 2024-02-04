@@ -110,7 +110,6 @@ public class UserController {
             }
             User user = userOptional.get();
             // 필요한 사용자 정보만 ResponseDto에 포함하여 반환
-            // 여기서는 예시로 전체 User 엔티티를 반환하고 있지만, 필요한 정보만 DTO로 전송하는 것이 좋습니다.
             response = new ResponseDto(true, "사용자 정보 조회 성공", user);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
