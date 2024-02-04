@@ -5,15 +5,17 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class AnnouncementDto(
+    val id : Long?,
     val title : String?,
-    val contents : String?,
-    val time : String?
+    val content : String?,
+    val dateTime : String?
 ) : Parcelable{
     companion object{
         fun init() = AnnouncementDto(
+            id = -1,
             title = null,
-            contents = null,
-            time = null
+            content = null,
+            dateTime = null
         )
     }
 }

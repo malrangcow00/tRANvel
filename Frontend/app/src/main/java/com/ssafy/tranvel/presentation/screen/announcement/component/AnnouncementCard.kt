@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.presentation.screen.announcement.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.tranvel.data.model.dto.AnnouncementDto
 import com.ssafy.tranvel.presentation.screen.announcement.AnnouncementDetailScreen
+import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 
 @Composable
 fun AnnouncementCard(
@@ -35,6 +37,7 @@ fun AnnouncementCard(
     }
     Card(
         modifier = Modifier
+            .background(PrimaryColor)
             .fillMaxWidth()
             .height(100.dp)
             .clickable(
@@ -59,18 +62,18 @@ fun AnnouncementCard(
                 ),
                 color = Color(0xFF018786)
             )
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth(0.3f)
-                    .align(Alignment.End),
-                text = dto?.time.orEmpty(),
-                style = TextStyle(
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 14.sp,
-                    letterSpacing = 0.25.sp
-                ),
-                color = Color(0xFF018786),
-            )
+//            Text(
+//                modifier = Modifier
+//                    .fillMaxWidth(0.3f)
+//                    .align(Alignment.End),
+//                text = dto?.dateTime.orEmpty(),
+//                style = TextStyle(
+//                    fontWeight = FontWeight.Normal,
+//                    fontSize = 14.sp,
+//                    letterSpacing = 0.25.sp
+//                ),
+//                color = Color(0xFF018786),
+//            )
         }
     }
 }
@@ -90,6 +93,7 @@ fun showAnnouncement(
 @Composable
 fun previewAnnouncementCard(
     dto: AnnouncementDto = AnnouncementDto(
+        1,
         "Hello",
         "asdflkqjwplvz;lxcmvl;zxkcjv;zlkxjcv;lkzas;dfjal;asdfalsdkf;asldkf;asldkfaskdfjalksdhjfaoisvlkzxncvaiosjdf;lkc;vaksdjfl;mzxviaowpierqlwkjfvla;kscmvlkajsdoifa;lcvzml;aksdjfioapqwek;lasjdfl;kj;lkksdjf;laksdjf;lkxcjv;lzkxjc;lvkzjx;lckvj;laksjedropiqwju;eorjlazxcv,n,m;laiksjdfoiasj;dlfkajmsdfxjc;lvkj;lakjsd;lfkjas;kldf",
         "20240131"

@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface AnnouncementService {
 
-    @GET("announcement/search")
+    @GET("announcement")
     suspend fun getAllAnnouncements(): Response<AnnouncementResponse>
 }

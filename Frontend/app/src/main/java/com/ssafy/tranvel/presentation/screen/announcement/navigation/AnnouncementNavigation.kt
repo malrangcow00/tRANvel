@@ -10,12 +10,19 @@ import com.ssafy.tranvel.presentation.screen.announcement.AnnouncementScreen
 
 const val announcementRoute = "announcement_route"
 
+fun NavController.navigateAnnouncement(
+    navOptions: NavOptions? = null
+) {
+    this.navigate(announcementRoute)
+}
+
 fun NavGraphBuilder.announcementScreen(navigateToDetailAnnouncement: (AnnouncementDto?) -> Unit) {
     composable(announcementRoute) {
         AnnouncementScreen(
             hiltViewModel(),
-        ){
-            
-        }
+            navigateToDetail = {
+                navigateToDetailAnnouncement.invoke(it)
+            }
+        )
     }
 }
