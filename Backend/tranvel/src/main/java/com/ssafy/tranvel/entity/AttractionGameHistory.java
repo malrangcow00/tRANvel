@@ -16,7 +16,7 @@ import java.util.List;
 public class AttractionGameHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int Long;
 
     @ManyToOne
     private RoomHistory roomHistory;

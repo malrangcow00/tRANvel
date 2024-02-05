@@ -15,7 +15,7 @@ public class FoodImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int Long;
 
     @ManyToOne
     private RoomHistory roomHistory;
