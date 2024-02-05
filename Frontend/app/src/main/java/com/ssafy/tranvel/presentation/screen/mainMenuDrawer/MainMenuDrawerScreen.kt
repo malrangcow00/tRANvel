@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -50,6 +51,7 @@ fun MainMenuDrawerScreen(
             .background(Color.White)
     ) {
         DrawerHeader(onSettingClicked)
+        DrawerSpacer()
         DrawerMenus(onAnnouncementClicked, onInquiryClicked, onWithdrawalClicked)
     }
 }
@@ -62,7 +64,7 @@ private fun DrawerHeader(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.35f)
-            .background(PrimaryColor)
+            .background(Color.White)
     ) {
         Image(
             modifier = Modifier
@@ -93,6 +95,13 @@ private fun DrawerHeader(
             fontWeight = FontWeight.Bold
         )
     }
+}
+
+@Composable
+private fun DrawerSpacer(){
+    Box(
+        modifier = Modifier.background(PrimaryColor).fillMaxWidth().fillMaxHeight(0.1f)
+    )
 }
 
 @Composable
