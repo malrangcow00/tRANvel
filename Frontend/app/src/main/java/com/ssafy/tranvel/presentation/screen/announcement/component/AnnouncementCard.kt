@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.ssafy.tranvel.data.model.dto.AnnouncementDto
 import com.ssafy.tranvel.presentation.screen.announcement.AnnouncementDetailScreen
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
+import com.ssafy.tranvel.presentation.ui.theme.bmjua
 
 @Composable
 fun AnnouncementCard(
@@ -32,12 +34,18 @@ fun AnnouncementCard(
     showDetailAnnouncementClick: () -> (Unit)
 ) {
     val showDialog = remember { mutableStateOf(false) }
-    if(showDialog.value){
-        AnnouncementDetailScreen(dto = dto!!, onDismiss = {showDialog.value = false}, showDialog = showDialog.value)
+    if (showDialog.value) {
+        AnnouncementDetailScreen(
+            dto = dto!!,
+            onDismiss = { showDialog.value = false },
+            showDialog = showDialog.value
+        )
     }
     Card(
+        colors = CardDefaults.cardColors(
+            containerColor = PrimaryColor
+        ),
         modifier = Modifier
-            .background(PrimaryColor)
             .fillMaxWidth()
             .height(100.dp)
             .clickable(
@@ -57,23 +65,25 @@ fun AnnouncementCard(
                 text = dto?.title.orEmpty(),
                 style = TextStyle(
                     fontWeight = FontWeight.Normal,
+                    fontFamily = bmjua,
                     fontSize = 24.sp,
+                    color = Color.Black,
                     letterSpacing = 0.5.sp
                 ),
                 color = Color(0xFF018786)
             )
-//            Text(
-//                modifier = Modifier
-//                    .fillMaxWidth(0.3f)
-//                    .align(Alignment.End),
-//                text = dto?.dateTime.orEmpty(),
-//                style = TextStyle(
-//                    fontWeight = FontWeight.Normal,
-//                    fontSize = 14.sp,
-//                    letterSpacing = 0.25.sp
-//                ),
-//                color = Color(0xFF018786),
-//            )
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(0.3f)
+                    .align(Alignment.End),
+                text = (dto?.dateTime)?.substring(0, 10).orEmpty(),
+                style = TextStyle(
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                    letterSpacing = 0.25.sp
+                ),
+                color = Color(0xFF018786),
+            )
         }
     }
 }
@@ -98,6 +108,6 @@ fun previewAnnouncementCard(
         "asdflkqjwplvz;lxcmvl;zxkcjv;zlkxjcv;lkzas;dfjal;asdfalsdkf;asldkf;asldkfaskdfjalksdhjfaoisvlkzxncvaiosjdf;lkc;vaksdjfl;mzxviaowpierqlwkjfvla;kscmvlkajsdoifa;lcvzml;aksdjfioapqwek;lasjdfl;kj;lkksdjf;laksdjf;lkxcjv;lzkxjc;lvkzjx;lckvj;laksjedropiqwju;eorjlazxcv,n,m;laiksjdfoiasj;dlfkajmsdfxjc;lvkj;lakjsd;lfkjas;kldf",
         "20240131"
     )
-){
+) {
 
 }

@@ -1,6 +1,5 @@
 package com.ssafy.tranvel.presentation.screen.home.component
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -94,23 +93,30 @@ private fun Content(
         pagingItems = rememberFlowWithLifecycle(it).collectAsLazyPagingItems()
     }
 
+    var cnt = 0
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 15.dp)
     ){
         LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = PaddingValues(vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ){
             if (isLoading) {
+                if (pagingItems != null && cnt == 0) {
+                    cnt = pagingItems!!.itemCount
+                }
                 items(1) {
                     LoadingIndicator()
                 }
             } else if (pagedData != null && pagingItems != null && pagingItems!!.itemCount>0) {
-                val cnt = pagingItems!!.itemCount
-                Log.d(TAG,"pagingItems.itemCount : ${pagingItems!!.itemCount} / cnt : ${cnt}")
-                items(count = pagingItems!!.itemCount) { index ->
+                if (cnt == 0 && pagingItems!!.itemCount != 0) {
+                    cnt = pagingItems!!.itemCount
+                }
+                items(count = cnt) { index ->
                     HomeHistoryCard(
                         historyClicked = {
                             clickHistory.invoke(pagingItems!![index])
@@ -123,7 +129,7 @@ private fun Content(
                 items(1){
                     Text(
                         modifier = Modifier.align(Alignment.TopCenter),
-                        text = "현재 등록된 \n 공지사항이 없어요ㅠㅠ",
+                        text = "현재 기록된 \n 여행이 없어요ㅠㅠ",
                         fontFamily = bmjua,
                         fontSize = 30.sp,
                         textAlign = TextAlign.Center

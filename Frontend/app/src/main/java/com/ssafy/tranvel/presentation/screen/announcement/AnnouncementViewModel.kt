@@ -40,7 +40,7 @@ class AnnouncementViewModel @Inject constructor(
 
             val params = GetAnnouncementUseCase.Params(config)
             val pagedFlow = getAnnouncementUseCase(params).cachedIn(scope = viewModelScope)
-            delay(1000)
+            delay(1500)
             setState { currentState.copy(isLoading = false, pagedData = pagedFlow) }
         }
     }
