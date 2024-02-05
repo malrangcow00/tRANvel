@@ -13,4 +13,5 @@ public interface RoomHistoryRepository extends JpaRepository<RoomHistory, Long> 
 //    Optional<List<RoomHistory>> findByJoinUser(List<JoinUser> joinUser);
 
     Optional<RoomHistory> findByRoomCode(String roomCode);
+    Optional<Long> findByUserId(Long userId);
 }

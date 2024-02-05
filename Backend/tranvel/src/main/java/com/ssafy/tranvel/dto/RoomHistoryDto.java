@@ -1,12 +1,13 @@
 package com.ssafy.tranvel.dto;
 
 
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 public class RoomHistoryDto {
-
+    @Nullable
     private Long userId;
 
     private String roomCode;

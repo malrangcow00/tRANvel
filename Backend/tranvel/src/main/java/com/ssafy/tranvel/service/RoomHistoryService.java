@@ -26,11 +26,17 @@ public class RoomHistoryService {
     private  final JoinUserRepository joinUserRepository;
 
     public List<RoomHistory> getAllRoomHistories(RoomHistoryDto roomHistoryDto) {
-        User user = userRepository.findById(roomHistoryDto.getUserId()).get();
+//        User user = userRepository.findById(roomHistoryDto.getUserId()).get();
 //        JoinUser joinUser = joinUserRepository.findByUserId(roomHistoryDto.getUserId()).get();
 
 //        return roomHistoryRepository.findByJoinUser(user.getJoinUser());
-        return user.getRoomHistories();
+        List<JoinUser> userList = joinUserRepository.findAllByUserId(roomHistoryDto.getUserId()).get();
+        List<RoomHistory> roomHistoryList = new ArrayList<>();
+        for (int idx = 0; idx < userList.size(); idx ++){
+            roomHistoryList.add(userList.get(idx).getRoomHistory());
+        }
+//        return user.getRoomHistories();
+        return roomHistoryList;
     }
 
 
@@ -57,6 +63,7 @@ public class RoomHistoryService {
     public void addJoinUser(Long userId, String roomCode, String inputRoomPassword) {
 
         RoomHistory roomHistory = roomHistoryRepository.findByRoomCode(roomCode).get();
+
         if (roomHistory.getRoomPassword().equals(inputRoomPassword)) {
             User user = userRepository.findById(userId).get();
             JoinUser joinUser = JoinUser.builder()
@@ -64,8 +71,6 @@ public class RoomHistoryService {
                     .userId(userId)
                     .roomHistory(roomHistory)
                     .build();
-
-            System.out.println(roomHistory.getJoinUser() == null);
             if (roomHistory.getJoinUser() == null) {
                 List<JoinUser> nowJoin = new ArrayList<>();
                 nowJoin.add(joinUser);
@@ -88,7 +93,6 @@ public class RoomHistoryService {
                     nowJoin.add(joinUser);
                     joinUserRepository.save(joinUser);
                     roomHistory.joinUser(nowJoin);
-
                 }
 
             }
