@@ -12,16 +12,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.tranvel.data.model.dto.HistoryDto
-import com.ssafy.tranvel.presentation.screen.room.RoomViewModel
 import com.ssafy.tranvel.presentation.screen.history.HistoryViewModel
 import com.ssafy.tranvel.presentation.screen.home.component.HomeBody
 import com.ssafy.tranvel.presentation.screen.home.component.HomeHeader
-import com.ssafy.tranvel.presentation.screen.home.component.HomeRoomBody
 import com.ssafy.tranvel.presentation.screen.mainMenuDrawer.MainMenuDrawerScreen
+import com.ssafy.tranvel.presentation.screen.travel.TravelViewModel
 
 @Composable
 fun HomeScreen(
-//    roomViewModel: RoomViewModel,
+    travelViewModel: TravelViewModel,
     historyViewModel: HistoryViewModel,
     onSettingClicked: () -> Unit,
     onAnnouncementClicked: () -> Unit,
@@ -67,7 +66,7 @@ fun HomeScreen(
             content = { paddingValues ->
                 HomeBody(
                     paddingValues,
-//                    roomViewModel,
+                    travelViewModel,
                     historyViewModel,
                     onEnterButtonClicked,
                     onCreateButtonClicked,

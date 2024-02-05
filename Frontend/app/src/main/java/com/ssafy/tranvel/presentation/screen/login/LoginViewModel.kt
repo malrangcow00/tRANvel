@@ -69,9 +69,6 @@ class LoginViewModel @Inject constructor(
                 UserRequest(
                     email = id.value,
                     password = password.value,
-                    balance = 0,
-                    profileImage = "",
-                    nickName = "asdf"
                 )
             ).collect {
                 when (it) {

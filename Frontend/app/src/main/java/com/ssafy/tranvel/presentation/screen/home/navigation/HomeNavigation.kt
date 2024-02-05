@@ -22,7 +22,7 @@ fun NavGraphBuilder.homeScreen(navController: NavController, navigateToDetailHis
     composable(homeRoute) {
         HomeScreen(
             hiltViewModel(),
-//            hiltViewModel(),
+            hiltViewModel(),
             { navController.navigate("userInfoModify_route") },
             { navController.navigateAnnouncement() },
             { navController.navigate("userWithdrawal_route") },

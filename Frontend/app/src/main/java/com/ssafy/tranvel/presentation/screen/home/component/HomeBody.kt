@@ -7,13 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.ssafy.tranvel.data.model.dto.HistoryDto
-import com.ssafy.tranvel.presentation.screen.room.RoomViewModel
 import com.ssafy.tranvel.presentation.screen.history.HistoryViewModel
+import com.ssafy.tranvel.presentation.screen.travel.TravelViewModel
 
 @Composable
 fun HomeBody(
     innerPadding: PaddingValues,
-//    roomViewModel: RoomViewModel,
+    travelViewModel: TravelViewModel,
     historyViewModel: HistoryViewModel,
     onEnterButtonClicked: () -> Unit,
     onCreateButtonClicked: () -> Unit,
@@ -24,7 +24,7 @@ fun HomeBody(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 //        HomeRoomBody(roomViewModel, onEnterButtonClicked, onCreateButtonClicked)
-        HomeRoomBody(onEnterButtonClicked, onCreateButtonClicked)
+        HomeRoomBody(travelViewModel, onEnterButtonClicked, onCreateButtonClicked)
         HomeHistoryBody(historyViewModel, onHistoryClicked)
     }
 }

@@ -9,13 +9,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,23 +26,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ssafy.tranvel.R
-import com.ssafy.tranvel.presentation.screen.room.RoomViewModel
+import com.ssafy.tranvel.presentation.screen.travel.TravelViewModel
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 import com.ssafy.tranvel.presentation.ui.theme.TextColor
 import com.ssafy.tranvel.presentation.ui.theme.bmjua
 
 @Composable
 fun HomeRoomBody(
-//    roomViewModel: RoomViewModel,
+    travelViewModel: TravelViewModel,
     onEnterButtonClicked: () -> Unit,
     onCreateButtonClicked: () -> Unit,
 ) {
 //    val uiState: String by roomViewModel.uiState.collectAsState()
-    var isError by remember { mutableStateOf(false) }
+    var dialogState: Boolean by remember {
+        mutableStateOf(false)
+    }
+
+    if (dialogState) {
+        CreateRoomDialog(
+            onChangeState = { dialogState = false },
+            onCreateRoom = {
+                travelViewModel.createRoom(it)
+//                onCreateButtonClicked()
+            }
+        )
+    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -57,9 +69,7 @@ fun HomeRoomBody(
             onValueChange = {
 //                homeViewModel.enterCode.value = it
             },
-            isError = isError,
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             leadingIcon = {
                 Image(
                     modifier = Modifier.size(30.dp),
@@ -77,8 +87,6 @@ fun HomeRoomBody(
                 unfocusedContainerColor = Color.White,
                 focusedLabelColor = TextColor,
                 unfocusedLabelColor = TextColor,
-                errorContainerColor = Color.White,
-                errorLabelColor = Color.Red
             )
         )
         Spacer(modifier = Modifier.width(20.dp))
@@ -104,7 +112,8 @@ fun HomeRoomBody(
                 .width(90.dp)
                 .height(50.dp),
             onClick = {
-                onCreateButtonClicked()
+//                onCreateButtonClicked()
+                dialogState = true
             }
         ) {
             Text(
@@ -115,4 +124,43 @@ fun HomeRoomBody(
             )
         }
     }
+}
+
+@Composable
+fun CreateRoomDialog(onChangeState: () -> (Unit), onCreateRoom: (String) -> (Unit)) {
+    var inputText by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = { onChangeState() },
+        title = {
+            Text(
+                text = "방 생성",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
+        text = {
+            TextField(
+                value = inputText,
+                onValueChange = {
+                    inputText = it
+                }
+            )
+        },
+
+        dismissButton = {
+            TextButton(onClick = { onChangeState() }) {
+                Text(text = "취소", color = Color.Black)
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+//                    onChangeState()
+                    onCreateRoom(inputText)
+                }) {
+                Text(text = "생성", color = Color.Black)
+            }
+        }
+    )
 }
