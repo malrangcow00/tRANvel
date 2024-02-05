@@ -44,7 +44,6 @@ public class JwtProvider {
     public JwtProvider(
             @Value("${jwt.secret}") String secretKey,
             TokenBlackListRepository tokenBlackListRepository) {
-//        byte[] keyBytes = Decoders.BASE64.decode(secretKey); // 256bit
         byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8); // 512bit
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.tokenBlackListRepository = tokenBlackListRepository;
@@ -57,8 +56,8 @@ public class JwtProvider {
 
         // Access Token 생성
         long now = (new Date()).getTime();
-        Date accessTokenExpiresIn = new Date(now + 1800000); // 30분
-        Date refreshTokenExpiresIn = new Date(now + 86400000); // 1일
+        Date accessTokenExpiresIn = new Date(now + 3600000); // 1시간
+        Date refreshTokenExpiresIn = new Date(now + 864000000); // 10일
 
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())

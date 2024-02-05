@@ -8,6 +8,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TokenBlackListRepository extends JpaRepository<TokenBlackList, String> {
 
-//    TokenBlackList findByToken(String token);
-
 }
