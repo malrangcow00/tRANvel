@@ -24,6 +24,7 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("String", "API_KEY",getApiKey("API_KEY"))
+        resValue("string","NAVER_API_KEY",getApiKey("NAVER_API_KEY"))
     }
 
     buildTypes {
@@ -100,7 +101,7 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:6.3.0")
 
     //navermap
-
+    implementation("io.github.fornewid:naver-map-compose:1.4.1")
 
     //viewmodel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")

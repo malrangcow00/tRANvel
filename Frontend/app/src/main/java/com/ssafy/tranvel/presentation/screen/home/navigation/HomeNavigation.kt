@@ -26,7 +26,8 @@ fun NavGraphBuilder.homeScreen(navController: NavController, navigateToDetailHis
             { navController.navigate("userInfoModify_route") },
             { navController.navigateAnnouncement() },
             { navController.navigate("userWithdrawal_route") },
-            {}, {}, {
+            { navController.navigate("game")},
+            {}, {
                 navigateToDetailHistory.invoke(it)
             }
         )

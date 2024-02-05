@@ -15,6 +15,7 @@ import com.ssafy.tranvel.presentation.screen.found.FoundPasswordScreen
 import com.ssafy.tranvel.presentation.screen.home.navigation.homeScreen
 import com.ssafy.tranvel.presentation.screen.login.LoginScreen
 import com.ssafy.tranvel.presentation.screen.register.navigation.registerGraph
+import com.ssafy.tranvel.presentation.screen.travel.navigation.gameNavGraph
 import com.ssafy.tranvel.presentation.screen.userInfoModification.navigation.userInfoModifyScreen
 import com.ssafy.tranvel.presentation.screen.userWithdrawal.navigation.userWithdrawalScreen
 
@@ -33,6 +34,7 @@ fun NavGraph() {
             Modifier.padding(innerPadding)
         ) {
             announcementScreen { }
+            gameNavGraph(navController)
             composable(route = "login_screen") {
                 LoginScreen(
                     loginViewModel = hiltViewModel(),
