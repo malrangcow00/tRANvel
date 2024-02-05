@@ -83,38 +83,34 @@ private fun Content(
             contentPadding = PaddingValues(vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-//            if (isLoading) {
-//                items(10) {
-//                    AnnouncementShimmer()
-//                }
-//            } else if (pagedData != null && pagingItems != null) {
-            if (!isLoading && pagedData != null && pagingItems != null) {
-                Log.d(
-                    TAG,
-                    "pagedData : ${pagedData}  / pagingItems : ${pagingItems} / pagingItems.itemCount : ${pagingItems!!.itemCount}"
-                )
-                items(count = pagingItems!!.itemCount, key = null) { index ->
+            if (isLoading) {
+                items(1) {
+                    AnnouncementLoadingIndicator()
+                }
+            } else if (pagedData != null && pagingItems != null && pagingItems!!.itemCount>0) {
+                val cnt = pagingItems!!.itemCount
+                Log.d(TAG,"pagingItems.itemCount : ${pagingItems!!.itemCount} / cnt : ${cnt}")
+                items(count = pagingItems!!.itemCount) { index ->
                     AnnouncementCard(
                         showDetailAnnouncementClick = {
-                            clickDetail.invoke(pagingItems!!.get(index))
+                            clickDetail.invoke(pagingItems!![index])
                         },
-                        dto = pagingItems!!.get(index),
+                        dto = pagingItems!![index]
                     )
                 }
             }
-        }
-        if (isLoading) {
-            AnnouncementLoadingIndicator()
-        }
-        if (!isLoading && (pagedData != null || pagingItems != null)) {
-            Text(
-                modifier = Modifier.align(Alignment.TopCenter),
-                text = "현재 등록된 \n 공지사항이 없어요ㅠㅠ",
-                fontFamily = bmjua,
-                fontSize = 30.sp,
-                textAlign = TextAlign.Center
-            )
-            EmptyIndicator()
+            else{
+                items(1){
+                    Text(
+                        modifier = Modifier.align(Alignment.TopCenter),
+                        text = "현재 등록된 \n 공지사항이 없어요ㅠㅠ",
+                        fontFamily = bmjua,
+                        fontSize = 30.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    EmptyIndicator()
+                }
+            }
         }
     }
 }

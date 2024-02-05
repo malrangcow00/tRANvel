@@ -71,6 +71,7 @@ dependencies {
 
     //okhttp3
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
     //compose
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))

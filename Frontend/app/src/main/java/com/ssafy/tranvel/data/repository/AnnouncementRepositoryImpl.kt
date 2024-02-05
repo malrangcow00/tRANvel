@@ -10,6 +10,6 @@ import javax.inject.Inject
 class AnnouncementRepositoryImpl @Inject constructor(
     private val announcementRemoteDataSource: AnnouncementRemoteDataSource,
 ) : AnnouncementRepository {
-    override suspend fun getAllAnnouncement(page: Int): Response<AnnouncementResponse> =
-        announcementRemoteDataSource.getAllAnnouncements(page)
+    override suspend fun getAllAnnouncement(): Response<AnnouncementResponse> =
+        announcementRemoteDataSource.getAllAnnouncements()
 }

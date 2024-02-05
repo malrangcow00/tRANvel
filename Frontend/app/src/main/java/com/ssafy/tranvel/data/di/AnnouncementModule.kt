@@ -15,7 +15,7 @@ import retrofit2.Retrofit
 
 @Stable
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 class AnnouncementModule {
 
     @Provides

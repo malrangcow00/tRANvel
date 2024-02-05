@@ -11,6 +11,6 @@ class AnnouncementRemoteDataSourceImpl @Inject constructor(
     private val announcementService: AnnouncementService
 ) : BaseDataSource(), AnnouncementRemoteDataSource {
 
-    override suspend fun getAllAnnouncements(page: Int): Response<AnnouncementResponse> = announcementService.getAllAnnouncements()
+    override suspend fun getAllAnnouncements(): Response<AnnouncementResponse> = announcementService.getAllAnnouncements()
 
 }

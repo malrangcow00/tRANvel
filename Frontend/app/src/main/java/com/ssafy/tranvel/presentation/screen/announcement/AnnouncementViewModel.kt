@@ -17,7 +17,7 @@ import javax.inject.Inject
 class AnnouncementViewModel @Inject constructor(
     private val getAnnouncementUseCase: GetAnnouncementUseCase,
 ) : ViewModel() {
-    private val config = PagingConfig(pageSize = 20)
+    private val config = PagingConfig(pageSize = 10)
 
     //state 처리
     fun createInitialState() = AnnouncementViewState()

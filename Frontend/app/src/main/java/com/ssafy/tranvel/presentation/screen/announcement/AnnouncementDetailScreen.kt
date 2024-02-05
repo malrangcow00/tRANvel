@@ -92,7 +92,7 @@ fun DialogContent(
                 .fillMaxWidth()
         )
         Text(
-            text = dto?.contents.orEmpty(),
+            text = dto?.content.orEmpty(),
             fontFamily = bmjua,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -113,12 +113,12 @@ fun DialogContent(
 fun showDialog() {
     AnnouncementDetailScreen(
         dto = AnnouncementDto(
+            1,
             "Hello",
             "asdflkqjwplvz;lxcmvl;zxkcjv;zlkxjcv;lkzas;dfjal;asdfalsdkf;asldkf;asldkfaskdfjalksdhjfaoisvlkzxncvaiosjdf;lkc;vaksdjfl;mzxviaowpierqlwkjfvla;kscmvlkajsdoifa;lcvzml;aksdjfioapqwek;lasjdfl;kj;lkksdjf;laksdjf;lkxcjv;lzkxjc;lvkzjx;lckvj;laksjedropiqwju;eorjlazxcv,n,m;laiksjdfoiasj;dlfkajmsdfxjc;lvkj;lakjsd;lfkjas;kldf",
             "20240131"
         ),
         onDismiss = { },
         showDialog = true
-
-        )
+    )
 }
