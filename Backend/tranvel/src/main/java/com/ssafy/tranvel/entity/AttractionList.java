@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class AttractionList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int Long;
 
     @Column(length = 20, name = "Name")
     private String name;

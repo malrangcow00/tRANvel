@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class AnswerDto {
 
-    private int inquiryId;
+    private Long inquiryId;
 
-    private int answerId;
+    private Long answerId;
 
     private String title;
 

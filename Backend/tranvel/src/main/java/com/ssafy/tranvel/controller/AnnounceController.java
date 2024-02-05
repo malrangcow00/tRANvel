@@ -48,14 +48,14 @@ public class AnnounceController {
     }
 
     @GetMapping("/{announcement-id}")
-    public ResponseEntity<ResponseDto> detailAnnouncement(@PathVariable("announcement-id") int announcementId) {
+    public ResponseEntity<ResponseDto> detailAnnouncement(@PathVariable("announcement-id") Long announcementId) {
         Announcement announcement = announcementService.findAnnouncement(announcementId);
         response = new ResponseDto(true, "공지사항 조회.", announcement);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PutMapping("/{announcement-id}")
-    public ResponseEntity<ResponseDto> putAnnouncement(@PathVariable("announcement-id") int announcementId,
+    public ResponseEntity<ResponseDto> putAnnouncement(@PathVariable("announcement-id") Long announcementId,
                                                        @RequestBody @Validated
                                                        AnnouncementDto announcementDto) {
         Announcement announcement = announcementService.updateAnnouncement(announcementId, announcementDto);
@@ -64,7 +64,7 @@ public class AnnounceController {
     }
 
     @DeleteMapping("/{announcement-id}")
-    public ResponseEntity<ResponseDto> deleteAnnouncement(@PathVariable("announcement-id") int announcementId) {
+    public ResponseEntity<ResponseDto> deleteAnnouncement(@PathVariable("announcement-id") Long announcementId) {
         response = new ResponseDto(true, "공지사항이 삭제되었습니다.", null);
         announcementService.deleteAnnouncement(announcementId);
         return ResponseEntity.status(HttpStatus.OK).body(response);

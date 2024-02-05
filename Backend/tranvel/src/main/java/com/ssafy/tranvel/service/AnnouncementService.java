@@ -41,20 +41,20 @@ public class AnnouncementService {
     }
 
 
-    public Announcement findAnnouncement(int announcementId) {
+    public Announcement findAnnouncement(Long announcementId) {
         Announcement announcement = announcementRepository.findById(announcementId).get();
         return announcement;
 
     }
 
-    public Announcement updateAnnouncement(int announcementId, AnnouncementDto announcementDto) {
+    public Announcement updateAnnouncement(Long announcementId, AnnouncementDto announcementDto) {
         Announcement announcement = announcementRepository.findById(announcementId).get();
         announcement.update(announcementDto.getTitle(), announcementDto.getContent());
         announcementRepository.save(announcement);
         return announcement;
     }
 
-    public void deleteAnnouncement(int announcementId) {
+    public void deleteAnnouncement(Long announcementId) {
         announcementRepository.deleteById(announcementId);
     }
 

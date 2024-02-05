@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.util.ArrayList;
@@ -53,7 +54,11 @@ public class User implements UserDetails {
     @JsonManagedReference
     private List<Inquiry> inquiryList;
 
-    // JoinUser
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonBackReference
+    private List<RoomHistory> roomHistories;
+
 
 
     // UserDetails
