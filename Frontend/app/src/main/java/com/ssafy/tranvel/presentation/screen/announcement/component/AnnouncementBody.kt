@@ -12,7 +12,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,14 +24,10 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
-import com.ssafy.tranvel.R
 import com.ssafy.tranvel.data.model.dto.AnnouncementDto
 import com.ssafy.tranvel.presentation.screen.announcement.AnnouncementViewModel
+import com.ssafy.tranvel.presentation.screen.components.EmptyIndicator
+import com.ssafy.tranvel.presentation.screen.components.LoadingIndicator
 import com.ssafy.tranvel.presentation.ui.theme.bmjua
 import kotlinx.coroutines.flow.Flow
 
@@ -85,7 +80,7 @@ private fun Content(
         ) {
             if (isLoading) {
                 items(1) {
-                    AnnouncementLoadingIndicator()
+                    LoadingIndicator()
                 }
             } else if (pagedData != null && pagingItems != null && pagingItems!!.itemCount>0) {
                 val cnt = pagingItems!!.itemCount
@@ -113,36 +108,6 @@ private fun Content(
             }
         }
     }
-}
-
-@Composable
-fun AnnouncementLoadingIndicator(
-    modifier: Modifier = Modifier
-) {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loadinganimation))
-    val progress by animateLottieCompositionAsState(
-        composition, true, iterations = LottieConstants.IterateForever, restartOnPlay = false
-    )
-    LottieAnimation(
-        composition = composition,
-        progress = { progress },
-        modifier = modifier.fillMaxSize()
-    )
-}
-
-@Composable
-fun EmptyIndicator(
-    modifier: Modifier = Modifier
-) {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.emptyanimation))
-    val progress by animateLottieCompositionAsState(
-        composition, true, iterations = LottieConstants.IterateForever, restartOnPlay = false
-    )
-    LottieAnimation(
-        composition = composition,
-        progress = { progress },
-        modifier = modifier.fillMaxSize()
-    )
 }
 
 @Composable

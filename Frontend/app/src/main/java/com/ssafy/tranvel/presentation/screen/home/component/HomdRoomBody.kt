@@ -29,18 +29,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ssafy.tranvel.R
-import com.ssafy.tranvel.presentation.screen.home.HomeViewModel
+import com.ssafy.tranvel.presentation.screen.room.RoomViewModel
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 import com.ssafy.tranvel.presentation.ui.theme.TextColor
 import com.ssafy.tranvel.presentation.ui.theme.bmjua
 
 @Composable
 fun HomeRoomBody(
-    homeViewModel: HomeViewModel,
+//    roomViewModel: RoomViewModel,
     onEnterButtonClicked: () -> Unit,
     onCreateButtonClicked: () -> Unit,
 ) {
-    val uiState: String by homeViewModel.uiState.collectAsState()
+//    val uiState: String by roomViewModel.uiState.collectAsState()
     var isError by remember { mutableStateOf(false) }
 
     Row(
@@ -52,9 +52,10 @@ fun HomeRoomBody(
             modifier = Modifier
                 .fillMaxWidth(0.4f),
             shape = RoundedCornerShape(5.dp),
-            value = homeViewModel.enterCode.value,
+            value = "",
+//            value = homeViewModel.enterCode.value,
             onValueChange = {
-                homeViewModel.enterCode.value = it
+//                homeViewModel.enterCode.value = it
             },
             isError = isError,
             singleLine = true,

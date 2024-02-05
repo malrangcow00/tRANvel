@@ -6,20 +6,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.ssafy.tranvel.presentation.screen.home.HomeViewModel
+import com.ssafy.tranvel.data.model.dto.HistoryDto
+import com.ssafy.tranvel.presentation.screen.room.RoomViewModel
+import com.ssafy.tranvel.presentation.screen.history.HistoryViewModel
 
 @Composable
 fun HomeBody(
     innerPadding: PaddingValues,
-    homeViewModel: HomeViewModel,
+//    roomViewModel: RoomViewModel,
+    historyViewModel: HistoryViewModel,
     onEnterButtonClicked: () -> Unit,
     onCreateButtonClicked: () -> Unit,
+    onHistoryClicked: (HistoryDto?) -> Unit
 ) {
     Column(
         modifier = Modifier.padding(innerPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        HomeRoomBody(homeViewModel, onEnterButtonClicked, onCreateButtonClicked)
-        HomeHistoryBody(homeViewModel)
+//        HomeRoomBody(roomViewModel, onEnterButtonClicked, onCreateButtonClicked)
+        HomeRoomBody(onEnterButtonClicked, onCreateButtonClicked)
+        HomeHistoryBody(historyViewModel, onHistoryClicked)
     }
 }

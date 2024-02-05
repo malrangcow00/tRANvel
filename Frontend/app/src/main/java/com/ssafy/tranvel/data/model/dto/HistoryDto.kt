@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class AllHistoryDto(
+data class HistoryDto(
     val roomId: Int,
     val period : String,
     val images : List<String>?,
@@ -12,7 +12,7 @@ data class AllHistoryDto(
     val profit : Int?
 ) : Parcelable {
     companion object{
-        fun init() = AllHistoryDto(
+        fun init() = HistoryDto(
             roomId = -1,
             period = "",
             images = null,

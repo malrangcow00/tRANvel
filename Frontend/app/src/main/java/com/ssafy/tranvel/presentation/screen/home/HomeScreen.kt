@@ -11,6 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.ssafy.tranvel.data.model.dto.HistoryDto
+import com.ssafy.tranvel.presentation.screen.room.RoomViewModel
+import com.ssafy.tranvel.presentation.screen.history.HistoryViewModel
 import com.ssafy.tranvel.presentation.screen.home.component.HomeBody
 import com.ssafy.tranvel.presentation.screen.home.component.HomeHeader
 import com.ssafy.tranvel.presentation.screen.home.component.HomeRoomBody
@@ -18,12 +21,14 @@ import com.ssafy.tranvel.presentation.screen.mainMenuDrawer.MainMenuDrawerScreen
 
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel,
+//    roomViewModel: RoomViewModel,
+    historyViewModel: HistoryViewModel,
     onSettingClicked: () -> Unit,
     onAnnouncementClicked: () -> Unit,
     onWithdrawalClicked: () -> Unit,
     onEnterButtonClicked: () -> Unit,
-    onCreateButtonClicked: () -> Unit
+    onCreateButtonClicked: () -> Unit,
+    onHistoryClicked: (HistoryDto?) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -60,7 +65,14 @@ fun HomeScreen(
         Scaffold(
             topBar = { HomeHeader(drawerState = drawerState) },
             content = { paddingValues ->
-                HomeBody(paddingValues, homeViewModel, onEnterButtonClicked, onCreateButtonClicked)
+                HomeBody(
+                    paddingValues,
+//                    roomViewModel,
+                    historyViewModel,
+                    onEnterButtonClicked,
+                    onCreateButtonClicked,
+                    onHistoryClicked
+                )
             }
         )
     }
