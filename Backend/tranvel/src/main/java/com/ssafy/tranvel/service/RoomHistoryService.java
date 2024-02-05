@@ -10,8 +10,6 @@ import com.ssafy.tranvel.repository.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.hibernate.mapping.Join;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,7 +25,7 @@ public class RoomHistoryService {
     private  final UserRepository userRepository;
     private  final JoinUserRepository joinUserRepository;
 
-    public List<RoomHistory> getAllRoomhistories(RoomHistoryDto roomHistoryDto) {
+    public List<RoomHistory> getAllRoomHistories(RoomHistoryDto roomHistoryDto) {
         User user = userRepository.findById(roomHistoryDto.getUserId()).get();
 //        JoinUser joinUser = joinUserRepository.findByUserId(roomHistoryDto.getUserId()).get();
 
@@ -66,15 +64,33 @@ public class RoomHistoryService {
                     .userId(userId)
                     .roomHistory(roomHistory)
                     .build();
-            joinUserRepository.save(joinUser);
+
+            System.out.println(roomHistory.getJoinUser() == null);
             if (roomHistory.getJoinUser() == null) {
                 List<JoinUser> nowJoin = new ArrayList<>();
                 nowJoin.add(joinUser);
                 roomHistory.joinUser(nowJoin);
+                joinUserRepository.save(joinUser);
             } else {
                 List<JoinUser> nowJoin = roomHistory.getJoinUser() == null? null: roomHistory.getJoinUser();
-                nowJoin.add(joinUser);
-                roomHistory.joinUser(nowJoin);
+
+                boolean isCheck = false;
+                for (int idx = 0; idx < nowJoin.size(); idx ++) {
+                    if (
+                            Objects.equals(nowJoin.get(idx).getUserId().toString(),userId.toString()))
+                    {
+                        isCheck = true;
+                        break;
+                    }
+                }
+
+                if (!isCheck) {
+                    nowJoin.add(joinUser);
+                    joinUserRepository.save(joinUser);
+                    roomHistory.joinUser(nowJoin);
+
+                }
+
             }
         }
 
@@ -104,5 +120,26 @@ public class RoomHistoryService {
         addJoinUser(roomHistoryDto.getUserId(), roomCode, roomHistoryDto.getRoomPassword());
 
         return roomHistory1;
+    }
+
+
+    public RoomHistory getRoomDetailHistory(RoomHistoryDto roomHistoryDto) {
+        RoomHistory roomHistory = roomHistoryRepository.findById(roomHistoryDto.getRoomId()).get();
+
+        return roomHistory;
+    }
+
+    // 히스토리 수정은 후순위
+
+
+
+    public void finishRoomHistory(RoomHistoryDto roomHistoryDto) {
+        roomHistoryRepository.findById(roomHistoryDto.getRoomId()).get().finishRoom();
+    }
+
+
+    public Long deleteRoomHistory(RoomHistoryDto roomHistoryDto) {
+        roomHistoryRepository.deleteById(roomHistoryDto.getRoomId());
+        return roomHistoryDto.getRoomId();
     }
 }

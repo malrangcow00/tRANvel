@@ -55,7 +55,7 @@ public class User implements UserDetails {
     private List<Inquiry> inquiryList;
 
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user")
     @JsonBackReference
     private List<RoomHistory> roomHistories;
 

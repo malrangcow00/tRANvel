@@ -2,6 +2,7 @@ package com.ssafy.tranvel.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,6 +15,7 @@ public class JoinUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @JsonIgnore
     private Long id;
 
     @Column(name = "user_id")

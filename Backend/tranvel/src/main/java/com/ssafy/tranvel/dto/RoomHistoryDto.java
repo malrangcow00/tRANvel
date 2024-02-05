@@ -21,4 +21,6 @@ public class RoomHistoryDto {
 
     private int balanceResult;
 
+    private Long roomId;
+
 }

@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Entity
@@ -57,8 +59,12 @@ public class RoomHistory {
 
     public void joinUser(List<JoinUser> joinUser) {
         this.joinUser = joinUser;
+    }
 
-
+    public void finishRoom() {
+        this.nowPlaying = false;
+        this.roomCode = "";
+        this.endDate = LocalDateTime.now(ZoneId.of("Asia/Seoul")).toString();
     }
 
 }
