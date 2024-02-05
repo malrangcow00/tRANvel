@@ -6,14 +6,16 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
+import javax.inject.Inject
 
 private const val TAG = "tranvel"
-class XAccessTokenInterceptor(
+class XAccessTokenInterceptor @Inject constructor(
     private val dataSource: PreferenceDataSource
 ) : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val builder: Request.Builder = chain.request().newBuilder()
+        Log.d(TAG, "intercept: 찍힘???1111")
         try {
             dataSource.getString("access_token", null).let { token ->
                 token?.let {
@@ -23,8 +25,10 @@ class XAccessTokenInterceptor(
                 }
             }
         } catch (e: Exception) {
+            Log.d(TAG, "intercept: 찍힘???")
             Log.d(TAG, "intercept: 헤더 안담김")
         }
+        Log.d(TAG, "intercept: 찍힘???2222")
         return chain.proceed(builder.build())
     }
 }

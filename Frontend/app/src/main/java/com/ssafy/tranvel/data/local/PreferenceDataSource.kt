@@ -20,6 +20,7 @@ class PreferenceDataSource @Inject constructor(
     }
 
     fun putString(key: String, data: String?) {
+        editor.clear()
         editor.putString(key, data)
         editor.apply()
     }
