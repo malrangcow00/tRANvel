@@ -44,8 +44,8 @@ fun NavGraph() {
                     },
                     onLoginButtonClicked = {
                         it.viewModelStore.clear()
-                        navController.navigate("home_route"){
-                            popUpTo("login_screen") { inclusive = true}
+                        navController.navigate("home_route") {
+                            popUpTo("login_screen") { inclusive = true }
                         }
                     }
                 )
@@ -57,7 +57,7 @@ fun NavGraph() {
                 }
             }
             registerGraph(navController)
-            homeScreen(navController)
+            homeScreen(navController, { })
             userInfoModifyScreen(navController)
             userWithdrawalScreen(navController)
         }
