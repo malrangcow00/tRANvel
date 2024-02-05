@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class AdjustmentGameHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne
     private RoomHistory roomHistory;
@@ -23,19 +25,16 @@ public class AdjustmentGameHistory {
     private RandomGame miniGameCode;
 
     @Column(length = 20, name = "TargetUser")
-    private String TargetUser;
+    private String targetUser;
 
     @Column(length = 30, name = "DateTime")
     private String dateTime;
 
-    @Column(name = "MoneyResult")
-    private int moneyResult;
+    @OneToMany(mappedBy = "adjustmentGameHistory", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GamePlayer> gamePlayers; //
 
     @Column(name = "Price")
     private int price;
-
-    @Column(length = 20, name = "SelectedUsers")
-    private String selectedUsers;
 
     @Column(length = 30, name = "Image")
     private String image;

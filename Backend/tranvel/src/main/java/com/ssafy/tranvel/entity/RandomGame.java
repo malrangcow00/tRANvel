@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class RandomGame {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int miniGameCode;
+    private Long miniGameCode;
 
     @Column(length = 16, name = "GameName")
     private String gameName;
