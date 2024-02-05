@@ -13,13 +13,17 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.tranvel.presentation.screen.home.component.HomeBody
 import com.ssafy.tranvel.presentation.screen.home.component.HomeHeader
+import com.ssafy.tranvel.presentation.screen.home.component.HomeRoomBody
 import com.ssafy.tranvel.presentation.screen.mainMenuDrawer.MainMenuDrawerScreen
 
 @Composable
 fun HomeScreen(
+    homeViewModel: HomeViewModel,
     onSettingClicked: () -> Unit,
     onAnnouncementClicked: () -> Unit,
-    onWithdrawalClicked : () -> Unit
+    onWithdrawalClicked: () -> Unit,
+    onEnterButtonClicked: () -> Unit,
+    onCreateButtonClicked: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -56,7 +60,7 @@ fun HomeScreen(
         Scaffold(
             topBar = { HomeHeader(drawerState = drawerState) },
             content = { paddingValues ->
-                HomeBody(paddingValues)
+                HomeBody(paddingValues, homeViewModel, onEnterButtonClicked, onCreateButtonClicked)
             }
         )
     }

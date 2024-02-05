@@ -1,26 +1,26 @@
-package com.ssafy.tranvel.domain.usecase.announcement
+package com.ssafy.tranvel.domain.usecase.history
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.ssafy.tranvel.data.model.dto.AnnouncementDto
+import com.ssafy.tranvel.data.model.dto.AllHistoryDto
 import com.ssafy.tranvel.data.model.dto.extension.toAnnouncementDtoList
-import com.ssafy.tranvel.domain.repository.AnnouncementRepository
+import com.ssafy.tranvel.domain.repository.HistoryRepository
 import java.io.IOException
 
-class AnnouncementPagingSource(
-    internal val repository: AnnouncementRepository,
-) : PagingSource<Int, AnnouncementDto>() {
-    override fun getRefreshKey(state: PagingState<Int, AnnouncementDto>): Int? {
+class HistoryPagingSource (
+    internal val historyRepository : HistoryRepository,
+) : PagingSource<Int, AllHistoryDto>(){
+    override fun getRefreshKey(state: PagingState<Int, AllHistoryDto>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, AnnouncementDto> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, AllHistoryDto> {
         val page = params.key ?: 1
         return try {
-            val response = repository.getAllAnnouncement()
+            val response = historyRepository.getAllHistory()
 
             val announcementList = if (response.isSuccessful) {
                 response.body()?.data.orEmpty().toAnnouncementDtoList()

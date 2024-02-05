@@ -61,10 +61,5 @@ fun HomeHeader(
             fontSize = 25.sp,
             color = Color.Black,
         )
-        Image(
-            painter = painterResource(id = R.drawable.historyicon),
-            contentDescription = "히스토리 아이콘",
-            contentScale = ContentScale.Fit
-        )
     }
 }
