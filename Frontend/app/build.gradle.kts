@@ -24,6 +24,7 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("String", "API_KEY",getApiKey("API_KEY"))
+        buildConfigField("String", "WEBSOCKET_URL",getApiKey("WEBSOCKET_URL"))
         resValue("string","NAVER_API_KEY",getApiKey("NAVER_API_KEY"))
     }
 
@@ -73,6 +74,13 @@ dependencies {
     //okhttp3
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+
+    //STOMP
+    implementation ("com.github.NaikSoftware:StompProtocolAndroid:1.6.6")
+
+    //rx
+    implementation ("io.reactivex.rxjava2:rxjava:2.2.5")
+    implementation ("io.reactivex.rxjava2:rxandroid:2.1.0")
 
     //compose
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))

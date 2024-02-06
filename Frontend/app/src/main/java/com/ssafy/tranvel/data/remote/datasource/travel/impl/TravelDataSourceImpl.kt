@@ -11,8 +11,9 @@ import javax.inject.Inject
 
 class TravelDataSourceImpl @Inject constructor(
     private val travelService: TravelService
-) : TravelDataSource, BaseDataSource() {
-    override suspend fun createRoom(room: Room): Flow<DataState<DataResponse<Room>>> =
-        getResult { travelService.createRoom(room) }
+): TravelDataSource, BaseDataSource() {
+    override suspend fun createRoom(room: Room): Flow<DataState<DataResponse<Room>>> {
+        return getResult { travelService.createRoom(room) }
+    }
 
 }

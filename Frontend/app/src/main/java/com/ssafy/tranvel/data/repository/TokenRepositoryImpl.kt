@@ -10,4 +10,8 @@ class TokenRepositoryImpl @Inject constructor(
     override fun setToken(token: String, key: String) {
         preferenceDataSource.putString(key, token)
     }
+
+    override fun getToken(): String? {
+        return preferenceDataSource.getString("access_token")
+    }
 }

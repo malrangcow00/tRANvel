@@ -17,6 +17,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ssafy.tranvel.R
+import com.ssafy.tranvel.presentation.screen.login.LoadingDialog
 import com.ssafy.tranvel.presentation.screen.travel.TravelViewModel
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 import com.ssafy.tranvel.presentation.ui.theme.TextColor
@@ -40,7 +42,10 @@ fun HomeRoomBody(
     onEnterButtonClicked: () -> Unit,
     onCreateButtonClicked: () -> Unit,
 ) {
-//    val uiState: String by roomViewModel.uiState.collectAsState()
+    val uiState: String by travelViewModel.roomBodyState.collectAsState()
+    val loadingState: Boolean by travelViewModel.currentState.collectAsState()
+    val connectionState: Boolean by travelViewModel.connectionState.collectAsState()
+
     var dialogState: Boolean by remember {
         mutableStateOf(false)
     }
@@ -50,9 +55,25 @@ fun HomeRoomBody(
             onChangeState = { dialogState = false },
             onCreateRoom = {
                 travelViewModel.createRoom(it)
-//                onCreateButtonClicked()
             }
         )
+    }
+
+    when (uiState) {
+        "SUCCESS" -> {
+            travelViewModel.runStomp(5)
+            if (connectionState){
+                LoadingDialog{}
+            }
+        }
+        "FAILED" -> {
+//            Toast.makeText(context,"잠시 후 다시 시도해주세요.",Toast.LENGTH_SHORT).show()
+        }
+        else -> {
+            if (loadingState){
+                LoadingDialog{}
+            }
+        }
     }
 
     Row(
@@ -98,7 +119,8 @@ fun HomeRoomBody(
                 .width(90.dp)
                 .height(50.dp),
             onClick = {
-                onEnterButtonClicked()
+                travelViewModel.runStomp(5)
+//                onEnterButtonClicked()
             }
         ) {
             Text(text = "입장", color = Color.Black, textAlign = TextAlign.Center, fontFamily = bmjua)
