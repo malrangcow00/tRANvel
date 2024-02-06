@@ -46,7 +46,7 @@ public class InquiryService {
     public Inquiry getInquiry(InquiryDto inquiryDto) {
         User user = userRepository.findById(inquiryDto.getUserId()).get();
         List<Inquiry> inquiries = user.getInquiryList();
-        Inquiry inquiry = inquiries.stream().filter(inq -> inq.getUserId() == inquiryDto.getInquiryId())
+        Inquiry inquiry = inquiries.stream().filter(inq -> inq.getId() == inquiryDto.getInquiryId())
                 .findFirst().orElseThrow (() -> new IllegalArgumentException("해당번호의 문의 글이 존재하지 않습니다."));
         return inquiry;
     }
@@ -55,7 +55,7 @@ public class InquiryService {
     public Inquiry updateInquiry(InquiryDto inquiryDto) {
         User user = userRepository.findById(inquiryDto.getUserId()).get();
         List<Inquiry> inquiries = user.getInquiryList();
-        Inquiry inquiry = inquiries.stream().filter(inq -> inq.getUserId() == inquiryDto.getInquiryId())
+        Inquiry inquiry = inquiries.stream().filter(inq -> inq.getId() == inquiryDto.getInquiryId())
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("해당번호의 문의 글이 존재하지 않습니다."));
 
         inquiry.update(inquiryDto.getTitle(), inquiryDto.getContent());
@@ -67,7 +67,7 @@ public class InquiryService {
     public void deleteInquiry(InquiryDto inquiryDto) {
         User user = userRepository.findById(inquiryDto.getUserId()).get();
         List<Inquiry> inquiries = user.getInquiryList();
-        Inquiry inquiry = inquiries.stream().filter(inq -> inq.getUserId() == inquiryDto.getInquiryId())
+        Inquiry inquiry = inquiries.stream().filter(inq -> inq.getId() == inquiryDto.getInquiryId())
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("해당번호의 문의 글이 존재하지 않습니다."));
         inquiryRepository.delete(inquiry);
 

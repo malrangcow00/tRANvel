@@ -1,14 +1,17 @@
 package com.ssafy.tranvel.controller;
 
 
+import com.ssafy.tranvel.dto.AdjustmentGameHistoryDto;
 import com.ssafy.tranvel.dto.ResponseDto;
 import com.ssafy.tranvel.dto.RoomHistoryDto;
 import com.ssafy.tranvel.dto.StompDto;
 import com.ssafy.tranvel.entity.JoinUser;
 import com.ssafy.tranvel.entity.RoomHistory;
 import com.ssafy.tranvel.entity.User;
+import com.ssafy.tranvel.repository.AdjustmentGameHistoryRepository;
 import com.ssafy.tranvel.repository.RoomHistoryRepository;
 import com.ssafy.tranvel.repository.UserRepository;
+import com.ssafy.tranvel.service.AdjustmentGameHistoryService;
 import com.ssafy.tranvel.service.RoomHistoryService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +35,8 @@ public class RoomController {
     private final UserRepository userRepository;
     private final RoomHistoryService roomHistoryService;
     private final RoomHistoryRepository roomHistoryRepository;
+    private final AdjustmentGameHistoryService adjustmentGameHistoryService;
+    private final AdjustmentGameHistoryRepository adjustmentGameHistoryRepository;
     private final SimpMessageSendingOperations sendingOperations;
 
     @PostMapping("")
@@ -40,7 +45,6 @@ public class RoomController {
         response = new ResponseDto(true, "방 기록 전체 조회", roomHistoryList);
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> postRoomHistory(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
@@ -51,7 +55,6 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-
     //addJoinUser(Long userId, String roomCode, String inputRoomPassword
     @PostMapping("/enter")
     public ResponseEntity<ResponseDto> enterRoom(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
@@ -59,12 +62,6 @@ public class RoomController {
         List<JoinUser> joinUser = roomHistoryRepository.findByRoomCode(roomHistoryDto.getRoomCode()).get().getJoinUser();
 
         response = new ResponseDto(true, "방 게임 입장", joinUser);
-
-//        // Stomp 메세지 작성/발신
-//        String sender = userRepository.findById(roomHistoryDto.getUserId()).get().getNickName();
-//        String message = sender+"님이 입장하였습니다.";
-//        sendingOperations.convertAndSend("/topic/tranvel/room/" + roomHistoryDto.getRoomId(), message);
-
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -82,10 +79,6 @@ public class RoomController {
         roomHistoryService.finishRoomHistory(roomHistoryDto);
 
         response = new ResponseDto(true, "방 게임 기록 종료", roomHistoryRepository.findById(roomHistoryDto.getRoomId()).get());
-
-//        String message = "여행이 종료되었습니다."; // 멘트 더 꾸미는게 좋나..?
-//        sendingOperations.convertAndSend("/topic/chat/room/"+roomHistoryDto.getRoomId(),message);
-
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -95,6 +88,14 @@ public class RoomController {
 
         response = new ResponseDto(true, "방 게임 기록 삭제", roomHistoryDto.getRoomId());
 
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("{room-id}/adjustmentgame")
+    public ResponseEntity<ResponseDto> createAdjustmentGameHistory(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
+        adjustmentGameHistoryService.adjustment(adjustmentGameHistoryDto);
+
+        response = new ResponseDto(true,"정산 게임 생성", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
