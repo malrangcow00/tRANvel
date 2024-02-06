@@ -67,7 +67,7 @@ public class EmailAuthService {
         message.setSubject(title);
 
         String msgOfEmail =
-                "<div class=\"container\" style=\"text-align: center; width: 25%; position: relative;\">"
+                "<div class=\"container\" style=\"text-align: center; width: 50%; position: relative;\">"
 //                + "<img class=\"overlay-img responsive-img\" style=\"width: 40%;\" src=\"https://lh3.google.com/u/0/d/15K0WC6R8L23zDxpFVkzbZSTBK6cjCRSn=w2560-h1271-iv1\" alt=\"tRANvel Logo\"/>"
                 + "<p class=\"overlay-text\" style=\"top: 50%; left: 50%; color: #5caad2; font-size: 70px; margin: 0; z-index: 1;\"><strong>tRANvel</strong></p>"
                 + "<p style=\"margin: 10px 0; font-size: 20px;\"><strong>랜덤 여행지 추천 서비스</strong></p>"

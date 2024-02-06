@@ -43,25 +43,13 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 return;
             }
 
-
             if (token != null && jwtProvider.validateToken(token)) {
                 // 토큰 유효한 경우
                 Authentication authentication = jwtProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 chain.doFilter(request, response);
-            } else if (token != null) {
-                // 토큰 만료된 경우, 리프레시 토큰으로 새 토큰 발급
-                String refreshToken = getRefreshToken(httpRequest);
-                if (refreshToken != null && jwtProvider.validateRefreshToken(refreshToken)) {
-                    UserDetails userDetails = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-                    TokenDto newTokens = jwtProvider.regenerateToken(refreshToken, userDetails);
-                    sendNewTokens(httpResponse, newTokens);
-
-                } else {
-                    sendUnauthorizedResponse(httpResponse, "Refresh 토큰이 유효하지 않습니다.");
-                }
             } else {
-                sendUnauthorizedResponse(httpResponse, "토큰이 제공되지 않았습니다.");
+                sendUnauthorizedResponse(httpResponse, "Access Token이 유효하지 않거나 존재하지 않습니다.");
             }
         } catch (Exception e) {
             SecurityContextHolder.clearContext();

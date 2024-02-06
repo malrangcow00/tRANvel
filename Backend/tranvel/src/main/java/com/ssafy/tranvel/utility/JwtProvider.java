@@ -1,17 +1,18 @@
 package com.ssafy.tranvel.utility;
 
 import com.ssafy.tranvel.dto.TokenDto;
+import com.ssafy.tranvel.entity.RefreshToken;
+import com.ssafy.tranvel.repository.RefreshTokenRepository;
 
 import java.security.Key;
+import java.security.PrivilegedExceptionAction;
 import java.util.*;
 import java.util.stream.Collectors;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -25,49 +26,73 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 
-//import io.jsonwebtoken.io.Decoders; // 256bit
-import java.nio.charset.StandardCharsets; // 512bit
+import java.nio.charset.StandardCharsets;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-
 
 @Slf4j
 @Component
 public class JwtProvider {
 
     private final Key key;
-
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
     public JwtProvider(
-            @Value("${jwt.secret}") String secretKey) {
-//        byte[] keyBytes = Decoders.BASE64.decode(secretKey); // 256bit
-        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8); // 512bit
+            @Value("${jwt.secret}") String secretKey, RefreshTokenRepository refreshTokenRepository) {
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
-    public TokenDto generateToken(Authentication authentication) {
+    public TokenDto generateTokens(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
         // Access Token 생성
         long now = (new Date()).getTime();
-        Date accessTokenExpiresIn = new Date(now + 1800000); // 30분
-        Date refreshTokenExpiresIn = new Date(now + 86400000); // 1일
+        Date accessTokenExpiresIn = new Date(now + 86400000); // Access Token 1일
+        Date refreshTokenExpiresIn = new Date(now + 1728000000); // Refresh Token 20일
+//        Date accessTokenExpiresIn = new Date(now + 10000); // Access Token 10초 (임시)
+//        Date refreshTokenExpiresIn = new Date(now + 20000); // Refresh Token 20초 (임시)
 
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities) // 권한 정보
                 .setExpiration(accessTokenExpiresIn)
-//                .signWith(key, SignatureAlgorithm.HS256) // 256bit
-                .signWith(key, SignatureAlgorithm.HS512) // 512bit
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
                 .setExpiration(refreshTokenExpiresIn) // 1일
-//                .signWith(key, SignatureAlgorithm.HS256) // 256bit
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+
+        refreshTokenRepository.save(new RefreshToken(authentication.getName(), refreshToken));
+
+        // 인증 타입 prefix 설정 ("Bearer")
+        return TokenDto.builder()
+                .grantType("Bearer")
+                .accessToken(accessToken)
+//                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public TokenDto generateAccessToken(Authentication authentication) {
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        // Access Token 생성
+        long now = (new Date()).getTime();
+        Date accessTokenExpiresIn = new Date(now + 86400000); // 1일
+
+        String accessToken = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim("auth", authorities) // 권한 정보
+                .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512) // 512bit
                 .compact();
 
@@ -75,7 +100,6 @@ public class JwtProvider {
         return TokenDto.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
                 .build();
     }
 
@@ -124,20 +148,15 @@ public class JwtProvider {
         }
     }
 
-    // Refresh Token 유효성 검증
-    public boolean validateRefreshToken(String token) {
-        return validateToken(token); // 기존의 validateToken 메서드 재사용
-    }
-
-    // 새로운 Access Token과 Refresh Token 발급
+    // Refresh Token 검증 후 새로운 Access Token과 Refresh Token 발급
     public TokenDto regenerateToken(String refreshToken, UserDetails userDetails) {
         // Refresh Token 검증
-        if (!validateRefreshToken(refreshToken)) {
+        if (!validateToken(refreshToken)) {
             throw new RuntimeException("Refresh 토큰이 유효하지 않습니다.");
         }
 
         // 새로운 토큰 생성
-        return generateToken(new UsernamePasswordAuthenticationToken(
+        return generateAccessToken(new UsernamePasswordAuthenticationToken(
                 userDetails.getUsername(), null, userDetails.getAuthorities()));
     }
 }
