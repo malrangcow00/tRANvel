@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
+
 @RestController
 @Getter @Setter
 @RequiredArgsConstructor
@@ -21,9 +23,9 @@ public class AttractionController {
     private final AttractionService attractionService;
 
     @GetMapping("/attraction")
-    public ResponseEntity<ResponseDto> getAttractionInfos() {
+    public ResponseEntity<ResponseDto> getAttractionInfos() throws UnsupportedEncodingException {
         Object attractionList = attractionService.loadAttractionList();
-        response = new ResponseDto(true, "관광지 정보 저장", response);
+        response = new ResponseDto(true, "관광지 정보 저장", attractionList);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

@@ -7,8 +7,11 @@ import lombok.Setter;
 
 @Getter @Setter
 public class RoomHistoryDto {
+
     @Nullable
     private Long userId;
+
+    private String userEmail;
 
     private String roomCode;
 

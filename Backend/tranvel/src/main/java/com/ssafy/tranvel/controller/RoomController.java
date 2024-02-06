@@ -7,6 +7,7 @@ import com.ssafy.tranvel.entity.JoinUser;
 import com.ssafy.tranvel.entity.RoomHistory;
 import com.ssafy.tranvel.repository.RoomHistoryRepository;
 import com.ssafy.tranvel.service.RoomHistoryService;
+import com.ssafy.tranvel.utility.SecurityUtility;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -30,7 +31,10 @@ public class RoomController {
 
     @PostMapping("")
     public ResponseEntity<ResponseDto> getRoomHistoryList(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
-        List<RoomHistory> roomHistoryList = roomHistoryService.getAllRoomHistories(roomHistoryDto);
+        RoomHistoryDto info = roomHistoryDto;
+        info.setUserEmail(SecurityUtility.getCurrentUserId());
+
+        List<RoomHistory> roomHistoryList = roomHistoryService.getAllRoomHistories(info);
         response = new ResponseDto(true, "방 기록 전체 조회", roomHistoryList);
         return  ResponseEntity.status(HttpStatus.OK).body(response);
 
@@ -51,7 +55,9 @@ public class RoomController {
     //addJoinUser(Long userId, String roomCode, String inputRoomPassword
     @PostMapping("/enter")
     public ResponseEntity<ResponseDto> enterRoom(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
-        roomHistoryService.addJoinUser(roomHistoryDto.getUserId(), roomHistoryDto.getRoomCode(), roomHistoryDto.getRoomPassword());
+        RoomHistoryDto info = roomHistoryDto;
+        roomHistoryDto.setUserEmail(SecurityUtility.getCurrentUserId());
+        roomHistoryService.addJoinUser(info);
         List<JoinUser> joinUser = roomHistoryRepository.findByRoomCode(roomHistoryDto.getRoomCode()).get().getJoinUser();
         response = new ResponseDto(true, "방 게임 입장", joinUser);
 
