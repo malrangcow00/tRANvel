@@ -25,8 +25,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -82,13 +85,28 @@ public class UserController {
     }
 
 
-    // 로그인
+//     로그인
     @PostMapping("/signin")
     public ResponseEntity<ResponseDto> login(@RequestBody UserLoginDto userLoginDto) {
         TokenDto tokenDto = userService.login(userLoginDto.getEmail(), userLoginDto.getPassword());
         ResponseDto response = new ResponseDto(true, "로그인 성공", tokenDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+//    @PostMapping("/signin")
+//    public ResponseEntity<ResponseDto> login(@RequestBody UserLoginDto userLoginDto) {
+//        Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        userLoginDto.getEmail(),
+//                        userLoginDto.getPassword()
+//                )
+//        );
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        String accessToken = jwtProvider.generateAccessToken(authentication);
+//        String refreshToken = jwtProvider.generateRefreshToken();
+
+
 
     // JWT 테스트
     @PostMapping("/test")

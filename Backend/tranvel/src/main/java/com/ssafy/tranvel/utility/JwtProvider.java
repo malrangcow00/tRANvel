@@ -27,7 +27,6 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 
-//import io.jsonwebtoken.io.Decoders; // 256bit
 import java.nio.charset.StandardCharsets; // 512bit
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +48,7 @@ public class JwtProvider {
         this.tokenBlackListRepository = tokenBlackListRepository;
     }
 
-    public TokenDto generateToken(Authentication authentication) {
+    public TokenDto generateTokens(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -81,6 +80,51 @@ public class JwtProvider {
                 .refreshToken(refreshToken)
                 .build();
     }
+
+//    public TokenDto generateAccessToken(Authentication authentication) {
+//        String authorities = authentication.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.joining(","));
+//
+//        // Access Token 생성
+//        long now = (new Date()).getTime();
+//        Date accessTokenExpiresIn = new Date(now + 3600000); // 1시간
+//
+//        String accessToken = Jwts.builder()
+//                .setSubject(authentication.getName())
+//                .claim("auth", authorities) // 권한 정보
+//                .setExpiration(accessTokenExpiresIn)
+//                .signWith(key, SignatureAlgorithm.HS512) // 512bit
+//                .compact();
+//
+//        // 인증 타입 prefix 설정 ("Bearer")
+//        return TokenDto.builder()
+//                .grantType("Bearer")
+//                .accessToken(accessToken)
+//                .build();
+//    }
+//
+//    public TokenDto generateRefreshToken(Authentication authentication) {
+//        String authorities = authentication.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.joining(","));
+//
+//        // Access Token 생성
+//        long now = (new Date()).getTime();
+//        Date refreshTokenExpiresIn = new Date(now + 864000000); // 10일
+//
+//        // Refresh Token 생성
+//        String refreshToken = Jwts.builder()
+//                .setExpiration(refreshTokenExpiresIn) // 1일
+//                .signWith(key, SignatureAlgorithm.HS512) // 512bit
+//                .compact();
+//
+//        // 인증 타입 prefix 설정 ("Bearer")
+//        return TokenDto.builder()
+//                .grantType("Bearer")
+//                .refreshToken(refreshToken)
+//                .build();
+//    }
 
     // JWT 복호화 및 정보 추출
     public Authentication getAuthentication(String accessToken) {
@@ -164,7 +208,7 @@ public class JwtProvider {
         }
 
         // 새로운 토큰 생성
-        return generateToken(new UsernamePasswordAuthenticationToken(
+        return generateTokens(new UsernamePasswordAuthenticationToken(
                 userDetails.getUsername(), null, userDetails.getAuthorities()));
     }
 }
