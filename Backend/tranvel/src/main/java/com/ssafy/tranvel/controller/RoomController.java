@@ -4,6 +4,7 @@ package com.ssafy.tranvel.controller;
 import com.ssafy.tranvel.dto.AdjustmentGameHistoryDto;
 import com.ssafy.tranvel.dto.ResponseDto;
 import com.ssafy.tranvel.dto.RoomHistoryDto;
+import com.ssafy.tranvel.dto.RoomMainResponseDto;
 import com.ssafy.tranvel.dto.StompDto;
 import com.ssafy.tranvel.entity.JoinUser;
 import com.ssafy.tranvel.entity.RoomHistory;
@@ -13,6 +14,7 @@ import com.ssafy.tranvel.repository.RoomHistoryRepository;
 import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.AdjustmentGameHistoryService;
 import com.ssafy.tranvel.service.RoomHistoryService;
+import com.ssafy.tranvel.utility.SecurityUtility;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -22,7 +24,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 
 @Getter @Setter
@@ -41,8 +43,31 @@ public class RoomController {
 
     @PostMapping("")
     public ResponseEntity<ResponseDto> getRoomHistoryList(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
-        List<RoomHistory> roomHistoryList = roomHistoryService.getAllRoomHistories(roomHistoryDto);
-        response = new ResponseDto(true, "방 기록 전체 조회", roomHistoryList);
+        RoomHistoryDto info = roomHistoryDto;
+        info.setUserEmail(SecurityUtility.getCurrentUserId());
+
+        /*
+        List<RoomHistory>
+        roomId, data, images, roomName, balanceResult
+         */
+        List<RoomMainResponseDto> roomResponse = new ArrayList<>();
+
+
+        List<RoomHistory> roomHistoryList = roomHistoryService.getAllRoomHistories(info);
+        for (int idx = 0; idx < roomHistoryList.size(); idx ++) {
+            RoomMainResponseDto roomMainResponseDto = RoomMainResponseDto.builder()
+                    .roomid(roomHistoryList.get(idx).getId())
+                    .roomName(roomHistoryList.get(idx).getRoomName())
+                    .startDate(roomHistoryList.get(idx).getStartDate())
+                    .endDate(roomHistoryList.get(idx).getEndDate())
+                    .balanceResult(roomHistoryList.get(idx).getBalanceResult())
+                    .images(null)
+                    .build();
+            roomResponse.add(roomMainResponseDto);
+        }
+
+
+        response = new ResponseDto(true, "방 기록 전체 조회", roomResponse);
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -58,17 +83,33 @@ public class RoomController {
     //addJoinUser(Long userId, String roomCode, String inputRoomPassword
     @PostMapping("/enter")
     public ResponseEntity<ResponseDto> enterRoom(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
-        roomHistoryService.addJoinUser(roomHistoryDto.getUserId(), roomHistoryDto.getRoomCode(), roomHistoryDto.getRoomPassword());
+        RoomHistoryDto info = roomHistoryDto;
+        roomHistoryDto.setUserEmail(SecurityUtility.getCurrentUserId());
+        roomHistoryService.addJoinUser(info);
         List<JoinUser> joinUser = roomHistoryRepository.findByRoomCode(roomHistoryDto.getRoomCode()).get().getJoinUser();
 
         response = new ResponseDto(true, "방 게임 입장", joinUser);
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+
     @PostMapping("/detail")
     public ResponseEntity<ResponseDto> getRoomDetailHistory(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
         RoomHistory roomHistory = roomHistoryService.getRoomDetailHistory(roomHistoryDto);
         response = new ResponseDto(true, "방 게임 기록 조회", roomHistory);
+
+
+
+        /*
+
+        { result : true, msg : "~~", data: [
+
+        List<RoomHistory>
+        roomId, data, images, roomName, foodHistory, AttractionHistory, balanceResult
+
+
+        date, images, user : { userId, userProfile, profit}
+         */
 
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }

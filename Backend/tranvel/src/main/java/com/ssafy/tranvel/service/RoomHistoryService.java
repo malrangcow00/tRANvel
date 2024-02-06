@@ -30,7 +30,8 @@ public class RoomHistoryService {
 //        JoinUser joinUser = joinUserRepository.findByUserId(roomHistoryDto.getUserId()).get();
 
 //        return roomHistoryRepository.findByJoinUser(user.getJoinUser());
-        List<JoinUser> userList = joinUserRepository.findAllByUserId(roomHistoryDto.getUserId()).get();
+        Long userId = userRepository.findByEmail(roomHistoryDto.getUserEmail()).get().getId();
+        List<JoinUser> userList = joinUserRepository.findAllByUserId(userId).get();
         List<RoomHistory> roomHistoryList = new ArrayList<>();
         for (int idx = 0; idx < userList.size(); idx ++){
             roomHistoryList.add(userList.get(idx).getRoomHistory());
@@ -60,11 +61,12 @@ public class RoomHistoryService {
     }
 
 
-    public void addJoinUser(Long userId, String roomCode, String inputRoomPassword) {
+    // Long userId, String roomCode, String inputRoomPassword
+    public void addJoinUser(RoomHistoryDto roomHistoryDto) {
+        Long userId = userRepository.findByEmail(roomHistoryDto.getUserEmail()).get().getId();
+        RoomHistory roomHistory = roomHistoryRepository.findByRoomCode(roomHistoryDto.getRoomCode()).get();
 
-        RoomHistory roomHistory = roomHistoryRepository.findByRoomCode(roomCode).get();
-
-        if (roomHistory.getRoomPassword().equals(inputRoomPassword)) {
+        if (roomHistory.getRoomPassword().equals(roomHistoryDto.getRoomPassword())) {
             User user = userRepository.findById(userId).get();
             JoinUser joinUser = JoinUser.builder()
                     .authority(roomHistory.getJoinUser() == null)
@@ -105,9 +107,7 @@ public class RoomHistoryService {
     }
 
     public RoomHistory createRoomHistory(RoomHistoryDto roomHistoryDto) {
-        System.out.println(roomHistoryDto.getUserId());
-        System.out.println(roomHistoryDto.getRoomPassword());
-        User user = userRepository.findById(roomHistoryDto.getUserId()).get();
+        User user = userRepository.findByEmail(roomHistoryDto.getUserEmail()).get();
         String roomCode = createRoomCode();
         RoomHistory roomHistory = RoomHistory.builder()
                 .user(user)
@@ -121,7 +121,7 @@ public class RoomHistoryService {
                 .build();
         roomHistoryRepository.save(roomHistory);
         RoomHistory roomHistory1 = roomHistoryRepository.findByRoomCode(roomCode).get();
-        addJoinUser(roomHistoryDto.getUserId(), roomCode, roomHistoryDto.getRoomPassword());
+        addJoinUser(roomHistoryDto);
 
         return roomHistory1;
     }

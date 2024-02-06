@@ -6,8 +6,10 @@ import lombok.Setter;
 
 @Getter @Setter
 public class InquiryDto {
-    @NotNull
-    private Long userId;
+//    @NotNull
+    private String userEmail;
+
+//    private Long userId;
 
     private Long inquiryId;
 

@@ -76,7 +76,7 @@ public class UserController {
     // 프로필 이미지 등록
     @PostMapping("/image")
     public ResponseEntity<ResponseDto> saveImage(ProfileImageDto profileImageDto) throws IOException {
-        String profileimage = imageUploadService.uploadImage(profileImageDto.getProfileImage(), "profile", profileImageDto.getEmail());
+        String profileimage = imageUploadService.uploadImage(profileImageDto.getProfileImage(), "profile",  profileImageDto.getEmail() != null?profileImageDto.getEmail():SecurityUtility.getCurrentUserId());
         response = new ResponseDto(true, "프로필 사진 s3 저장", profileimage);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -121,7 +121,9 @@ public class UserController {
     // 회원 문의글 작성
     @PostMapping("/auth/inquiry")
     public ResponseEntity<ResponseDto> postInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
-        Inquiry inquiry = inquiryService.createInquiry(inquiryDto);
+        InquiryDto info = inquiryDto;
+        info.setUserEmail(SecurityUtility.getCurrentUserId());
+        Inquiry inquiry = inquiryService.createInquiry(info);
         response = new ResponseDto(true, "문의 작성 완료", inquiry);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
