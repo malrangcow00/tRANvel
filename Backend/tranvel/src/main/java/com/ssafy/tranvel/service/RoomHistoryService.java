@@ -7,6 +7,7 @@ import com.ssafy.tranvel.entity.User;
 import com.ssafy.tranvel.repository.JoinUserRepository;
 import com.ssafy.tranvel.repository.RoomHistoryRepository;
 import com.ssafy.tranvel.repository.UserRepository;
+import com.ssafy.tranvel.utility.SecurityUtility;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -30,7 +31,7 @@ public class RoomHistoryService {
 //        JoinUser joinUser = joinUserRepository.findByUserId(roomHistoryDto.getUserId()).get();
 
 //        return roomHistoryRepository.findByJoinUser(user.getJoinUser());
-        Long userId = userRepository.findByEmail(roomHistoryDto.getUserEmail()).get().getId();
+        Long userId = userRepository.findByEmail(SecurityUtility.getCurrentUserId()).get().getId();
         List<JoinUser> userList = joinUserRepository.findAllByUserId(userId).get();
         List<RoomHistory> roomHistoryList = new ArrayList<>();
         for (int idx = 0; idx < userList.size(); idx ++){
@@ -63,7 +64,8 @@ public class RoomHistoryService {
 
     // Long userId, String roomCode, String inputRoomPassword
     public void addJoinUser(RoomHistoryDto roomHistoryDto) {
-        Long userId = userRepository.findByEmail(roomHistoryDto.getUserEmail()).get().getId();
+        Long userId = userRepository.findByEmail(SecurityUtility.getCurrentUserId()).get().getId();
+        System.out.println(userId);
         RoomHistory roomHistory = roomHistoryRepository.findByRoomCode(roomHistoryDto.getRoomCode()).get();
 
         if (roomHistory.getRoomPassword().equals(roomHistoryDto.getRoomPassword())) {
@@ -74,6 +76,7 @@ public class RoomHistoryService {
                     .roomHistory(roomHistory)
                     .build();
             if (roomHistory.getJoinUser() == null) {
+                System.out.println("1");
                 List<JoinUser> nowJoin = new ArrayList<>();
                 nowJoin.add(joinUser);
                 roomHistory.joinUser(nowJoin);
@@ -82,19 +85,23 @@ public class RoomHistoryService {
                 List<JoinUser> nowJoin = roomHistory.getJoinUser() == null? null: roomHistory.getJoinUser();
 
                 boolean isCheck = false;
+                System.out.println("2");
                 for (int idx = 0; idx < nowJoin.size(); idx ++) {
                     if (
                             Objects.equals(nowJoin.get(idx).getUserId().toString(),userId.toString()))
                     {
                         isCheck = true;
+                        System.out.println("3");
                         break;
                     }
                 }
 
                 if (!isCheck) {
+                    System.out.println("4");
                     nowJoin.add(joinUser);
                     joinUserRepository.save(joinUser);
                     roomHistory.joinUser(nowJoin);
+                    System.out.println("5");
                 }
 
             }

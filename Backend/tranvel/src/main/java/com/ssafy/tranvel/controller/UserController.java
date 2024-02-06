@@ -15,7 +15,6 @@ import com.ssafy.tranvel.service.UserService;
 import com.ssafy.tranvel.utility.JwtProvider;
 
 import com.ssafy.tranvel.utility.SecurityUtility;
-import jakarta.servlet.http.HttpServletRequest;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,8 +72,8 @@ public class UserController {
 
     // 프로필 이미지 등록
     @PostMapping("/image")
-    public ResponseEntity<ResponseDto> saveImage(ProfileImageDto profileImageDto) throws IOException {
-        String profileimage = imageUploadService.uploadImage(profileImageDto.getProfileImage(), "profile",  profileImageDto.getEmail() != null?profileImageDto.getEmail():SecurityUtility.getCurrentUserId());
+    public ResponseEntity<ResponseDto> saveImage(ImagePostDto imagePostDto) throws IOException {
+        String profileimage = imageUploadService.uploadImage(imagePostDto);
         response = new ResponseDto(true, "프로필 사진 s3 저장", profileimage);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

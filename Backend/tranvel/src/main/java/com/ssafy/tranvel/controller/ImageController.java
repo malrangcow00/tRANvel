@@ -1,6 +1,6 @@
 package com.ssafy.tranvel.controller;
 
-import com.ssafy.tranvel.dto.ProfileImageDto;
+import com.ssafy.tranvel.dto.ImagePostDto;
 import com.ssafy.tranvel.dto.ResponseDto;
 import com.ssafy.tranvel.service.ImageUploadService;
 import lombok.Getter;
@@ -22,8 +22,12 @@ public class ImageController {
     private ResponseDto response;
 
     @PostMapping("/image")
-    public ResponseEntity<ResponseDto> saveImage(ProfileImageDto profileImageDto) throws IOException {
-        String profileimage = imageUploadService.uploadImage(profileImageDto.getProfileImage(), "profile", profileImageDto.getEmail());
+    public ResponseEntity<ResponseDto> saveImage(ImagePostDto imagePostDto) throws IOException {
+
+        /*
+        MultipartFile image, String category, Long roomId, Long contentId
+         */
+        String profileimage = imageUploadService.uploadImage(imagePostDto);
         response = new ResponseDto(true, "프로필 사진 s3 저장", profileimage);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
