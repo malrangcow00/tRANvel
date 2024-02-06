@@ -3,6 +3,7 @@ package com.ssafy.tranvel.controller;
 
 import com.ssafy.tranvel.dto.ResponseDto;
 import com.ssafy.tranvel.dto.RoomHistoryDto;
+import com.ssafy.tranvel.dto.RoomMainResponseDto;
 import com.ssafy.tranvel.dto.StompDto;
 import com.ssafy.tranvel.entity.JoinUser;
 import com.ssafy.tranvel.entity.RoomHistory;
@@ -20,7 +21,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 
 @Getter @Setter
@@ -40,8 +41,28 @@ public class RoomController {
         RoomHistoryDto info = roomHistoryDto;
         info.setUserEmail(SecurityUtility.getCurrentUserId());
 
+        /*
+        List<RoomHistory>
+        roomId, data, images, roomName, balanceResult
+         */
+        List<RoomMainResponseDto> roomResponse = new ArrayList<>();
+
+
         List<RoomHistory> roomHistoryList = roomHistoryService.getAllRoomHistories(info);
-        response = new ResponseDto(true, "방 기록 전체 조회", roomHistoryList);
+        for (int idx = 0; idx < roomHistoryList.size(); idx ++) {
+            RoomMainResponseDto roomMainResponseDto = RoomMainResponseDto.builder()
+                    .roomid(roomHistoryList.get(idx).getId())
+                    .roomName(roomHistoryList.get(idx).getRoomName())
+                    .startDate(roomHistoryList.get(idx).getStartDate())
+                    .endDate(roomHistoryList.get(idx).getEndDate())
+                    .balanceResult(roomHistoryList.get(idx).getBalanceResult())
+                    .images(null)
+                    .build();
+            roomResponse.add(roomMainResponseDto);
+        }
+
+
+        response = new ResponseDto(true, "방 기록 전체 조회", roomResponse);
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -74,10 +95,24 @@ public class RoomController {
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+
     @PostMapping("/detail")
     public ResponseEntity<ResponseDto> getRoomDetailHistory(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
         RoomHistory roomHistory = roomHistoryService.getRoomDetailHistory(roomHistoryDto);
         response = new ResponseDto(true, "방 게임 기록 조회", roomHistory);
+
+
+
+        /*
+
+        { result : true, msg : "~~", data: [
+
+        List<RoomHistory>
+        roomId, data, images, roomName, foodHistory, AttractionHistory, balanceResult
+
+
+        date, images, user : { userId, userProfile, profit}
+         */
 
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
