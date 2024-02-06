@@ -78,14 +78,14 @@ public class UserController {
 
     // 프로필 이미지 등록
     @PostMapping("/image")
-    public ResponseEntity<ResponseDto> saveImage(ProfileImageDto profileImageDto) throws IOException {
-        String profileimage = imageUploadService.uploadImage(profileImageDto.getProfileImage(), "profile",  profileImageDto.getEmail() != null?profileImageDto.getEmail():SecurityUtility.getCurrentUserId());
+    public ResponseEntity<ResponseDto> saveImage(ImagePostDto imagePostDto) throws IOException {
+        String profileimage = imageUploadService.uploadImage(imagePostDto);
         response = new ResponseDto(true, "프로필 사진 s3 저장", profileimage);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
-//     로그인
+    // 로그인
     @PostMapping("/signin")
     public ResponseEntity<ResponseDto> login(@RequestBody UserLoginDto userLoginDto) {
         TokenDto tokenDto = userService.login(userLoginDto.getEmail(), userLoginDto.getPassword());
