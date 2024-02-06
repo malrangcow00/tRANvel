@@ -1,8 +1,8 @@
 package com.ssafy.tranvel.utility;
 
 import com.ssafy.tranvel.dto.TokenDto;
-import com.ssafy.tranvel.entity.TokenBlackList;
-import com.ssafy.tranvel.repository.TokenBlackListRepository;
+//import com.ssafy.tranvel.entity.TokenBlackList;
+//import com.ssafy.tranvel.repository.TokenBlackListRepository;
 
 import java.security.Key;
 import java.util.*;
@@ -37,15 +37,16 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtProvider {
 
     private final Key key;
-    private final TokenBlackListRepository tokenBlackListRepository;
+//    private final TokenBlackListRepository tokenBlackListRepository;
 
     @Autowired
     public JwtProvider(
-            @Value("${jwt.secret}") String secretKey,
-            TokenBlackListRepository tokenBlackListRepository) {
+//            @Value("${jwt.secret}") String secretKey,
+//            TokenBlackListRepository tokenBlackListRepository) {
+            @Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.tokenBlackListRepository = tokenBlackListRepository;
+//        this.tokenBlackListRepository = tokenBlackListRepository;
     }
 
     public TokenDto generateTokens(Authentication authentication) {
@@ -56,6 +57,7 @@ public class JwtProvider {
         // Access Token 생성
         long now = (new Date()).getTime();
         Date accessTokenExpiresIn = new Date(now + 86400000); // 1일
+//        Date accessTokenExpiresIn = new Date(now + 10000); // 10초 (임시)
         Date refreshTokenExpiresIn = new Date(now + 1728000000); // 20일
 
         String accessToken = Jwts.builder()
@@ -79,28 +81,28 @@ public class JwtProvider {
                 .build();
     }
 
-//    public TokenDto generateAccessToken(Authentication authentication) {
-//        String authorities = authentication.getAuthorities().stream()
-//                .map(GrantedAuthority::getAuthority)
-//                .collect(Collectors.joining(","));
-//
-//        // Access Token 생성
-//        long now = (new Date()).getTime();
-//        Date accessTokenExpiresIn = new Date(now + 3600000); // 1시간
-//
-//        String accessToken = Jwts.builder()
-//                .setSubject(authentication.getName())
-//                .claim("auth", authorities) // 권한 정보
-//                .setExpiration(accessTokenExpiresIn)
-//                .signWith(key, SignatureAlgorithm.HS512) // 512bit
-//                .compact();
-//
-//        // 인증 타입 prefix 설정 ("Bearer")
-//        return TokenDto.builder()
-//                .grantType("Bearer")
-//                .accessToken(accessToken)
-//                .build();
-//    }
+    public TokenDto generateAccessToken(Authentication authentication) {
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        // Access Token 생성
+        long now = (new Date()).getTime();
+        Date accessTokenExpiresIn = new Date(now + 86400000); // 1일
+
+        String accessToken = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim("auth", authorities) // 권한 정보
+                .setExpiration(accessTokenExpiresIn)
+                .signWith(key, SignatureAlgorithm.HS512) // 512bit
+                .compact();
+
+        // 인증 타입 prefix 설정 ("Bearer")
+        return TokenDto.builder()
+                .grantType("Bearer")
+                .accessToken(accessToken)
+                .build();
+    }
 //
 //    public TokenDto generateRefreshToken(Authentication authentication) {
 //        String authorities = authentication.getAuthorities().stream()
@@ -174,18 +176,18 @@ public class JwtProvider {
         return validateToken(token); // 기존의 validateToken 메서드 재사용
     }
 
-    // 토큰을 블랙리스트에 추가하는 메서드
-    public void addToBlackList(String token) {
-        TokenBlackList tokenBlackList = new TokenBlackList(token);
-        tokenBlackListRepository.save(tokenBlackList);
-    }
+//    // 토큰을 블랙리스트에 추가하는 메서드
+//    public void addToBlackList(String token) {
+//        TokenBlackList tokenBlackList = new TokenBlackList(token);
+//        tokenBlackListRepository.save(tokenBlackList);
+//    }
 
-    // 토큰이 블랙리스트에 있는지 확인하는 메서드
-    public boolean isTokenInBlackList(String token) {
-        return tokenBlackListRepository.existsById(token);
-    }
+//    // 토큰이 블랙리스트에 있는지 확인하는 메서드
+//    public boolean isTokenInBlackList(String token) {
+//        return tokenBlackListRepository.existsById(token);
+//    }
 
-    // 새로운 Access Token과 Refresh Token 발급
+    // Refresh Token 검증 후 새로운 Access Token과 Refresh Token 발급
     public TokenDto regenerateToken(String refreshToken, UserDetails userDetails) {
         // Refresh Token 검증
         if (!validateRefreshToken(refreshToken)) {
@@ -199,14 +201,14 @@ public class JwtProvider {
 //            addToBlackList(currentAccessToken);
 //        }
 
-        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        if (currentAuthentication != null && currentAuthentication.getCredentials() instanceof String) {
-            String currentAccessToken = currentAuthentication.getCredentials().toString();
-            addToBlackList(currentAccessToken);
-        }
+//        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (currentAuthentication != null && currentAuthentication.getCredentials() instanceof String) {
+//            String currentAccessToken = currentAuthentication.getCredentials().toString();
+//            addToBlackList(currentAccessToken);
+//        }
 
         // 새로운 토큰 생성
-        return generateTokens(new UsernamePasswordAuthenticationToken(
+        return generateAccessToken(new UsernamePasswordAuthenticationToken(
                 userDetails.getUsername(), null, userDetails.getAuthorities()));
     }
 }
