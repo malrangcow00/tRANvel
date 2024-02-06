@@ -29,4 +29,8 @@ public class AttractionController {
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+    @GetMapping("/check")
+    public void check() {
+        attractionService.saveDataFromJsonFile("src/main/resources/AttractionJson.json");
+    }
 }

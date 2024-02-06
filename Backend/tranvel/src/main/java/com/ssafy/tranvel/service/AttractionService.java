@@ -1,8 +1,10 @@
 package com.ssafy.tranvel.service;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.tranvel.dto.AttractionBaseDto;
+import com.ssafy.tranvel.entity.AttractionList;
 import com.ssafy.tranvel.repository.AttractionRepository;
-import io.swagger.v3.core.util.Json;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -10,15 +12,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
+
 
 @Service
 @Getter @Setter
 @RequiredArgsConstructor
 public class AttractionService {
 
-    private AttractionRepository attractionRepository;
+    private final AttractionRepository attractionRepository;
 
 
     public Object loadAttractionList() throws UnsupportedEncodingException {
@@ -48,4 +54,38 @@ public class AttractionService {
         }
 
     }
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public List<Object> readDataFromJsonFile(String filePath) throws IOException {
+        return objectMapper.readValue(new File(filePath), objectMapper.getTypeFactory().constructCollectionType(List.class, Object.class));
+    }
+
+    public void saveDataFromJsonFile(String filePath) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            AttractionBaseDto[] attractionArray = objectMapper.readValue(new File(filePath), AttractionBaseDto[].class);
+//            List<AttractionList> attractionList = objectMapper.readValue(new File(filePath), new TypeReference<List<AttractionList>>(){});
+//            attractionRepository.saveAll(attractionList);
+//            System.out.println("데이터 저장이 완료되었습니다.");
+//            List<Object> dataList = readDataFromJsonFile(filePath);
+            for (int idx = 0; idx < attractionArray.length; idx ++) {
+                AttractionList attractionList = AttractionList.builder()
+                        .city(attractionArray[idx].getProvidingAgencyName())
+                        .description(attractionArray[idx].getIntroduction())
+                        .latitude(attractionArray[idx].getLatitude())
+                        .longitude(attractionArray[idx].getLongitude())
+                        .name(attractionArray[idx].getAttractionName())
+                        .build();
+                attractionRepository.save(attractionList);
+            }
+            System.out.println(attractionArray[0].getProvidingAgencyName());
+//            attractionRepository.saveAll(dataList);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle exception
+        }
+    }
+
+
 }

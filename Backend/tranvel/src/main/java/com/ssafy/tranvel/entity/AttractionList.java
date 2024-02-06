@@ -1,5 +1,7 @@
 package com.ssafy.tranvel.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,24 +18,31 @@ public class AttractionList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20, name = "Name")
+    @Column(name = "Name")
+    @JsonProperty("관광지명")
     private String name;
 
     @Column(name = "Latitude")
-    private double latitude;
+    @JsonProperty("위도")
+    private String latitude;
 
     @Column(name = "Longitude")
-    private double longitude;
+    @JsonProperty("경도")
+    private String longitude;
 
-    @Column(length = 100, name = "Description")
+    @Column(length = 5000, name = "Description")
+    @JsonProperty("관광지소개")
     private String description;
 
-    @Column(length = 10, name = "Province")
-    private String province;
+//    @Column(length = 30, name = "Province")
+//    @JsonProperty("제공기관명")
+//    private String province;
 
-    @Column(length = 10, name = "City")
+    @Column(name = "City")
+    @JsonProperty("제공기관명")
     private String city;
 
-    @Column(length = 20, name = "Image")
+    @Column(name = "Image")
+    @Nullable
     private String image;
 }
