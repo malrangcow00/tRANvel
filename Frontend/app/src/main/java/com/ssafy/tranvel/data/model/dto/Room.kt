@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Room(
     val userId: Long = 11,
+    val userEmail: String="hiahn777@gmail.com",
     val roomCode: String = " ",
     val roomName: String = " ",
     val roomPassword: String,

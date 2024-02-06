@@ -26,8 +26,7 @@ fun NavGraph() {
     val currentRoute = navBackStackEntry?.destination?.route
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
 
-    Scaffold(
-    ) { innerPadding ->
+    Scaffold { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = "login_screen",
@@ -59,7 +58,7 @@ fun NavGraph() {
                 }
             }
             registerGraph(navController)
-            homeScreen(navController, { })
+            homeScreen(navController) { }
             userInfoModifyScreen(navController)
             userWithdrawalScreen(navController)
         }

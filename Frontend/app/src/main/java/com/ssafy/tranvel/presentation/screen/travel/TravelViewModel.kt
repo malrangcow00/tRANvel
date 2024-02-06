@@ -34,18 +34,21 @@ class TravelViewModel @Inject constructor(
         mapOf("Authorization" to "Bearer ${result}")
     )
 
-    private val _roomBodyState = MutableStateFlow("")
+    private val _roomBodyState = MutableStateFlow(false)
     val roomBodyState = _roomBodyState.asStateFlow()
 
     private val _currentState = MutableStateFlow(false)
     val currentState = _currentState.asStateFlow()
 
-    private val _connectionState = MutableStateFlow(false)
-    val connectionState = _connectionState.asStateFlow()
-
-    private fun changeConnectionState() {
+    private fun changeCurrentState() {
         viewModelScope.launch {
-            _connectionState.emit(!_connectionState.value)
+            _currentState.emit(!_currentState.value)
+        }
+    }
+
+    fun changeRoomBodyState() {
+        viewModelScope.launch {
+            _roomBodyState.emit(!_roomBodyState.value)
         }
     }
 
@@ -65,7 +68,8 @@ class TravelViewModel @Inject constructor(
                 when (lifecycleEvent.type) {
                     LifecycleEvent.Type.OPENED -> {
                         Log.i("OPEND", "!!")
-                        changeConnectionState()
+                        changeCurrentState()
+                        _roomBodyState.value = true
                     }
 
                     LifecycleEvent.Type.CLOSED -> {
@@ -75,6 +79,7 @@ class TravelViewModel @Inject constructor(
                     LifecycleEvent.Type.ERROR -> {
                         Log.i("ERROR", "!!")
                         Log.e("CONNECT ERROR", lifecycleEvent.exception.toString())
+                        stompClient.connect()
                     }
 
                     else -> {
@@ -82,8 +87,6 @@ class TravelViewModel @Inject constructor(
                     }
                 }
             }
-
-        sendRoomMessage("ENTER")
     }
 
     fun sendRoomMessage(type: String) {
@@ -99,29 +102,26 @@ class TravelViewModel @Inject constructor(
 
     fun createRoom(password: String) {
         viewModelScope.launch {
+            _currentState.emit(true)
             travelRepository.createRoom(Room(roomPassword = password)).collect {
                 when (it) {
                     is DataState.Success -> {
-                        if (it.data.result) {
-                            _roomBodyState.emit("SUCCESS")
-                            _connectionState.emit(true)
-                        } else {
-                            _roomBodyState.emit("FAILED")
-                            _currentState.emit(false)
-                        }
+                        runStomp(7)
                     }
 
                     is DataState.Error -> {
-                        _roomBodyState.emit("FAILED")
                         _currentState.emit(false)
                     }
 
                     is DataState.Loading -> {
-                        _roomBodyState.emit("LOADING")
                         _currentState.emit(true)
                     }
                 }
             }
         }
+    }
+
+    fun enterRoom() {
+
     }
 }

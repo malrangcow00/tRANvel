@@ -16,7 +16,6 @@ fun HomeBody(
     travelViewModel: TravelViewModel,
     historyViewModel: HistoryViewModel,
     onEnterButtonClicked: () -> Unit,
-    onCreateButtonClicked: () -> Unit,
     onHistoryClicked: (HistoryDto?) -> Unit
 ) {
     Column(
@@ -24,7 +23,7 @@ fun HomeBody(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 //        HomeRoomBody(roomViewModel, onEnterButtonClicked, onCreateButtonClicked)
-        HomeRoomBody(travelViewModel, onEnterButtonClicked, onCreateButtonClicked)
+        HomeRoomBody(travelViewModel, onEnterButtonClicked)
         HomeHistoryBody(historyViewModel, onHistoryClicked)
     }
 }

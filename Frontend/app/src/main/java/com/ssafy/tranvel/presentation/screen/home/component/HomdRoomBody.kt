@@ -40,11 +40,9 @@ import com.ssafy.tranvel.presentation.ui.theme.bmjua
 fun HomeRoomBody(
     travelViewModel: TravelViewModel,
     onEnterButtonClicked: () -> Unit,
-    onCreateButtonClicked: () -> Unit,
 ) {
-    val uiState: String by travelViewModel.roomBodyState.collectAsState()
+    val uiState: Boolean by travelViewModel.roomBodyState.collectAsState()
     val loadingState: Boolean by travelViewModel.currentState.collectAsState()
-    val connectionState: Boolean by travelViewModel.connectionState.collectAsState()
 
     var dialogState: Boolean by remember {
         mutableStateOf(false)
@@ -54,26 +52,20 @@ fun HomeRoomBody(
         CreateRoomDialog(
             onChangeState = { dialogState = false },
             onCreateRoom = {
-                travelViewModel.createRoom(it)
+                onEnterButtonClicked()
+//                travelViewModel.createRoom(it)
             }
         )
     }
 
-    when (uiState) {
-        "SUCCESS" -> {
-            travelViewModel.runStomp(5)
-            if (connectionState){
-                LoadingDialog{}
-            }
+    if (loadingState) {
+        LoadingDialog {
         }
-        "FAILED" -> {
-//            Toast.makeText(context,"잠시 후 다시 시도해주세요.",Toast.LENGTH_SHORT).show()
-        }
-        else -> {
-            if (loadingState){
-                LoadingDialog{}
-            }
-        }
+    }
+
+    if (uiState) {
+        onEnterButtonClicked()
+        travelViewModel.changeRoomBodyState()
     }
 
     Row(
@@ -119,8 +111,8 @@ fun HomeRoomBody(
                 .width(90.dp)
                 .height(50.dp),
             onClick = {
-                travelViewModel.runStomp(5)
-//                onEnterButtonClicked()
+                onEnterButtonClicked()
+//                travelViewModel.runStomp(5)
             }
         ) {
             Text(text = "입장", color = Color.Black, textAlign = TextAlign.Center, fontFamily = bmjua)
@@ -134,7 +126,6 @@ fun HomeRoomBody(
                 .width(90.dp)
                 .height(50.dp),
             onClick = {
-//                onCreateButtonClicked()
                 dialogState = true
             }
         ) {

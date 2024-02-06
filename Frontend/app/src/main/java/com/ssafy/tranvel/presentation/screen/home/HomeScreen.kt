@@ -26,7 +26,6 @@ fun HomeScreen(
     onAnnouncementClicked: () -> Unit,
     onWithdrawalClicked: () -> Unit,
     onEnterButtonClicked: () -> Unit,
-    onCreateButtonClicked: () -> Unit,
     onHistoryClicked: (HistoryDto?) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -69,7 +68,6 @@ fun HomeScreen(
                     travelViewModel,
                     historyViewModel,
                     onEnterButtonClicked,
-                    onCreateButtonClicked,
                     onHistoryClicked
                 )
             }
