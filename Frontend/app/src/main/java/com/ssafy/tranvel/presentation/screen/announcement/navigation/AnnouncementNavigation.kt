@@ -16,13 +16,10 @@ fun NavController.navigateAnnouncement(
     this.navigate(announcementRoute)
 }
 
-fun NavGraphBuilder.announcementScreen(navigateToDetailAnnouncement: (AnnouncementDto?) -> Unit) {
+fun NavGraphBuilder.announcementScreen() {
     composable(announcementRoute) {
         AnnouncementScreen(
             hiltViewModel(),
-            navigateToDetail = {
-                navigateToDetailAnnouncement.invoke(it)
-            }
         )
     }
 }

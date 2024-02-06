@@ -40,7 +40,6 @@ private const val TAG = "AnnouncementBody_싸피"
 fun AnnouncementBody(
     paddingValues: PaddingValues,
     viewModel: AnnouncementViewModel,
-    navigateToAnnouncementDetail: (AnnouncementDto?) -> Unit
 ) {
     val viewState = viewModel.uiState.collectAsState().value
 
@@ -52,9 +51,6 @@ fun AnnouncementBody(
             Content(
                 isLoading = viewState.isLoading,
                 pagedData = viewState.pagedData,
-                clickDetail = {
-                    navigateToAnnouncementDetail.invoke(it)
-                }
             )
         },
     )
@@ -64,7 +60,6 @@ fun AnnouncementBody(
 private fun Content(
     isLoading: Boolean = false,
     pagedData: Flow<PagingData<AnnouncementDto>>? = null,
-    clickDetail: (AnnouncementDto?) -> Unit
 ) {
     var pagingItems: LazyPagingItems<AnnouncementDto>? = null
     pagedData?.let {
@@ -97,9 +92,6 @@ private fun Content(
                 }
                 items(count = cnt) { index ->
                     AnnouncementCard(
-                        showDetailAnnouncementClick = {
-                            clickDetail.invoke(pagingItems!![index])
-                        },
                         dto = pagingItems!![index]
                     )
                 }

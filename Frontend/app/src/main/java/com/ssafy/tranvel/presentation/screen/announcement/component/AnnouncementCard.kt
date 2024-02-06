@@ -31,7 +31,6 @@ import com.ssafy.tranvel.presentation.ui.theme.bmjua
 @Composable
 fun AnnouncementCard(
     dto: AnnouncementDto?,
-    showDetailAnnouncementClick: () -> (Unit)
 ) {
     val showDialog = remember { mutableStateOf(false) }
     if (showDialog.value) {
@@ -85,17 +84,6 @@ fun AnnouncementCard(
                 color = Color(0xFF018786),
             )
         }
-    }
-}
-
-@Composable
-fun showAnnouncement(
-    dto: AnnouncementDto,
-    showDialog: Boolean,
-    onDismiss: () -> Unit
-) {
-    if (showDialog) {
-        AnnouncementDetailScreen(dto, onDismiss, showDialog)
     }
 }
 

@@ -32,7 +32,7 @@ fun NavGraph() {
             startDestination = "login_screen",
             Modifier.padding(innerPadding)
         ) {
-            announcementScreen { }
+            announcementScreen()
             composable(route = "login_screen") {
                 LoginScreen(
                     loginViewModel = hiltViewModel(),
