@@ -42,7 +42,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 chain.doFilter(request, response);
                 return;
             }
-
             if (token != null && jwtProvider.validateToken(token)) {
                 // 토큰 유효한 경우
                 Authentication authentication = jwtProvider.getAuthentication(token);
@@ -54,8 +53,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         } catch (Exception e) {
             SecurityContextHolder.clearContext();
             log.error("인증 오류: ", e); // 오류 로깅 추가
-//            sendUnauthorizedResponse(httpResponse, "인증 오류 발생");
-            sendUnauthorizedResponse(httpResponse, "인증 오류 발생: " + e.getMessage()); // 예외 메시지 포함
+            sendUnauthorizedResponse(httpResponse, "인증 오류 발생: " + e.getMessage());
         }
     }
 
@@ -73,14 +71,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         return null;
     }
 
-    private String getRefreshToken(HttpServletRequest request) {
-        return request.getHeader("Refresh-Token");
-    }
-
     private void sendNewTokens(HttpServletResponse response, TokenDto newTokens) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().write("Access Token: " + newTokens.getAccessToken() + ", Refresh Token: " + newTokens.getRefreshToken());
+        response.getWriter().write("Access Token: " + newTokens.getAccessToken());
     }
 
     private void sendUnauthorizedResponse(HttpServletResponse response, String message) throws IOException {

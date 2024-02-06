@@ -13,6 +13,5 @@ public class TokenDto {
 
     private String grantType; // prefix: Bearer
     private String accessToken;
-    private String refreshToken;
 
 }
