@@ -43,11 +43,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 return;
             }
 
-            if (token != null && jwtProvider.isTokenInBlackList(token)) {
-                // 블랙리스트 토큰인 경우 인증 실패 처리
-                sendUnauthorizedResponse(httpResponse, "이 토큰은 사용할 수 없습니다.");
-                return;
-            }
 
             if (token != null && jwtProvider.validateToken(token)) {
                 // 토큰 유효한 경우
@@ -61,7 +56,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                     UserDetails userDetails = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
                     TokenDto newTokens = jwtProvider.regenerateToken(refreshToken, userDetails);
                     sendNewTokens(httpResponse, newTokens);
-                    jwtProvider.addToBlackList(token); // 새 토큰 발급 후 이전 토큰 블랙리스트 처리
+
                 } else {
                     sendUnauthorizedResponse(httpResponse, "Refresh 토큰이 유효하지 않습니다.");
                 }

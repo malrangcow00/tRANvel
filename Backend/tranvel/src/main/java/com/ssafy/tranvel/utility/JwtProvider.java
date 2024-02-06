@@ -1,8 +1,6 @@
 package com.ssafy.tranvel.utility;
 
 import com.ssafy.tranvel.dto.TokenDto;
-import com.ssafy.tranvel.entity.TokenBlackList;
-import com.ssafy.tranvel.repository.TokenBlackListRepository;
 
 import java.security.Key;
 import java.util.*;
@@ -38,16 +36,14 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtProvider {
 
     private final Key key;
-    private final TokenBlackListRepository tokenBlackListRepository;
+
 
     @Autowired
     public JwtProvider(
-            @Value("${jwt.secret}") String secretKey,
-            TokenBlackListRepository tokenBlackListRepository) {
+            @Value("${jwt.secret}") String secretKey) {
 //        byte[] keyBytes = Decoders.BASE64.decode(secretKey); // 256bit
         byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8); // 512bit
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.tokenBlackListRepository = tokenBlackListRepository;
     }
 
     public TokenDto generateToken(Authentication authentication) {
@@ -133,35 +129,11 @@ public class JwtProvider {
         return validateToken(token); // 기존의 validateToken 메서드 재사용
     }
 
-    // 토큰을 블랙리스트에 추가하는 메서드
-    public void addToBlackList(String token) {
-        TokenBlackList tokenBlackList = new TokenBlackList(token);
-        tokenBlackListRepository.save(tokenBlackList);
-    }
-
-    // 토큰이 블랙리스트에 있는지 확인하는 메서드
-    public boolean isTokenInBlackList(String token) {
-        return tokenBlackListRepository.existsById(token);
-    }
-
     // 새로운 Access Token과 Refresh Token 발급
     public TokenDto regenerateToken(String refreshToken, UserDetails userDetails) {
         // Refresh Token 검증
         if (!validateRefreshToken(refreshToken)) {
             throw new RuntimeException("Refresh 토큰이 유효하지 않습니다.");
-        }
-
-        // 현재 Token을 블랙리스트에 추가 - 로그인만 두번 했을 때 발생하는 토큰에 대한 처리가 필요...
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null && authentication.getCredentials() instanceof String) {
-//            String currentAccessToken = authentication.getCredentials().toString();
-//            addToBlackList(currentAccessToken);
-//        }
-
-        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        if (currentAuthentication != null && currentAuthentication.getCredentials() instanceof String) {
-            String currentAccessToken = currentAuthentication.getCredentials().toString();
-            addToBlackList(currentAccessToken);
         }
 
         // 새로운 토큰 생성
