@@ -37,7 +37,7 @@ fun AnnouncementDetailScreen(
         Dialog(
             onDismissRequest = onDismiss,
         ) {
-            DialogContent(dto)
+            DialogContent(dto, showDialog)
         }
     }
 }
@@ -45,6 +45,7 @@ fun AnnouncementDetailScreen(
 @Composable
 fun DialogContent(
     dto: AnnouncementDto,
+    showDialog: Boolean
 ) {
     Column(
         modifier = Modifier.background(color = Color.White)
@@ -54,7 +55,7 @@ fun DialogContent(
                 .align(Alignment.Start)
                 .padding(10.dp)
                 .size(40.dp)
-                .clickable { },
+                .clickable { !showDialog },
             painter = painterResource(id = R.drawable.exiticon),
             contentDescription = "notificationImage",
             contentScale = ContentScale.Inside,

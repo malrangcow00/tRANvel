@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.ssafy.tranvel.data.model.dto.HistoryDto
 import com.ssafy.tranvel.domain.usecase.history.GetHistoryUseCase
 import com.ssafy.tranvel.domain.viewstate.history.HistoryViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +20,8 @@ class HistoryViewModel @Inject constructor(
 ) : ViewModel() {
     private val config = PagingConfig(pageSize = 10)
     var cnt = 0;
+
+    var currentDto : HistoryDto? = null
 
     fun createInitialState() = HistoryViewState()
     private val initialState:HistoryViewState by lazy{createInitialState()}

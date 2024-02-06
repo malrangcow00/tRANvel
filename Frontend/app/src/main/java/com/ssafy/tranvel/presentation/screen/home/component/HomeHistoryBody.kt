@@ -30,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -47,7 +48,7 @@ private const val TAG = "HomdHistoryBody_싸피"
 @Composable
 fun HomeHistoryBody(
     historyViewModel: HistoryViewModel,
-    navigateToHistory: (HistoryDto?) -> Unit
+    navController: NavController
 ) {
     val viewState = historyViewModel.uiState.collectAsState().value
 
@@ -82,7 +83,7 @@ fun HomeHistoryBody(
         historyViewModel,
         viewState.isLoading,
         viewState.pagedData,
-        { navigateToHistory.invoke(it) }
+        navController
     )
 }
 
@@ -91,7 +92,7 @@ private fun Content(
     historyViewModel: HistoryViewModel,
     isLoading: Boolean = false,
     pagedData: Flow<PagingData<HistoryDto>>? = null,
-    clickHistory: (HistoryDto?) -> Unit
+    navController: NavController
 ) {
     var pagingItems: LazyPagingItems<HistoryDto>? = null
     pagedData?.let {
@@ -122,10 +123,9 @@ private fun Content(
                 Log.d(TAG, "Cnt: ${historyViewModel.cnt}")
                 items(count = historyViewModel.cnt) { index ->
                     HomeHistoryCard(
-                        historyClicked = {
-                            clickHistory.invoke(pagingItems!![index])
-                        },
-                        dto = pagingItems!![index]
+                        historyViewModel,
+                        dto = pagingItems!![index],
+                        navController
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     Canvas(

@@ -33,23 +33,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.ssafy.tranvel.data.model.dto.HistoryDto
+import com.ssafy.tranvel.presentation.screen.history.HistoryScreen
+import com.ssafy.tranvel.presentation.screen.history.HistoryViewModel
+import com.ssafy.tranvel.presentation.screen.history.navigation.navigateHistory
 import com.ssafy.tranvel.presentation.ui.theme.bmjua
+import java.text.DecimalFormat
 
 private const val TAG = "HomeHistoryCard_싸피"
 
 @Composable
 fun HomeHistoryCard(
+    viewModel: HistoryViewModel,
     dto: HistoryDto?,
-    historyClicked: (HistoryDto?) -> (Unit)
+    navController: NavController
 ) {
-    val profit = if (dto?.balanceResult == null) 0 else moneyChanger(dto.balanceResult)
-    Log.d(TAG, "싸피 지금 값은 profit : ${profit}")
-//    val profit = if (dto?.balanceResult == null) 0 else dto?.balanceResult
-    Log.d(TAG, "싸피 지금 값은 dto : ${dto}")
+    val profit = if (dto?.balanceResult == null) 0 else moneyFormatter(dto.balanceResult)
     val endDateString =
         if (dto?.endDate == null) "" else (" ~ " + (dto?.endDate.orEmpty()).substring(5, 10))
-    Log.d(TAG, "싸피 지금 값음 endDate : ${endDateString}")
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -57,7 +60,11 @@ fun HomeHistoryCard(
             .fillMaxWidth()
             .height(150.dp)
             .clickable(
-                onClick = { historyClicked(dto) }
+                onClick = {
+//                    HistoryScreen(viewModel = viewModel)
+                    Log.d(TAG, "HomeHistoryCard viewModel dto 값 : ${viewModel.currentDto}")
+                    navController.navigateHistory(dto)
+                }
             ),
     ) {
         Row(
@@ -151,23 +158,10 @@ fun imageCard(
 
 }
 
-fun moneyChanger(money: Int): String {
-    var output = ""
-
-    var current = money
-
-    if(current == 0){
-        return "0원"
-    }
-
-    var divider = 1000000000000000
-    while (current > 1000) {
-        output += ((current / divider).toString() + ",")
-        divider /= 1000
-    }
-    output += current.toString() + "원"
-
-    return output
+fun moneyFormatter(money: Int): String {
+    var dec = DecimalFormat("#,###")
+    var output = dec.format(money)
+    return output.toString() + "원"
 }
 
 @Preview
