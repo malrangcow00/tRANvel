@@ -30,8 +30,8 @@ public class AdjustmentGameHistory {
     @Column(length = 30, name = "DateTime")
     private String dateTime;
 
-    @OneToMany(mappedBy = "adjustmentGameHistory", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GamePlayer> gamePlayers; //
+//    @ManyToOne
+//    private List<JoinUser> selectedUsers;
 
     @Column(name = "Price")
     private int price;
