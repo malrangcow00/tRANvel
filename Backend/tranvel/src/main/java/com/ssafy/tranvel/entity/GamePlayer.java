@@ -20,9 +20,9 @@ public class GamePlayer {
     @JoinColumn(name = "joinUser_id")
     private JoinUser joinUser;
 
-    @ManyToOne
-    @JoinColumn(name = "adjustmentGameHistory_id")
-    private AdjustmentGameHistory adjustmentGameHistory;
+//    @ManyToOne
+//    @JoinColumn(name = "adjustmentGameHistory_id")
+//    private AdjustmentGameHistory adjustmentGameHistory;
 
     @Column(name = "MoneyResult")
     private int moneyResult;

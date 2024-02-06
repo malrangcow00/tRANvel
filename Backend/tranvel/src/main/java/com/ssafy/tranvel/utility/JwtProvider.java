@@ -27,7 +27,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 
-import java.nio.charset.StandardCharsets; // 512bit
+import java.nio.charset.StandardCharsets;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,7 +43,7 @@ public class JwtProvider {
     public JwtProvider(
             @Value("${jwt.secret}") String secretKey,
             TokenBlackListRepository tokenBlackListRepository) {
-        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8); // 512bit
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.tokenBlackListRepository = tokenBlackListRepository;
     }
@@ -55,22 +55,20 @@ public class JwtProvider {
 
         // Access Token 생성
         long now = (new Date()).getTime();
-        Date accessTokenExpiresIn = new Date(now + 3600000); // 1시간
-        Date refreshTokenExpiresIn = new Date(now + 864000000); // 10일
+        Date accessTokenExpiresIn = new Date(now + 86400000); // 1일
+        Date refreshTokenExpiresIn = new Date(now + 1728000000); // 20일
 
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities) // 권한 정보
                 .setExpiration(accessTokenExpiresIn)
-//                .signWith(key, SignatureAlgorithm.HS256) // 256bit
-                .signWith(key, SignatureAlgorithm.HS512) // 512bit
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
                 .setExpiration(refreshTokenExpiresIn) // 1일
-//                .signWith(key, SignatureAlgorithm.HS256) // 256bit
-                .signWith(key, SignatureAlgorithm.HS512) // 512bit
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
         // 인증 타입 prefix 설정 ("Bearer")

@@ -16,23 +16,20 @@ public class StompController {
     private final RoomHistoryRepository roomHistoryRepository;
     private final SimpMessageSendingOperations sendingOperations;
 
-
     // 방장의 (푸쉬 알람)공지 -> 계획에 없었으니 빼도 됨
     @MessageMapping("/tranvel/notice")
     public void notice(StompDto message) {
         if (StompDto.MessageType.NOTICE.equals(message.getType())) {
-            sendingOperations.convertAndSend("/topic/tranvel/room/"+message.getRoomId(),message); // 문자열로 변환해서 발신
+            sendingOperations.convertAndSend("/topic/tranvel/room/" + message.getRoomId(), message); // 문자열로 변환해서 발신
         }
-
     }
-
 
     // 유저가 방에 입장 시, 방에 입장해 있던 인원 모두에게 그 사실을 알림
     @MessageMapping("/tranvel/enter") // 클라이언트가 이 url로 메세지를 보내면 다음을 실행함
     public void roomEnter(StompDto message) {
         if (StompDto.MessageType.ENTER.equals(message.getType())) {
-            message.setMessage(userRepository.findById(message.getSender_id()).get().getNickName()+"님이 입장하였습니다.");
-            sendingOperations.convertAndSend("/topic/tranvel/room/"+message.getRoomId(),message); // 문자열로 변환해서 발신
+            message.setMessage(userRepository.findById(message.getSender_id()).get().getNickName() + "님이 입장하였습니다.");
+            sendingOperations.convertAndSend("/topic/tranvel/room/" + message.getRoomId(), message); // 문자열로 변환해서 발신
         }
     }
 
@@ -40,7 +37,7 @@ public class StompController {
     @MessageMapping("/tranvel/close")
     public void roomClose(StompDto message) {
         message.setMessage("여행이 종료되었습니다.");
-        sendingOperations.convertAndSend("/topic/tranvel/room/"+message.getRoomId(),message);
+        sendingOperations.convertAndSend("/topic/tranvel/room/" + message.getRoomId(), message);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -48,13 +45,13 @@ public class StompController {
     @MessageMapping("/tranvel/foodgame/start")
     public void foodGameStart(StompDto message) {
         message.setMessage("음식 선택 게임을 시작합니다.");
-        sendingOperations.convertAndSend("/topic/tranvel/room/"+message.getRoomId(),message);
+        sendingOperations.convertAndSend("/topic/tranvel/room/" + message.getRoomId(), message);
     }
 
     @MessageMapping("/tranvel/foodgame/end")
     public void foodGameEnd(StompDto message) {
         message.setMessage("음식 선택 게임이 완료되었습니다.");
-        sendingOperations.convertAndSend("/topic/tranvel/room/"+message.getRoomId(),message);
+        sendingOperations.convertAndSend("/topic/tranvel/room/" + message.getRoomId(), message);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -62,13 +59,13 @@ public class StompController {
     @MessageMapping("/tranvel/attractiongame/start")
     public void attractionGameStart(StompDto message) {
         message.setMessage("행선지 선택 게임을 시작합니다.");
-        sendingOperations.convertAndSend("/topic/tranvel/room/"+message.getRoomId(),message);
+        sendingOperations.convertAndSend("/topic/tranvel/room/" + message.getRoomId(), message);
     }
 
     @MessageMapping("/tranvel/attractiongame/end")
     public void attractionGameEnd(StompDto message) {
         message.setMessage("행선지 선택 게임이 완료되었습니다.");
-        sendingOperations.convertAndSend("/topic/tranvel/room/"+message.getRoomId(),message);
+        sendingOperations.convertAndSend("/topic/tranvel/room/" + message.getRoomId(), message);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -77,12 +74,12 @@ public class StompController {
     public void adjustmentattractiongameStart(StompDto message) {
         message.getRoomId();
         message.setMessage("정산 게임을 시작합니다.");
-        sendingOperations.convertAndSend("/topic/tranvel/room/"+message.getRoomId(),message);
+        sendingOperations.convertAndSend("/topic/tranvel/room/" + message.getRoomId(), message);
     }
 
     @MessageMapping("/tranvel/adjustmentgame/end")
     public void adjustmentattractiongameEnd(StompDto message) {
         message.setMessage("정산 게임이 완료되었습니다.");
-        sendingOperations.convertAndSend("/topic/tranvel/room/"+message.getRoomId(),message);
+        sendingOperations.convertAndSend("/topic/tranvel/room/" + message.getRoomId(), message);
     }
-
+}
