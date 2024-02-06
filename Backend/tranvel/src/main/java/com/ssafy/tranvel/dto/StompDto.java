@@ -13,7 +13,7 @@ import lombok.Setter;
 public class StompDto {
 
     public enum MessageType {
-        ENTER, ALARM, NOTICE
+        ENTER, CLOSE, NOTICE
     }
 
     private MessageType type;
