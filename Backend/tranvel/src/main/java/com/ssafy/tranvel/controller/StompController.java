@@ -75,7 +75,7 @@ public class StompController {
 
     @MessageMapping("/tranvel/adjustmentgame/start")
     public void adjustmentattractiongameStart(StompDto message) {
-        message.getRoomId()
+        message.getRoomId();
         message.setMessage("정산 게임을 시작합니다.");
         sendingOperations.convertAndSend("/topic/tranvel/room/"+message.getRoomId(),message);
     }
