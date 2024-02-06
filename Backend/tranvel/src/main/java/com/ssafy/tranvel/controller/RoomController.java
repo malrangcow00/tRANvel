@@ -3,9 +3,12 @@ package com.ssafy.tranvel.controller;
 
 import com.ssafy.tranvel.dto.ResponseDto;
 import com.ssafy.tranvel.dto.RoomHistoryDto;
+import com.ssafy.tranvel.dto.StompDto;
 import com.ssafy.tranvel.entity.JoinUser;
 import com.ssafy.tranvel.entity.RoomHistory;
+import com.ssafy.tranvel.entity.User;
 import com.ssafy.tranvel.repository.RoomHistoryRepository;
+import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.RoomHistoryService;
 import com.ssafy.tranvel.utility.SecurityUtility;
 import lombok.Getter;
@@ -13,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +30,10 @@ import java.util.List;
 public class RoomController {
 
     private ResponseDto response;
+    private final UserRepository userRepository;
     private final RoomHistoryService roomHistoryService;
     private final RoomHistoryRepository roomHistoryRepository;
+    private final SimpMessageSendingOperations sendingOperations;
 
     @PostMapping("")
     public ResponseEntity<ResponseDto> getRoomHistoryList(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
@@ -37,7 +43,6 @@ public class RoomController {
         List<RoomHistory> roomHistoryList = roomHistoryService.getAllRoomHistories(info);
         response = new ResponseDto(true, "방 기록 전체 조회", roomHistoryList);
         return  ResponseEntity.status(HttpStatus.OK).body(response);
-
     }
 
 
@@ -51,7 +56,6 @@ public class RoomController {
     }
 
 
-
     //addJoinUser(Long userId, String roomCode, String inputRoomPassword
     @PostMapping("/enter")
     public ResponseEntity<ResponseDto> enterRoom(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
@@ -59,7 +63,13 @@ public class RoomController {
         roomHistoryDto.setUserEmail(SecurityUtility.getCurrentUserId());
         roomHistoryService.addJoinUser(info);
         List<JoinUser> joinUser = roomHistoryRepository.findByRoomCode(roomHistoryDto.getRoomCode()).get().getJoinUser();
+
         response = new ResponseDto(true, "방 게임 입장", joinUser);
+
+//        // Stomp 메세지 작성/발신
+//        String sender = userRepository.findById(roomHistoryDto.getUserId()).get().getNickName();
+//        String message = sender+"님이 입장하였습니다.";
+//        sendingOperations.convertAndSend("/topic/tranvel/room/" + roomHistoryDto.getRoomId(), message);
 
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -78,6 +88,9 @@ public class RoomController {
         roomHistoryService.finishRoomHistory(roomHistoryDto);
 
         response = new ResponseDto(true, "방 게임 기록 종료", roomHistoryRepository.findById(roomHistoryDto.getRoomId()).get());
+
+//        String message = "여행이 종료되었습니다."; // 멘트 더 꾸미는게 좋나..?
+//        sendingOperations.convertAndSend("/topic/chat/room/"+roomHistoryDto.getRoomId(),message);
 
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
