@@ -70,13 +70,13 @@ public class JwtProvider {
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
+        // Refresh Token 저장
         refreshTokenRepository.save(new RefreshToken(authentication.getName(), refreshToken));
 
-        // 인증 타입 prefix 설정 ("Bearer")
+        // Access Token 전송
         return TokenDto.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
-//                .refreshToken(refreshToken)
                 .build();
     }
 
