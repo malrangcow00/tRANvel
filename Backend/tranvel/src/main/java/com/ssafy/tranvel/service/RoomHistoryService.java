@@ -1,6 +1,8 @@
 package com.ssafy.tranvel.service;
 
 import com.ssafy.tranvel.dto.RoomHistoryDto;
+import com.ssafy.tranvel.dto.RoomInsideDto;
+import com.ssafy.tranvel.dto.RoomMainResponseDto;
 import com.ssafy.tranvel.entity.JoinUser;
 import com.ssafy.tranvel.entity.RoomHistory;
 import com.ssafy.tranvel.entity.User;
@@ -42,6 +44,49 @@ public class RoomHistoryService {
     }
 
 
+    public List<RoomMainResponseDto> filteredRoomInfo(RoomHistoryDto roomHistoryDto) {
+        // service 패키지로 이동예정
+        RoomHistoryDto info = roomHistoryDto;
+        info.setUserEmail(SecurityUtility.getCurrentUserId());
+
+        /*
+        List<RoomHistory>
+        roomId, data, images, roomName, balanceResult
+         */
+        List<RoomMainResponseDto> roomResponse = new ArrayList<>();
+
+
+        List<RoomHistory> roomHistoryList = getAllRoomHistories(info);
+        for (int idx = 0; idx < roomHistoryList.size(); idx ++) {
+            RoomMainResponseDto roomMainResponseDto = RoomMainResponseDto.builder()
+                    .roomid(roomHistoryList.get(idx).getId())
+                    .roomName(roomHistoryList.get(idx).getRoomName())
+                    .startDate(roomHistoryList.get(idx).getStartDate())
+                    .endDate(roomHistoryList.get(idx).getEndDate())
+                    .balanceResult(roomHistoryList.get(idx).getBalanceResult())
+                    .images(null)
+                    .build();
+            roomResponse.add(roomMainResponseDto);
+        }
+        return roomResponse;
+    }
+
+
+    public RoomInsideDto filteredRoomInsideInfo(RoomHistory roomHistory) {
+
+        List<JoinUser> joinUser = roomHistoryRepository.findByRoomCode(roomHistory.getRoomCode()).get().getJoinUser();
+
+        RoomInsideDto info = RoomInsideDto.builder()
+                .roomCode(roomHistory.getRoomCode())
+                .roomPassword(roomHistory.getRoomPassword())
+                .joinUser(joinUser)
+                .build();
+
+
+        return info;
+    }
+
+
 
     public String createRoomCode() {
         Random random = new Random();
@@ -63,12 +108,12 @@ public class RoomHistoryService {
 
 
     // Long userId, String roomCode, String inputRoomPassword
-    public void addJoinUser(RoomHistoryDto roomHistoryDto) {
+    public void addJoinUser(RoomHistory info) {
         Long userId = userRepository.findByEmail(SecurityUtility.getCurrentUserId()).get().getId();
         System.out.println(userId);
-        RoomHistory roomHistory = roomHistoryRepository.findByRoomCode(roomHistoryDto.getRoomCode()).get();
+        RoomHistory roomHistory = roomHistoryRepository.findByRoomCode(info.getRoomCode()).get();
 
-        if (roomHistory.getRoomPassword().equals(roomHistoryDto.getRoomPassword())) {
+        if (roomHistory.getRoomPassword().equals(info.getRoomPassword())) {
             User user = userRepository.findById(userId).get();
             JoinUser joinUser = JoinUser.builder()
                     .authority(roomHistory.getJoinUser() == null)
@@ -114,7 +159,8 @@ public class RoomHistoryService {
     }
 
     public RoomHistory createRoomHistory(RoomHistoryDto roomHistoryDto) {
-        User user = userRepository.findByEmail(roomHistoryDto.getUserEmail()).get();
+
+        User user = userRepository.findByEmail(SecurityUtility.getCurrentUserId()).get();
         String roomCode = createRoomCode();
         RoomHistory roomHistory = RoomHistory.builder()
                 .user(user)
@@ -128,7 +174,7 @@ public class RoomHistoryService {
                 .build();
         roomHistoryRepository.save(roomHistory);
         RoomHistory roomHistory1 = roomHistoryRepository.findByRoomCode(roomCode).get();
-        addJoinUser(roomHistoryDto);
+        addJoinUser(roomHistory1);
 
         return roomHistory1;
     }
