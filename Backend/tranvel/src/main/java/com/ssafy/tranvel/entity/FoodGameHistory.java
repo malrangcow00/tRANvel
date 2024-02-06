@@ -16,7 +16,7 @@ import java.util.List;
 public class FoodGameHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Long;
+    private Long id;
 
     @ManyToOne
     private RoomHistory roomHistory;

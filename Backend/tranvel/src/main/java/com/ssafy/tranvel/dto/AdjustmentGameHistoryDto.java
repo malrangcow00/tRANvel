@@ -21,9 +21,7 @@ public class AdjustmentGameHistoryDto {
 
     private int price;
 
-    private List<Long> selectedUsers; // 일단 id로 받음..
-
-    private List<GamePlayerDto> moneyResults; // 유저들의 정산 결과들
+    private List<Long> selectedUsers;
 
     private String image;
 

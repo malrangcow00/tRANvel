@@ -19,7 +19,7 @@ public class StompController {
     @MessageMapping("/tranvel/rooms") // 클라이언트가 이 url로 메세지를 보내면 다음을 실행함
     public void room(StompDto message) {
         if (StompDto.MessageType.ENTER.equals(message.getType())) {
-            message.setMessage(userRepository.findById(message.getSender_id()).get().getNickName() + "님이 입장하였습니다.");
+            message.setMessage(userRepository.findById(Long.parseLong(message.getSender_id())).get().getNickName() + "님이 입장하였습니다.");
         } else if (StompDto.MessageType.CLOSE.equals(message.getType())) {
             message.setMessage("여행이 종료되었습니다.");
         }

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -60,6 +61,8 @@ public class RoomHistory {
     public void joinUser(List<JoinUser> joinUser) {
         this.joinUser = joinUser;
     }
+
+
 
     public void finishRoom() {
         this.nowPlaying = false;

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,11 +31,14 @@ public class AdjustmentGameHistory {
     @Column(length = 30, name = "DateTime")
     private String dateTime;
 
-//    @ManyToOne
-//    private List<JoinUser> selectedUsers;
-
     @Column(name = "Price")
     private int price;
+
+    @Column(name = "MoneyResult")
+    private int moneyResult;
+
+    @ElementCollection
+    private List<Long> selectedUsers = new ArrayList<>();
 
     @Column(length = 30, name = "Image")
     private String image;

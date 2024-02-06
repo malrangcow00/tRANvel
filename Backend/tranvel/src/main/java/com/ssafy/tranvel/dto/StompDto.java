@@ -18,9 +18,9 @@ public class StompDto {
 
     private MessageType type;
 
-    private Long sender_id;
+    private String sender_id;
 
-    private Long roomId;
+    private String roomId;
 
     private String message;
 }

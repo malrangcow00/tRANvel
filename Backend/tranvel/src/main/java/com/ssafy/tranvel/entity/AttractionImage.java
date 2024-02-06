@@ -14,10 +14,7 @@ import lombok.NoArgsConstructor;
 public class AttractionImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Long;
-
-    @ManyToOne
-    private RoomHistory roomHistory;
+    private Long id;
 
     @ManyToOne
     private AttractionGameHistory attractionGameHistory;
