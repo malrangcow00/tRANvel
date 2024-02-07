@@ -6,12 +6,12 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class HistoryResult(
-    val roomId: Int,
-    val period : String,
-    val images : List<String>?,
+    val roomid: Long,
     val roomName : String,
-    val profit : Int?
-
+    val startDate : String,
+    val endDate : String?,
+    val images: String?,
+    val balanceResult : Int,
 ) : Parcelable{
     companion object{
         fun create(jsonString : String) : HistoryResult?{

@@ -1,5 +1,7 @@
 package com.ssafy.tranvel.dto;
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,7 +23,7 @@ public class AdjustmentGameHistoryDto {
 
     private int price;
 
-    private List<Long> selectedUsers;
+    private List<Long> selectedUsers; // JoinUser의 userId를 받음
 
     private String image;
 
