@@ -72,9 +72,12 @@ public class UserController {
     }
 
     // 프로필 이미지 등록
-    @PostMapping("/image")
+    @PostMapping("/profileImage")
     public ResponseEntity<ResponseDto> saveImage(ImagePostDto imagePostDto) throws IOException {
-        String profileimage = imageUploadService.uploadImage(imagePostDto);
+        // image
+
+        String profileimage;
+        profileimage = imageUploadService.uploadImage(imagePostDto, "profile");
         response = new ResponseDto(true, "프로필 사진 s3 저장", profileimage);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

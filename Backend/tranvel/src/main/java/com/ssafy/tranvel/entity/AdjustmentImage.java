@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -10,10 +11,10 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FoodImage {
+@Builder
+public class AdjustmentImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +22,6 @@ public class FoodImage {
 
     @ManyToOne
     @JsonBackReference
-    private FoodGameHistory foodGameHistory;
-//
-//    @Column(length = 30, name = "Image")
-//    private String image;
+    private AdjustmentGameHistory adjustmentGameHistory;
+
 }

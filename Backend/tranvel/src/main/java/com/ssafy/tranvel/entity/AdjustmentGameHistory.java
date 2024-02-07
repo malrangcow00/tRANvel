@@ -1,5 +1,8 @@
 package com.ssafy.tranvel.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.annotation.Nullable;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -22,6 +25,7 @@ public class AdjustmentGameHistory {
 
     @JsonBackReference
     @ManyToOne
+    @JsonManagedReference
     private RoomHistory roomHistory;
 
     @OneToOne
@@ -45,9 +49,9 @@ public class AdjustmentGameHistory {
     @ElementCollection
     private List<Long> selectedUsers = new ArrayList<>();
 
-    @Column(length = 30, name = "Image")
-    @Nullable
-    private String image;
+    @OneToMany(mappedBy = "adjustmentGameHistory")
+    @JsonManagedReference
+    private List<AdjustmentImage> images;
 
     @Column(length = 3, name = "Category")
     @Nullable
