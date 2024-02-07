@@ -9,14 +9,13 @@ import com.ssafy.tranvel.presentation.screen.announcement.component.Announcement
 @Composable
 fun AnnouncementScreen(
     viewModel: AnnouncementViewModel,
-    navigateToDetail: (AnnouncementDto?) -> Unit
 ) {
     Scaffold(
         topBar = { AnnouncementHeader() },
     ) { innerPadding ->
         AnnouncementBody(
             innerPadding,
-            viewModel, navigateToDetail
+            viewModel,
         )
     }
 }
