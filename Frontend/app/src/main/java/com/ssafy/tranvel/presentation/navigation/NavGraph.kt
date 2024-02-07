@@ -13,10 +13,10 @@ import androidx.navigation.compose.rememberNavController
 import com.ssafy.tranvel.presentation.screen.announcement.navigation.announcementScreen
 import com.ssafy.tranvel.presentation.screen.found.FoundPasswordScreen
 import com.ssafy.tranvel.presentation.screen.history.navigation.historyScreen
-import com.ssafy.tranvel.presentation.screen.history.navigation.navigateHistory
 import com.ssafy.tranvel.presentation.screen.home.navigation.homeScreen
 import com.ssafy.tranvel.presentation.screen.login.LoginScreen
 import com.ssafy.tranvel.presentation.screen.register.navigation.registerGraph
+import com.ssafy.tranvel.presentation.screen.travel.navigation.gameNavGraph
 import com.ssafy.tranvel.presentation.screen.userInfoModification.navigation.userInfoModifyScreen
 import com.ssafy.tranvel.presentation.screen.userWithdrawal.navigation.userWithdrawalScreen
 
@@ -27,14 +27,14 @@ fun NavGraph() {
     val currentRoute = navBackStackEntry?.destination?.route
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
 
-    Scaffold(
-    ) { innerPadding ->
+    Scaffold { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = "login_screen",
             Modifier.padding(innerPadding)
         ) {
             announcementScreen()
+            gameNavGraph(navController)
             composable(route = "login_screen") {
                 LoginScreen(
                     loginViewModel = hiltViewModel(),

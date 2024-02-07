@@ -16,6 +16,9 @@
         android:theme="@style/Theme.TRANvel"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="@string/NAVER_API_KEY" />
         <activity
             android:name=".presentation.screen.main.MainActivity"
             android:exported="true"
