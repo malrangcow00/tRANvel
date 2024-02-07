@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,16 +31,22 @@ public class AdjustmentGameHistoryService {
 //    방 아이디를 받아서 이 방에 참가중인 유저들의{JoinUserId, Nickname, ProfileImage} 리스트를 반환(선택할 리스트 제공)
 //    JoinUserId : JoinUser의 id O / userId(User 상 Id) X
     public List<JoinUserInfoDto> getJoinUsers(AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
+        System.out.println("AdjustmentGameHistoryService.getJoinUsers");
         Long roomId = adjustmentGameHistoryDto.getRoomId();
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
         List<JoinUser> joinUsers = roomHistory.getJoinUser();
         List<JoinUserInfoDto> joinUserReturn = new ArrayList<>();
 
         for (JoinUser joinUser : joinUsers) {
-            User user = userRepository.findById(joinUser.getUserId()).get();
+            Optional<User> userOptional = userRepository.findById(joinUser.getUserId());
+            if (!userOptional.isPresent()) {
+                continue;
+            }
+            User user = userOptional.get();
             JoinUserInfoDto joinUserInfoDto = new JoinUserInfoDto(joinUser.getId(), user.getNickName(), user.getProfileImage());
             joinUserReturn.add(joinUserInfoDto);
         }
+        System.out.println("AdjustmentGameHistoryService.getJoinUsers Ready");
         return joinUserReturn;
     }
 
@@ -47,7 +54,7 @@ public class AdjustmentGameHistoryService {
     // selectedUsers의 아이디는 User.Id가 아닌, joinUser.Id
     @Transactional
     public int adjustment(AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
-        System.out.println("AdjustmentGameHistoryService.adjustment"); //
+        System.out.println("AdjustmentGameHistoryService.adjustment");
 
         RoomHistory roomHistory = roomHistoryRepository.findById(adjustmentGameHistoryDto.getRoomId()).get();
 //        Long miniGameCodeId = adjustmentGameHistoryDto.getMiniGameCodeId();
@@ -64,7 +71,12 @@ public class AdjustmentGameHistoryService {
             joinUser.setProfit(joinUser.getProfit() - moneyResult);
             joinUserRepository.save(joinUser); // joinUser에서 moneyResult 반영
 
-            User user = userRepository.findById(joinUser.getUserId()).get();
+            Optional<User> userOptional = userRepository.findById(joinUser.getUserId());
+            if (!userOptional.isPresent()) { // selectedUser에서 이미 살아있는 유저만 걸러오기 때문에 없어도 괜찮을지도
+                continue;
+            }
+
+            User user = userOptional.get();
             user.setBalance(user.getBalance() - moneyResult);
             userRepository.save(user); // User 에서 moneyResult 반영
         }
@@ -83,19 +95,23 @@ public class AdjustmentGameHistoryService {
                 .build();
         adjustmentGameHistoryRepository.save(adjustmentGameHistory);
 
+        System.out.println("AdjustmentGameHistoryService.adjustment Ready");
         return moneyResult;
     }
 
     // 모든 정산 게임 기록
     public List<AdjustmentGameHistory> getAllAdjustmentHistories(AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
+        System.out.println("AdjustmentGameHistoryService.getAllAdjustmentHistories");
         RoomHistory roomHistory = roomHistoryRepository.findById(adjustmentGameHistoryDto.getRoomId()).get();
         List<AdjustmentGameHistory> adjustmentGameHistoryList = roomHistory.getAdjustmentGameHistories();
 
+        System.out.println("AdjustmentGameHistoryService.getAllAdjustmentHistories Ready");
         return adjustmentGameHistoryList;
     }
 
     // 한 정산 게임 기록
     public AdjustmentGameHistory getAdjustmentHistory(AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
+        System.out.println("AdjustmentGameHistoryService.getAdjustmentHistory");
         return adjustmentGameHistoryRepository.findById(adjustmentGameHistoryDto.getId()).get();
     }
 }
