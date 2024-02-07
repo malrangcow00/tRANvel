@@ -9,7 +9,7 @@ data class HistoryDto(
     val roomName : String,
     val startDate : String,
     val endDate : String?,
-    val images: String?,
+    val images: List<String>?,
     val balanceResult : Int,
 ) : Parcelable {
     companion object {

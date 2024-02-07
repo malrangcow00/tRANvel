@@ -34,5 +34,4 @@ public class AnswerController {
 
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 }

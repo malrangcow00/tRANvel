@@ -36,7 +36,6 @@ public class EmailController {
 
     private ResponseDto response;
 
-
     @PostMapping("/email-auth")
     public ResponseEntity<ResponseDto> sendEmail(@RequestBody @Validated EmailDto emailDto) throws MessagingException, UnsupportedEncodingException {
         if (emailAuthService.emailDuplication(emailDto)) {
@@ -47,7 +46,6 @@ public class EmailController {
         response = new ResponseDto(true, "인증 코드를 전송하였습니다.", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 
     /**
      해당 controller 수정 예정
@@ -90,6 +88,5 @@ public class EmailController {
         userService.saveUserInfo(userDto);
         response = new ResponseDto(true, "회원가입에 성공하였습니다.", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
-
     }
 }

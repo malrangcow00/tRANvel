@@ -18,7 +18,6 @@ import java.io.UnsupportedEncodingException;
 @RequiredArgsConstructor
 public class AttractionController {
 
-
     private ResponseDto response;
     private final AttractionService attractionService;
 

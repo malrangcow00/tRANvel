@@ -18,7 +18,7 @@ class XAccessTokenInterceptor @Inject constructor(
         try {
             dataSource.getString("access_token", null).let { token ->
                 token?.let {
-                    builder.addHeader("Authorization", "Bearer $it")
+                    builder.addHeader("Access-token", "Bearer $it")
                     Log.d(TAG, "intercept: 헤더 담김 ${it}")
                     return chain.proceed(builder.build())
                 }
