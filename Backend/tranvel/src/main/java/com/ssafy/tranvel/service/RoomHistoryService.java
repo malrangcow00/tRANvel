@@ -73,13 +73,22 @@ public class RoomHistoryService {
 
 
     public RoomInsideDto filteredRoomInsideInfo(RoomHistory roomHistory) {
-
+        Long userId = userRepository.findByEmail(SecurityUtility.getCurrentUserId()).get().getId();
         List<JoinUser> joinUser = roomHistoryRepository.findByRoomCode(roomHistory.getRoomCode()).get().getJoinUser();
+
+        boolean authority = false;
+
+        for (int idx = 0; idx < joinUser.size(); idx ++) {
+            if (joinUser.get(idx).getUserId().equals(userId)) {
+                authority = joinUser.get(idx).isAuthority();
+                break;
+            }
+        }
 
         RoomInsideDto info = RoomInsideDto.builder()
                 .roomCode(roomHistory.getRoomCode())
                 .roomPassword(roomHistory.getRoomPassword())
-                .joinUser(joinUser)
+                .authority(authority)
                 .build();
 
 
