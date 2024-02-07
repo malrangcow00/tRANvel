@@ -104,7 +104,6 @@ public class AdjustmentGameHistoryService {
         adjustmentGameHistoryRepository.save(adjustmentGameHistory);
 
         return adjustmentGameHistory;
-
     }
 
     // 모든 정산 게임 기록
