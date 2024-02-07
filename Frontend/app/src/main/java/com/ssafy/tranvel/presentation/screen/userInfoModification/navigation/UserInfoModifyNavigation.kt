@@ -13,7 +13,6 @@ fun NavGraphBuilder.userInfoModifyScreen(navController: NavController){
     composable(userInfoModifyNavigationRoute){
         UserInfoModifyScreen(
             hiltViewModel(),
-
         )
     }
 }

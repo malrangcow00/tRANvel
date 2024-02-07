@@ -79,10 +79,7 @@ class RegisterUserViewModel @Inject constructor(
             registerUserUseCase.execute(
                 UserRequest(
                     id.value,
-                    nickname.value,
                     password.value,
-                    null,
-                    null
                 )
             ).collect {
                 checkState(it)

@@ -8,5 +8,4 @@ import kotlinx.parcelize.Parcelize
 data class TokenDto(
     val grantType: String,
     val accessToken: String,
-    val refreshToken: String
 ) : Parcelable
