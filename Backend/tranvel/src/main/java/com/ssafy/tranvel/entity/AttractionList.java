@@ -1,39 +1,48 @@
-//package com.ssafy.tranvel.entity;
-//
-//import jakarta.persistence.*;
-//import lombok.AllArgsConstructor;
-//import lombok.Builder;
-//import lombok.Getter;
-//import lombok.NoArgsConstructor;
-//
-//@Entity
-//@Getter
-//@Builder
-//@NoArgsConstructor
-//@AllArgsConstructor
-//public class AttractionList {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private int Long;
-//
-//    @Column(length = 20, name = "Name")
-//    private String name;
-//
-//    @Column(name = "Latitude")
-//    private double latitude;
-//
-//    @Column(name = "Longitude")
-//    private double longitude;
-//
-//    @Column(length = 100, name = "Description")
-//    private String description;
-//
-//    @Column(length = 10, name = "Province")
+package com.ssafy.tranvel.entity;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class AttractionList {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "Name")
+    @JsonProperty("관광지명")
+    private String name;
+
+    @Column(name = "Latitude")
+    @JsonProperty("위도")
+    private String latitude;
+
+    @Column(name = "Longitude")
+    @JsonProperty("경도")
+    private String longitude;
+
+    @Column(length = 5000, name = "Description")
+    @JsonProperty("관광지소개")
+    private String description;
+
+//    @Column(length = 30, name = "Province")
+//    @JsonProperty("제공기관명")
 //    private String province;
-//
-//    @Column(length = 10, name = "City")
-//    private String city;
-//
-//    @Column(length = 20, name = "Image")
-//    private String image;
-//}
+
+    @Column(name = "City")
+    @JsonProperty("제공기관명")
+    private String city;
+
+    @Column(name = "Image")
+    @Nullable
+    private String image;
+}

@@ -71,15 +71,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-
     // 프로필 이미지 등록
     @PostMapping("/image")
-    public ResponseEntity<ResponseDto> saveImage(ProfileImageDto profileImageDto) throws IOException {
-        String profileimage = imageUploadService.uploadImage(profileImageDto.getProfileImage(), "profile", profileImageDto.getEmail());
+    public ResponseEntity<ResponseDto> saveImage(ImagePostDto imagePostDto) throws IOException {
+        String profileimage = imageUploadService.uploadImage(imagePostDto);
         response = new ResponseDto(true, "프로필 사진 s3 저장", profileimage);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 
     // 로그인
     @PostMapping("/signin")
@@ -137,7 +135,9 @@ public class UserController {
     // 회원 문의글 작성
     @PostMapping("/auth/inquiry")
     public ResponseEntity<ResponseDto> postInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
-        Inquiry inquiry = inquiryService.createInquiry(inquiryDto);
+        InquiryDto info = inquiryDto;
+        info.setUserEmail(SecurityUtility.getCurrentUserId());
+        Inquiry inquiry = inquiryService.createInquiry(info);
         response = new ResponseDto(true, "문의 작성 완료", inquiry);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -150,7 +150,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-
     // 회원 문의글 상세 조회
     @PostMapping("/auth/inquiry/detail")
     public ResponseEntity<ResponseDto> getInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
@@ -159,7 +158,6 @@ public class UserController {
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-
     // 회원 문의글 수정
     @PutMapping("/auth/inquiry/detail")
     public ResponseEntity<ResponseDto> putInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
@@ -167,7 +165,6 @@ public class UserController {
         response = new ResponseDto(true, "상세 문의 글 수정", inquiry);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 
     // 회원 문의글 삭제
     @DeleteMapping("/auth/inquiry/detail")

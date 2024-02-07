@@ -30,7 +30,7 @@ public class InquiryService {
                 .title(inquiryDto.getTitle())
                 .content(inquiryDto.getContent())
                 .datetime(LocalDateTime.now(ZoneId.of("Asia/Seoul")).toString())
-                .user(userRepository.findById(inquiryDto.getUserId()).get())
+                .user(userRepository.findByEmail(inquiryDto.getUserEmail()).get())
                 .build();
 
         inquiryRepository.save(inquiry);
@@ -38,24 +38,24 @@ public class InquiryService {
     }
 
     public List<Inquiry> getAllInquiries(InquiryDto inquiryDto) {
-        User user = userRepository.findById(inquiryDto.getUserId()).get();
+        User user = userRepository.findByEmail(inquiryDto.getUserEmail()).get();
         return user.getInquiryList();
     }
 
 
     public Inquiry getInquiry(InquiryDto inquiryDto) {
-        User user = userRepository.findById(inquiryDto.getUserId()).get();
+        User user = userRepository.findByEmail(inquiryDto.getUserEmail()).get();
         List<Inquiry> inquiries = user.getInquiryList();
-        Inquiry inquiry = inquiries.stream().filter(inq -> inq.getUserId() == inquiryDto.getInquiryId())
+        Inquiry inquiry = inquiries.stream().filter(inq -> inq.getId() == inquiryDto.getInquiryId())
                 .findFirst().orElseThrow (() -> new IllegalArgumentException("해당번호의 문의 글이 존재하지 않습니다."));
         return inquiry;
     }
 
 
     public Inquiry updateInquiry(InquiryDto inquiryDto) {
-        User user = userRepository.findById(inquiryDto.getUserId()).get();
+        User user = userRepository.findByEmail(inquiryDto.getUserEmail()).get();
         List<Inquiry> inquiries = user.getInquiryList();
-        Inquiry inquiry = inquiries.stream().filter(inq -> inq.getUserId() == inquiryDto.getInquiryId())
+        Inquiry inquiry = inquiries.stream().filter(inq -> inq.getId() == inquiryDto.getInquiryId())
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("해당번호의 문의 글이 존재하지 않습니다."));
 
         inquiry.update(inquiryDto.getTitle(), inquiryDto.getContent());
@@ -65,9 +65,9 @@ public class InquiryService {
     }
 
     public void deleteInquiry(InquiryDto inquiryDto) {
-        User user = userRepository.findById(inquiryDto.getUserId()).get();
+        User user = userRepository.findByEmail(inquiryDto.getUserEmail()).get();
         List<Inquiry> inquiries = user.getInquiryList();
-        Inquiry inquiry = inquiries.stream().filter(inq -> inq.getUserId() == inquiryDto.getInquiryId())
+        Inquiry inquiry = inquiries.stream().filter(inq -> inq.getId() == inquiryDto.getInquiryId())
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("해당번호의 문의 글이 존재하지 않습니다."));
         inquiryRepository.delete(inquiry);
 

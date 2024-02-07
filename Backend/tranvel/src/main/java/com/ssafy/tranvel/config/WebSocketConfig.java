@@ -12,12 +12,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
+        System.out.println("WebSocketConfig.configureMessageBroker");
         config.enableSimpleBroker("/topic");  // 바로 일대다 브로드캐스팅
         config.setApplicationDestinationPrefixes("/app");  // 바로 브로커로 가지 않고 핸들러(RoomController)로 라우팅
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+        System.out.println("WebSocketConfig.registerStompEndpoints");
         registry.addEndpoint("/ws/tranvel") // 클라이언트가 여기로 연결해야 함
                 .setAllowedOrigins("*") // cors 일단 다 허용
                 .withSockJS(); // 직접 지원 안하는 브라우저의 경우 sockjs를 들고 오면 됨

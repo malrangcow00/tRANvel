@@ -1,6 +1,7 @@
 package com.ssafy.tranvel.dto;
 
 
+import com.ssafy.tranvel.utility.SecurityUtility;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,3 +20,5 @@ public class AnswerDto {
     private String content;
 
 }
+
+
