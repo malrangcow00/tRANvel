@@ -44,9 +44,9 @@ public class JwtProvider {
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
-//        Date accessTokenExpiresIn = new Date(now + 86400000); // Access Token 1일
+        Date accessTokenExpiresIn = new Date(now + 86400000); // Access Token 1일
         Date refreshTokenExpiresIn = new Date(now + 1728000000); // Refresh Token 20일
-        Date accessTokenExpiresIn = new Date(now + 10000); // Access Token 10초 (임시)
+//        Date accessTokenExpiresIn = new Date(now + 10000); // Access Token 10초 (임시)
 //        Date refreshTokenExpiresIn = new Date(now + 20000); // Refresh Token 20초 (임시)
 
         String accessToken = Jwts.builder()

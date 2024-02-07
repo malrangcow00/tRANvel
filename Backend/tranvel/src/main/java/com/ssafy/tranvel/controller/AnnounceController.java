@@ -26,7 +26,6 @@ public class AnnounceController {
     private ResponseDto response;
     private final AnnouncementService announcementService;
 
-
     @GetMapping()
     public ResponseEntity<ResponseDto> getAnnouncement() {
 //    public List<Announcement> getAnnouncement() {
