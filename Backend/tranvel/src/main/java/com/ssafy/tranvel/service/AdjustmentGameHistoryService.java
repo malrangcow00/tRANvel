@@ -2,6 +2,7 @@ package com.ssafy.tranvel.service;
 
 import com.ssafy.tranvel.dto.AdjustmentGameHistoryDto;
 import com.ssafy.tranvel.entity.AdjustmentGameHistory;
+import com.ssafy.tranvel.entity.AdjustmentImage;
 import com.ssafy.tranvel.entity.RandomGame;
 import com.ssafy.tranvel.entity.RoomHistory;
 import com.ssafy.tranvel.repository.AdjustmentGameHistoryRepository;
@@ -40,11 +41,11 @@ public class AdjustmentGameHistoryService {
                 .selectedUsers(adjustmentGameHistoryDto.getSelectedUsers())
                 .price(adjustmentGameHistoryDto.getPrice())
                 .moneyResult(moneyResult)
-                .image(adjustmentGameHistoryDto.getImage())
                 .category(adjustmentGameHistoryDto.getCategory())
                 .detail(adjustmentGameHistoryDto.getDetail())
                 .build();
         adjustmentGameHistoryRepository.save(adjustmentGameHistory);
+
         return adjustmentGameHistory;
     }
 }

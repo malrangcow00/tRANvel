@@ -2,12 +2,14 @@ package com.ssafy.tranvel.controller;
 
 
 import com.ssafy.tranvel.dto.EmailDto;
+import com.ssafy.tranvel.dto.ImagePostDto;
 import com.ssafy.tranvel.dto.UserDto;
 import com.ssafy.tranvel.dto.ResponseDto;
 import com.ssafy.tranvel.entity.User;
 import com.ssafy.tranvel.repository.EmailAuthDao;
 import com.ssafy.tranvel.repository.NickNameDao;
 import com.ssafy.tranvel.service.EmailAuthService;
+import com.ssafy.tranvel.service.ImageUploadService;
 import com.ssafy.tranvel.service.UserService;
 import jakarta.mail.MessagingException;
 import lombok.Getter;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 @Getter @Setter
@@ -29,6 +32,7 @@ public class EmailController {
     private final UserService userService;
     private final EmailAuthDao emailAuthDao;
     private final NickNameDao nickNameDao;
+    private final ImageUploadService imageUploadService;
 
     private ResponseDto response;
 
@@ -59,6 +63,17 @@ public class EmailController {
         response = new ResponseDto(true, "이메일 인증에 성공하였습니다.", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @PostMapping("/profileImage")
+    public ResponseEntity<ResponseDto> saveImage(ImagePostDto imagePostDto) throws IOException {
+        // image, email required
+
+        String profileimage;
+        profileimage = imageUploadService.uploadImage(imagePostDto, "profile");
+        response = new ResponseDto(true, "프로필 사진 s3 저장", profileimage);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 
     @PostMapping("/signup")
     public ResponseEntity<ResponseDto> signUp(@RequestBody @Validated UserDto userDto) {

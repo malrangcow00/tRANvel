@@ -1,4 +1,6 @@
 package com.ssafy.tranvel.entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +20,7 @@ public class AdjustmentGameHistory {
     private Long id;
 
     @ManyToOne
+    @JsonManagedReference
     private RoomHistory roomHistory;
 
     @OneToOne
@@ -38,8 +41,9 @@ public class AdjustmentGameHistory {
     @ElementCollection
     private List<Long> selectedUsers = new ArrayList<>();
 
-    @Column(length = 30, name = "Image")
-    private String image;
+    @OneToMany(mappedBy = "adjustmentGameHistory")
+    @JsonManagedReference
+    private List<AdjustmentImage> images;
 
     @Column(length = 3, name = "Category")
     private String category;

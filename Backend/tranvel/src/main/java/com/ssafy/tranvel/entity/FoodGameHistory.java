@@ -1,5 +1,7 @@
 package com.ssafy.tranvel.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,15 +21,17 @@ public class FoodGameHistory {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     private RoomHistory roomHistory;
 
     @OneToMany(mappedBy = "foodGameHistory")
-    private List<FoodImage> foodImages;
+    @JsonManagedReference
+    private List<FoodImage> images;
 
     @OneToOne
     private RandomGame miniGameCode;
 
-    @Column(length = 10, name = "FoodName")
+    @Column(length = 20, name = "FoodName")
     private String foodName;
 
     @Column(length = 30, name = "DateTime")

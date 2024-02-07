@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Getter
+@Getter @Setter
 @Builder
 public class RoomMainResponseDto {
     /*
@@ -28,7 +28,7 @@ public class RoomMainResponseDto {
 
     private String endDate;
 
-    private List<Image> images;
+    private List<String> images;
 
     private int balanceResult;
 

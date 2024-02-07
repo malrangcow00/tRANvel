@@ -56,7 +56,7 @@ public class User implements UserDetails {
 
 
     @OneToMany(mappedBy = "user")
-    @JsonBackReference
+    @JsonManagedReference
     private List<RoomHistory> roomHistories;
 
 
