@@ -7,6 +7,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.ssafy.tranvel.data.model.dto.HistoryDto
 import com.ssafy.tranvel.presentation.screen.announcement.navigation.navigateAnnouncement
+import com.ssafy.tranvel.presentation.screen.history.navigation.navigateHistory
 import com.ssafy.tranvel.presentation.screen.home.HomeScreen
 
 
@@ -18,17 +19,16 @@ fun NavController.navigateHome(
     this.navigate(homeRoute)
 }
 
-fun NavGraphBuilder.homeScreen(navController: NavController, navigateToDetailHistory: (HistoryDto?)->Unit) {
+fun NavGraphBuilder.homeScreen(navController: NavController) {
     composable(homeRoute) {
         HomeScreen(
+            navController,
             hiltViewModel(),
 //            hiltViewModel(),
             { navController.navigate("userInfoModify_route") },
             { navController.navigateAnnouncement() },
             { navController.navigate("userWithdrawal_route") },
-            {}, {}, {
-                navigateToDetailHistory.invoke(it)
-            }
+            {}, {}
         )
     }
 }

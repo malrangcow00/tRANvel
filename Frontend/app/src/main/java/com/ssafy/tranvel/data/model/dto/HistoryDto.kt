@@ -5,19 +5,21 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class HistoryDto(
-    val roomId: Int,
-    val period : String,
-    val images : List<String>?,
+    val roomid: Long,
     val roomName : String,
-    val profit : Int?
+    val startDate : String,
+    val endDate : String?,
+    val images: String?,
+    val balanceResult : Int,
 ) : Parcelable {
-    companion object{
+    companion object {
         fun init() = HistoryDto(
-            roomId = -1,
-            period = "",
-            images = null,
+            roomid = -1,
             roomName = "",
-            profit = null
+            startDate = "",
+            endDate = null,
+            balanceResult = 0,
+            images = null,
         )
     }
 }
