@@ -11,5 +11,5 @@ fun HistoryHeader(
 ){
     Log.d(TAG, "HistoryHeader: ${dto?.roomName.orEmpty()}")
     HistoryTitle(dto)
-    HistoryHeaderImages()
+    HistoryHeaderImages(dto)
 }
