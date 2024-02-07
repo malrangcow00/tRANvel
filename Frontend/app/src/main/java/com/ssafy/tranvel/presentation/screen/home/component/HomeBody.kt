@@ -23,7 +23,7 @@ fun HomeBody(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 //        HomeRoomBody(roomViewModel, onEnterButtonClicked, onCreateButtonClicked)
-        HomeRoomBody(onEnterButtonClicked, onEnterButtonClicked)
+        HomeRoomBody(travelViewModel,onEnterButtonClicked)
         HomeHistoryBody(historyViewModel, navController)
     }
 }
