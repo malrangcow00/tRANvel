@@ -8,17 +8,16 @@ import com.ssafy.tranvel.presentation.screen.history.component.HistoryBody
 import com.ssafy.tranvel.presentation.screen.history.component.HistoryHeader
 
 private const val TAG = "HistoryScreen_싸피"
+
 @Composable
 fun HistoryScreen(
-    viewModel: HistoryViewModel,
+    dto: HistoryDto?
 ) {
-    var dto : HistoryDto? = viewModel.currentDto
     Scaffold(
         topBar = { HistoryHeader(dto) }
     ) {
         HistoryBody(
-            it,
-            viewModel
+            it, dto
         )
     }
 

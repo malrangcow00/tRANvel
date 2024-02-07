@@ -62,7 +62,7 @@ fun HomeHistoryCard(
             .clickable(
                 onClick = {
 //                    HistoryScreen(viewModel = viewModel)
-                    Log.d(TAG, "HomeHistoryCard viewModel dto 값 : ${viewModel.currentDto}")
+//                    Log.d(TAG, "HomeHistoryCard viewModel dto 값 : ${viewModel.currentDto}")
                     navController.navigateHistory(dto)
                 }
             ),

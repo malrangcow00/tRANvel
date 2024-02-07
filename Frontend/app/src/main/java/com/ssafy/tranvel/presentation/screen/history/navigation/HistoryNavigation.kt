@@ -16,11 +16,13 @@ fun NavController.navigateHistory(
     dto: HistoryDto?,
 ) {
     Log.d(TAG, "navigateHistory: ${dto?.roomName.orEmpty()}")
+    this.currentBackStackEntry?.savedStateHandle?.set("history",dto)
     this.navigate(historyRoute)
 }
 
 fun NavGraphBuilder.historyScreen(navController: NavController) {
     composable(historyRoute) {
-        HistoryScreen(hiltViewModel())
+        val historyObject : HistoryDto?=navController.previousBackStackEntry?.savedStateHandle?.get("history")
+        HistoryScreen(historyObject)
     }
 }
