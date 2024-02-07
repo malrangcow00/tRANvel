@@ -60,7 +60,7 @@ public class AdjustmentGameHistoryService {
     // 정산 정보 입력 시 N등분 해서 정산 실시.
     // selectedUsers의 아이디는 User.Id가 아닌, joinUser.Id
     @Transactional
-    public AdjustmentGameHistory adjustment(AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
+    public int adjustment(AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
         System.out.println("AdjustmentGameHistoryService.adjustment");
 
         RoomHistory roomHistory = roomHistoryRepository.findById(adjustmentGameHistoryDto.getRoomId()).get();
@@ -103,7 +103,7 @@ public class AdjustmentGameHistoryService {
                 .build();
         adjustmentGameHistoryRepository.save(adjustmentGameHistory);
 
-        return adjustmentGameHistory;
+        return moneyResult;
     }
 
     // 모든 정산 게임 기록

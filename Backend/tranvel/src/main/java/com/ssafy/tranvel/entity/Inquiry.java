@@ -33,7 +33,7 @@ public class Inquiry {
     private String datetime;
 
     @ManyToOne
-    @JsonManagedReference
+    @JsonBackReference
     private User user;
 
     @OneToMany(mappedBy = "inquiry", cascade = CascadeType.REMOVE)

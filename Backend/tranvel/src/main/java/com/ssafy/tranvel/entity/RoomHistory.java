@@ -76,17 +76,6 @@ public class RoomHistory {
     @Nullable
     private List<JoinUser> joinUser;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "roomHistory")
-    private List<AdjustmentGameHistory> adjustmentGameHistories;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "roomHistory")
-    private List<AttractionGameHistory> attractionGameHistories;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "roomHistory")
-    private List<FoodGameHistory> foodGameHistories;
 
     public void joinUser(List<JoinUser> joinUser) {
         this.joinUser = joinUser;

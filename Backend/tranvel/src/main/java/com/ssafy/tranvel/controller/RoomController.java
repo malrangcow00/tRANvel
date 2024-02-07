@@ -150,7 +150,7 @@ public class RoomController {
     // 입력된 정보에 따라, 선택된 인원들에 대해 price/인원 으로 정산 실시 및 기록, api 명세 참조
     @PostMapping("/adjustment/record")
     public ResponseEntity<ResponseDto> createAdjustmentGameHistory(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
-        int moneyResult = adjustmentGameHistoryService.adjustment(adjustmentGameHistoryDt; // 1인당 정산되는 금액
+        int moneyResult = adjustmentGameHistoryService.adjustment(adjustmentGameHistoryDto); // 1인당 정산되는 금액
 
         response = new ResponseDto(true,"정산 실시, 1/N 액수", moneyResult);
         return ResponseEntity.status(HttpStatus.OK).body(response);

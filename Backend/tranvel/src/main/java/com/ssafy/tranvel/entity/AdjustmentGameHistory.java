@@ -26,7 +26,6 @@ public class AdjustmentGameHistory {
 
     @JsonBackReference
     @ManyToOne
-    @JsonManagedReference
     private RoomHistory roomHistory;
 
     @OneToOne

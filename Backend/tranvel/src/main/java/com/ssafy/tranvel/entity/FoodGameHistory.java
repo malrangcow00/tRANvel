@@ -20,12 +20,10 @@ public class FoodGameHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonBackReference
     @ManyToOne
     @JsonBackReference
     private RoomHistory roomHistory;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "foodGameHistory")
     @JsonManagedReference
     private List<FoodImage> images;
