@@ -1,4 +1,5 @@
 package com.ssafy.tranvel.entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -19,6 +20,7 @@ public class AdjustmentGameHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
     @ManyToOne
     private RoomHistory roomHistory;
 
