@@ -1,32 +1,24 @@
 package com.ssafy.tranvel.security;
-
 import com.ssafy.tranvel.utility.JwtProvider;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
-
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
-
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
-
     private final JwtProvider jwtProvider;
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
@@ -34,13 +26,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String accessToken = resolveToken(httpRequest, "Access-Token");
         String refreshToken = resolveToken(httpRequest, "Refresh-Token");
         String requestUri = httpRequest.getRequestURI();
-
         try {
-//            if (isAllowedPath(requestUri)) {
-//                chain.doFilter(request, response);
-//                return;
-//            }
-
+            if (isAllowedPath(requestUri)) {
+                chain.doFilter(request, response);
+                return;
+            }
             if ("/user/token/refresh".equals(requestUri)) {
                 if (refreshToken != null && jwtProvider.validateToken(refreshToken, "refresh")) {
                     chain.doFilter(request, response);
@@ -62,12 +52,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             sendUnauthorizedResponse(httpResponse, "Authentication error: " + e.getMessage());
         }
     }
-
-//    private boolean isAllowedPath(String requestUri) {
-//        List<String> allowedPaths = Arrays.asList("/signup", "/email-auth", "/email-auth/verification", "/user/duplication", "/user/signin", "/swagger-ui/", "/v3/", "/api/");
-//        return allowedPaths.stream().anyMatch(path -> requestUri.startsWith(path));
-//    }
-
+    private boolean isAllowedPath(String requestUri) {
+        List<String> allowedPaths = Arrays.asList("/signup", "/email-auth", "/email-auth/verification", "/user/duplication", "/user/signin", "/swagger-ui/", "/v3/", "/api/");
+        return allowedPaths.stream().anyMatch(path -> requestUri.startsWith(path));
+    }
     private String resolveToken(HttpServletRequest request, String headerName) {
         String prefixToken = request.getHeader(headerName);
         if (StringUtils.hasText(prefixToken) && prefixToken.startsWith("Bearer ")) {
@@ -75,7 +63,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         }
         return null;
     }
-
     private void sendUnauthorizedResponse(HttpServletResponse response, String message) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
