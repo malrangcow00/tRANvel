@@ -1,6 +1,8 @@
 package com.ssafy.tranvel.presentation.screen.components
 
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -38,5 +40,31 @@ fun EmptyIndicator(
         composition = composition,
         progress = { progress },
         modifier = modifier.fillMaxSize()
+    )
+}
+
+@Composable
+fun HistoryIndicator() {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.historyanimation))
+    val progress by animateLottieCompositionAsState(
+        composition, true, iterations = LottieConstants.IterateForever, restartOnPlay = false
+    )
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+        modifier = Modifier.fillMaxWidth(0.2f).fillMaxHeight(0.5f)
+    )
+}
+
+@Composable
+fun ResultLoadingIndicator(){
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.historyanimation))
+    val progress by animateLottieCompositionAsState(
+        composition, true, iterations = LottieConstants.IterateForever, restartOnPlay = false
+    )
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+        modifier = Modifier.fillMaxWidth(0.2f).fillMaxHeight(0.5f)
     )
 }
