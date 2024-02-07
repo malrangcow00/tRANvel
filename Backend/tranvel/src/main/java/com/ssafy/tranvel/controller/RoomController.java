@@ -137,11 +137,19 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @GetMapping("{room-id}/adjustmentgame")
+    public ResponseEntity<ResponseDto> getRoomUsers(@PathVariable("room-id") @Validated Long roomId) {
+        List<JoinUserInfoDto> joinUserInfoDtos = adjustmentGameHistoryService.getJoinUsers(roomId);
+
+        response = new ResponseDto(true, "방의 인원 목록.",joinUserInfoDtos);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @PostMapping("{room-id}/adjustmentgame")
     public ResponseEntity<ResponseDto> createAdjustmentGameHistory(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
-        adjustmentGameHistoryService.adjustment(adjustmentGameHistoryDto);
+        int moneyResult = adjustmentGameHistoryService.adjustment(adjustmentGameHistoryDto); // 1인당 정산되는 금액
 
-        response = new ResponseDto(true,"정산 게임 생성", null);
+        response = new ResponseDto(true,"정산 실시, 1/N 액수", moneyResult);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

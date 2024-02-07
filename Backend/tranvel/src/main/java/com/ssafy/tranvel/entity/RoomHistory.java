@@ -62,8 +62,6 @@ public class RoomHistory {
         this.joinUser = joinUser;
     }
 
-
-
     public void finishRoom() {
         this.nowPlaying = false;
         this.roomCode = "";
