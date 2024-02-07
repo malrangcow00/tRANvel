@@ -1,18 +1,19 @@
 package com.ssafy.tranvel.controller;
 
 import com.ssafy.tranvel.dto.TokenDto;
-import com.ssafy.tranvel.repository.RefreshTokenRepository;
 import com.ssafy.tranvel.utility.JwtProvider;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/user")
@@ -20,40 +21,49 @@ public class AuthController {
 
     private final JwtProvider jwtProvider;
     private final UserDetailsService userDetailsService;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    public AuthController(JwtProvider jwtProvider, UserDetailsService userDetailsService, RefreshTokenRepository refreshTokenRepository) {
+    public AuthController(JwtProvider jwtProvider, UserDetailsService userDetailsService) {
         this.jwtProvider = jwtProvider;
         this.userDetailsService = userDetailsService;
-        this.refreshTokenRepository = refreshTokenRepository;
+    }
+
+    private String resolveTokenFromHeader(HttpServletRequest request, String headerName) {
+        String bearerToken = request.getHeader(headerName);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
     @PostMapping("/token/refresh")
-    public ResponseEntity<?> refreshAccessToken(@RequestParam("refreshToken") String refreshToken) {
-        // Refresh Token이 DB에 저장된 것인지 확인
-        if (refreshTokenRepository.findByToken(refreshToken) == null) {
+    public ResponseEntity<?> regenerateAccessToken(HttpServletRequest request) {
+        String accessToken = resolveTokenFromHeader(request, "Access-Token");
+        String refreshToken = resolveTokenFromHeader(request, "Refresh-Token");
+
+        try {
+            if (!jwtProvider.validateToken(accessToken, "access")) {
+                return ResponseEntity
+                        .badRequest()
+                        .body("Error: Invalid or expired Access Token.");
+            }
+
+            if (!jwtProvider.validateToken(refreshToken, "refresh")) {
+                return ResponseEntity
+                        .badRequest()
+                        .body("Error: Invalid or expired refresh token.");
+            }
+            // Generate new Access Token
+            UserDetails userDetails = jwtProvider.getUserDetailsFromToken(refreshToken);
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+            TokenDto newAccessToken = jwtProvider.generateTokens(authentication);
+
+            return ResponseEntity.ok(newAccessToken);
+        } catch (Exception e) {
             return ResponseEntity
-                    .badRequest()
-                    .body("Error: Refresh token is not in the database.");
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
         }
-
-        if (!jwtProvider.validateToken(refreshToken)) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("Error: Invalid refresh token.");
-        }
-
-        // 연관된 사용자 정보 가져오기
-        String username = refreshTokenRepository.findByToken(refreshToken).getUsername();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
-
-        // 새로운 Access Token 생성
-        TokenDto newAccessToken = jwtProvider.generateAccessToken(authentication);
-
-        return ResponseEntity.ok(newAccessToken);
     }
 }

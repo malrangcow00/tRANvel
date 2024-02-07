@@ -15,7 +15,6 @@ import com.ssafy.tranvel.service.UserService;
 import com.ssafy.tranvel.utility.JwtProvider;
 
 import com.ssafy.tranvel.utility.SecurityUtility;
-import jakarta.servlet.http.HttpServletRequest;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,28 +81,31 @@ public class UserController {
     }
 
 
-//     로그인
+    // 로그인
     @PostMapping("/signin")
+
     public ResponseEntity<ResponseDto> login(@RequestBody UserLoginDto userLoginDto) {
         TokenDto tokenDto = userService.login(userLoginDto.getEmail(), userLoginDto.getPassword());
         ResponseDto response = new ResponseDto(true, "로그인 성공", tokenDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-//    @PostMapping("/signin")
-//    public ResponseEntity<ResponseDto> login(@RequestBody UserLoginDto userLoginDto) {
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        userLoginDto.getEmail(),
-//                        userLoginDto.getPassword()
-//                )
-//        );
-//
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        String accessToken = jwtProvider.generateAccessToken(authentication);
-//        String refreshToken = jwtProvider.generateRefreshToken();
-
-
+    // 자동 로그인 (Acceess Token으로 접근)
+    @PostMapping("/auto-signin")
+    public ResponseEntity<ResponseDto> autoLogin(@RequestHeader("Access-Token") String accessToken) {
+        try {
+            if (!jwtProvider.validateToken(accessToken, "access")) {
+                throw new RuntimeException("Invalid or expired access token.");
+            }
+            Authentication authentication = jwtProvider.getAuthenticationFromToken(accessToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            response = new ResponseDto(true, "Auto login successful.", null);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            response = new ResponseDto(false, "Auto login failed: " + e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 
     // JWT 테스트
     @PostMapping("/test")
@@ -120,7 +119,6 @@ public class UserController {
         try {
             // 현재 인증된 사용자의 ID(이메일) 조회
             String userId = SecurityUtility.getCurrentUserId();
-            // UserRepository 또는 UserService를 통해 사용자 정보 조회
             Optional<User> userOptional = userRepository.findByEmail(userId);
             if (!userOptional.isPresent()) {
                 response = new ResponseDto(false, "사용자를 찾을 수 없습니다.", null);
