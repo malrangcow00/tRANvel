@@ -1,9 +1,10 @@
 package com.ssafy.tranvel.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.annotation.Nullable;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.annotation.Nullable;
-import jakarta.annotation.Nullable;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
