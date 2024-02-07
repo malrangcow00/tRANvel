@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             }
 
             if ("/user/token/refresh".equals(requestUri)) {
-                if (refreshToken != null && jwtProvider.validateTokenWithoutExpiration(refreshToken)) {
+                if (refreshToken != null && jwtProvider.validateToken(refreshToken, "refresh")) {
                     chain.doFilter(request, response);
                 } else {
                     sendUnauthorizedResponse(httpResponse, "Refresh Token이 유효하지 않거나 만료되었습니다. 다시 로그인해주세요.");

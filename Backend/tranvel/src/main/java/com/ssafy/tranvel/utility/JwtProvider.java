@@ -44,9 +44,9 @@ public class JwtProvider {
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
-        Date accessTokenExpiresIn = new Date(now + 86400000); // Access Token 1일
+//        Date accessTokenExpiresIn = new Date(now + 86400000); // Access Token 1일
         Date refreshTokenExpiresIn = new Date(now + 1728000000); // Refresh Token 20일
-//        Date accessTokenExpiresIn = new Date(now + 10000); // Access Token 10초 (임시)
+        Date accessTokenExpiresIn = new Date(now + 10000); // Access Token 10초 (임시)
 //        Date refreshTokenExpiresIn = new Date(now + 20000); // Refresh Token 20초 (임시)
 
         String accessToken = Jwts.builder()
@@ -128,13 +128,13 @@ public class JwtProvider {
 
     public boolean validateTokenWithoutExpiration(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-            return true;
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return false; // Token is valid and not expired
         } catch (ExpiredJwtException e) {
-            return true;
+            return true; // Token is expired
         } catch (Exception e) {
-            log.info("Invalid JWT Token", e);
-            return false;
+            log.info("Invalid or malformed JWT Token", e);
+            return false; // Token is invalid for other reasons
         }
     }
 }

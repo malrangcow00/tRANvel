@@ -42,17 +42,18 @@ public class AuthController {
         String refreshToken = resolveTokenFromHeader(request, "Refresh-Token");
 
         try {
-            if (!jwtProvider.validateToken(accessToken, "access")) {
-                return ResponseEntity
-                        .badRequest()
-                        .body("Error: Invalid or expired Access Token.");
-            }
-
             if (!jwtProvider.validateToken(refreshToken, "refresh")) {
                 return ResponseEntity
                         .badRequest()
                         .body("Error: Invalid or expired refresh token.");
             }
+
+            if (!jwtProvider.validateToken(accessToken, "access") && !jwtProvider.validateTokenWithoutExpiration(accessToken)) {
+                return ResponseEntity
+                        .badRequest()
+                        .body("Error: Invalid Access Token.");
+            }
+
             // Generate new Access Token
             UserDetails userDetails = jwtProvider.getUserDetailsFromToken(refreshToken);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
