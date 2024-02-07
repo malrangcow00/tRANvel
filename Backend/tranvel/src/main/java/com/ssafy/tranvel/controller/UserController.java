@@ -88,28 +88,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // 자동 로그인 (Acceess Token으로 접근)
-    @PostMapping("/auto-signin")
-    public ResponseEntity<ResponseDto> autoLogin(@RequestHeader("Access-Token") String accessToken) {
-        try {
-            if (!jwtProvider.validateToken(accessToken, "access")) {
-                throw new RuntimeException("Invalid or expired access token.");
-            }
-            Authentication authentication = jwtProvider.getAuthenticationFromToken(accessToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            response = new ResponseDto(true, "Auto login successful.", null);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (Exception e) {
-            response = new ResponseDto(false, "Auto login failed: " + e.getMessage(), null);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
-    // JWT 테스트
-    @PostMapping("/test")
-    public String test() {
-        return "인증 성공";
-    }
+    // JWT 테스트 (임시)
+//    @PostMapping("/test")
+//    public String test() {
+//        return "인증 성공";
+//    }
 
     // 사용자 프로필 조회
     @GetMapping("/auth/profile")
