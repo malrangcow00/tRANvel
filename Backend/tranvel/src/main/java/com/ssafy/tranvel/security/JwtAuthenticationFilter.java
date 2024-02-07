@@ -34,13 +34,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String accessToken = resolveToken(httpRequest, "Access-Token");
         String refreshToken = resolveToken(httpRequest, "Refresh-Token");
         String requestUri = httpRequest.getRequestURI();
-
         try {
             if (isAllowedPath(requestUri)) {
                 chain.doFilter(request, response);
                 return;
             }
-
             if ("/user/token/refresh".equals(requestUri)) {
                 if (refreshToken != null && jwtProvider.validateToken(refreshToken, "refresh")) {
                     chain.doFilter(request, response);
@@ -62,12 +60,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             sendUnauthorizedResponse(httpResponse, "Authentication error: " + e.getMessage());
         }
     }
-
     private boolean isAllowedPath(String requestUri) {
         List<String> allowedPaths = Arrays.asList("/signup", "/email-auth", "/email-auth/verification", "/user/duplication", "/user/signin", "/swagger-ui/", "/v3/", "/api/");
         return allowedPaths.stream().anyMatch(path -> requestUri.startsWith(path));
     }
-
     private String resolveToken(HttpServletRequest request, String headerName) {
         String prefixToken = request.getHeader(headerName);
         if (StringUtils.hasText(prefixToken) && prefixToken.startsWith("Bearer ")) {

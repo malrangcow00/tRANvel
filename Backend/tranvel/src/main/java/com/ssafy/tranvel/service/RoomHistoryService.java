@@ -3,9 +3,7 @@ package com.ssafy.tranvel.service;
 import com.ssafy.tranvel.dto.RoomHistoryDto;
 import com.ssafy.tranvel.dto.RoomInsideDto;
 import com.ssafy.tranvel.dto.RoomMainResponseDto;
-import com.ssafy.tranvel.entity.JoinUser;
-import com.ssafy.tranvel.entity.RoomHistory;
-import com.ssafy.tranvel.entity.User;
+import com.ssafy.tranvel.entity.*;
 import com.ssafy.tranvel.repository.JoinUserRepository;
 import com.ssafy.tranvel.repository.RoomHistoryRepository;
 import com.ssafy.tranvel.repository.UserRepository;
@@ -54,18 +52,84 @@ public class RoomHistoryService {
         roomId, data, images, roomName, balanceResult
          */
         List<RoomMainResponseDto> roomResponse = new ArrayList<>();
+        System.out.println("a");
 
 
         List<RoomHistory> roomHistoryList = getAllRoomHistories(info);
         for (int idx = 0; idx < roomHistoryList.size(); idx ++) {
+            List<String> imageList = new ArrayList<>();
+            List<AdjustmentGameHistory> adjustmentGameHistories = roomHistoryList.get(idx).getAdjustmentGameHistories();
+            String imageRoute;
+            if (!adjustmentGameHistories.isEmpty()) {
+                System.out.println("b");
+                for (int adjustmentGameHistory = 0; adjustmentGameHistory < adjustmentGameHistories.size(); adjustmentGameHistory ++) {
+                    if (!adjustmentGameHistories.get(adjustmentGameHistory).getImages().isEmpty()) {
+                        List<AdjustmentImage> adjustmentImages = adjustmentGameHistories.get(adjustmentGameHistory).getImages();
+                        if (!adjustmentImages.isEmpty()) {
+                            for (int adjustmentImage = 0; adjustmentImage < adjustmentImages.size(); adjustmentImage ++) {
+                                imageRoute = "/" + roomHistoryList.get(idx).getId() + "/adjustment/" + adjustmentImages.get(adjustmentImage).getId().toString();
+                                imageList.add(imageRoute);
+                            }
+                        }
+
+                        System.out.println("c");
+                    }
+                    System.out.println(adjustmentGameHistories.get(adjustmentGameHistory).getId());
+
+                }
+
+            }
+
+            List<AttractionGameHistory> attractionGameHistories = roomHistoryList.get(idx).getAttractionGameHistories();
+            if (!attractionGameHistories.isEmpty()) {
+                System.out.println("d");
+                for (int attractionGaemHistory = 0; attractionGaemHistory < attractionGameHistories.size(); attractionGaemHistory ++) {
+                    if (!attractionGameHistories.get(attractionGaemHistory).getImages().isEmpty()) {
+                        List<AttractionImage> attractionImages = attractionGameHistories.get(attractionGaemHistory).getImages();
+                        if (!attractionImages.isEmpty()) {
+                            for (int attractionImage = 0; attractionImage < attractionImages.size(); attractionImage ++) {
+                                imageRoute = "/" + roomHistoryList.get(idx).getId() + "/attraction/" + attractionImages.get(attractionImage).getId().toString();
+                                imageList.add(imageRoute);
+                            }
+                        }
+//                        imageList.add(attractionGameHistories.get(attractionGaemHistory).getImages());
+                        System.out.println("e");
+                    }
+                }
+            }
+
+            List<FoodGameHistory> foodGameHistories = roomHistoryList.get(idx).getFoodGameHistories();
+            if (!foodGameHistories.isEmpty()) {
+                System.out.println("f");
+                for (int foodGameHistory = 0; foodGameHistory < foodGameHistories.size(); foodGameHistory ++) {
+                    if (!foodGameHistories.get(foodGameHistory).getImages().isEmpty()) {
+                        List<FoodImage> foodImages = foodGameHistories.get(foodGameHistory).getImages();
+                        if (!foodImages.isEmpty()) {
+                            for (int foodImage = 0; foodImage < foodImages.size(); foodImage ++) {
+                                imageRoute = "/" + roomHistoryList.get(idx).getId() + "/food/" + foodImages.get(foodImage).getId().toString();
+                                imageList.add(imageRoute);
+                            }
+                        }
+                        System.out.println("g");
+//                        imageList.add(foodGameHistories.get(foodGameHistory).getImages());
+                    }
+                }
+
+            }
+
+
             RoomMainResponseDto roomMainResponseDto = RoomMainResponseDto.builder()
                     .roomid(roomHistoryList.get(idx).getId())
                     .roomName(roomHistoryList.get(idx).getRoomName())
                     .startDate(roomHistoryList.get(idx).getStartDate())
                     .endDate(roomHistoryList.get(idx).getEndDate())
                     .balanceResult(roomHistoryList.get(idx).getBalanceResult())
-                    .images(null)
                     .build();
+            if (!imageList.isEmpty()) {
+                System.out.println("h");
+                roomMainResponseDto.setImages(imageList);
+            }
+            System.out.println("i");
             roomResponse.add(roomMainResponseDto);
         }
         return roomResponse;

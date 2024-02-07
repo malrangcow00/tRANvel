@@ -1,5 +1,12 @@
 package com.ssafy.tranvel.entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.annotation.Nullable;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.annotation.Nullable;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,16 +24,20 @@ public class AdjustmentGameHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
     @ManyToOne
     private RoomHistory roomHistory;
 
     @OneToOne
+    @Nullable
     private RandomGame miniGameCode;
 
     @Column(length = 20, name = "TargetUser")
+    @Nullable
     private String targetUser;
 
     @Column(length = 30, name = "DateTime")
+    @Nullable
     private String dateTime;
 
     @Column(name = "Price")
@@ -38,12 +49,15 @@ public class AdjustmentGameHistory {
     @ElementCollection
     private List<Long> selectedUsers = new ArrayList<>();
 
-    @Column(length = 30, name = "Image")
-    private String image;
+    @OneToMany(mappedBy = "adjustmentGameHistory")
+    @JsonManagedReference
+    private List<AdjustmentImage> images;
 
     @Column(length = 3, name = "Category")
+    @Nullable
     private String category;
 
     @Column(length = 100, name = "Detail")
+    @Nullable
     private String detail;
 }

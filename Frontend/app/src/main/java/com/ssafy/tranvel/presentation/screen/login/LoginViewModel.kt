@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.presentation.screen.login
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -69,9 +70,6 @@ class LoginViewModel @Inject constructor(
                 UserRequest(
                     email = id.value,
                     password = password.value,
-                    balance = 0,
-                    profileImage = "",
-                    nickName = "asdf"
                 )
             ).collect {
                 when (it) {
@@ -79,7 +77,6 @@ class LoginViewModel @Inject constructor(
                         if (it.data.result) {
                             _uiState.emit("SUCCESS")
                             setToken(it.data.data.accessToken,"access_token", )
-//                            setToken("refresh_token", it.data.data.refreshToken)
                         } else {
                             _uiState.emit("ERROR")
                         }

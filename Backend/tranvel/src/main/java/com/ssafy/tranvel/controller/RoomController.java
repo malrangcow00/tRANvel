@@ -2,6 +2,7 @@ package com.ssafy.tranvel.controller;
 
 
 import com.ssafy.tranvel.dto.*;
+import com.ssafy.tranvel.entity.AdjustmentGameHistory;
 import com.ssafy.tranvel.entity.JoinUser;
 import com.ssafy.tranvel.entity.RoomHistory;
 import com.ssafy.tranvel.entity.User;
@@ -137,11 +138,39 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("{room-id}/adjustmentgame")
-    public ResponseEntity<ResponseDto> createAdjustmentGameHistory(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
-        adjustmentGameHistoryService.adjustment(adjustmentGameHistoryDto);
+    // 정산을 위해 방의 인원 목록을 불러옴. / param : roomId
+    @PostMapping("/adjustment/select")
+    public ResponseEntity<ResponseDto> getRoomUsers(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
+        List<JoinUserInfoDto> joinUserInfoDtos = adjustmentGameHistoryService.getJoinUsers(adjustmentGameHistoryDto);
 
-        response = new ResponseDto(true,"정산 게임 생성", null);
+        response = new ResponseDto(true, "방의 인원 목록.",joinUserInfoDtos);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // 입력된 정보에 따라, 선택된 인원들에 대해 price/인원 으로 정산 실시 및 기록, api 명세 참조
+    @PostMapping("/adjustment/record")
+    public ResponseEntity<ResponseDto> createAdjustmentGameHistory(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
+        int moneyResult = adjustmentGameHistoryService.adjustment(adjustmentGameHistoryDto); // 1인당 정산되는 금액
+
+        response = new ResponseDto(true,"정산 실시, 1/N 액수", moneyResult);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // 방 id에 관련된 모든 정산 기록 정보 / param : roomId
+    @PostMapping("/adjustment/getallhistory")
+    public ResponseEntity<ResponseDto> getAllAdjustmentHistory(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
+        List<AdjustmentGameHistory> adjustmentGameHistoryList = adjustmentGameHistoryService.getAllAdjustmentHistories(adjustmentGameHistoryDto);
+
+        response = new ResponseDto(true, "해당 방의 모든 정산 기록", adjustmentGameHistoryList);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // AdjustmentGameHistory 의 한 id에 대한 기록 / param : id
+    @PostMapping("/adjustment/gethistory")
+    public ResponseEntity<ResponseDto> getOneAdjustmentHistory(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
+        AdjustmentGameHistory adjustmentGameHistory = adjustmentGameHistoryService.getAdjustmentHistory(adjustmentGameHistoryDto);
+
+        response = new ResponseDto(true, "해당 방의 해당 정산 기록", adjustmentGameHistory);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

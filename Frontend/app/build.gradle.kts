@@ -24,6 +24,8 @@ android {
             useSupportLibrary = true
         }
         buildConfigField("String", "API_KEY",getApiKey("API_KEY"))
+        buildConfigField("String", "WEBSOCKET_URL",getApiKey("WEBSOCKET_URL"))
+        resValue("string","NAVER_API_KEY",getApiKey("NAVER_API_KEY"))
     }
 
     buildTypes {
@@ -73,14 +75,22 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
+    //STOMP
+    implementation ("com.github.NaikSoftware:StompProtocolAndroid:1.6.6")
+
+    //rx
+    implementation ("io.reactivex.rxjava2:rxjava:2.2.5")
+    implementation ("io.reactivex.rxjava2:rxandroid:2.1.0")
+
     //compose
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.navigation:navigation-compose:2.5.3")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.compose.material:material")
+    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     implementation("androidx.paging:paging-runtime:3.2.1")
     implementation("androidx.paging:paging-compose:3.3.0-alpha02")
 
@@ -100,7 +110,7 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:6.3.0")
 
     //navermap
-
+    implementation("io.github.fornewid:naver-map-compose:1.4.1")
 
     //viewmodel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")

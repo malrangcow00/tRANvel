@@ -24,11 +24,16 @@ fun NavGraphBuilder.homeScreen(navController: NavController) {
         HomeScreen(
             navController,
             hiltViewModel(),
-//            hiltViewModel(),
+            hiltViewModel(),
             { navController.navigate("userInfoModify_route") },
             { navController.navigateAnnouncement() },
             { navController.navigate("userWithdrawal_route") },
-            {}, {}
+            {
+                navController.navigate("game") {
+                    it.viewModelStore.clear()
+                    popUpTo(homeRoute) { inclusive = true }
+                }
+            }
         )
     }
 }

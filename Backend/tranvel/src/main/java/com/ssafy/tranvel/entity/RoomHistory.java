@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.annotation.Nullable;
@@ -48,8 +49,25 @@ public class RoomHistory {
     @Column(name = "NowPlaying")
     private boolean nowPlaying;
 
-    @ManyToOne
+    @OneToMany(mappedBy = "roomHistory")
     @JsonManagedReference
+    private List<AdjustmentGameHistory> adjustmentGameHistories;
+
+    @OneToMany(mappedBy = "roomHistory")
+    @JsonManagedReference
+    private List<AttractionGameHistory> attractionGameHistories;
+
+    @OneToMany(mappedBy = "roomHistory")
+    @JsonManagedReference
+    private List<FoodGameHistory> foodGameHistories;
+
+
+    @OneToMany(mappedBy = "roomHistory")
+    @JsonManagedReference
+    private List<RoomImage> images;
+
+    @ManyToOne
+    @JsonBackReference
     @JsonIgnore
     private User user;
 
@@ -58,11 +76,10 @@ public class RoomHistory {
     @Nullable
     private List<JoinUser> joinUser;
 
+
     public void joinUser(List<JoinUser> joinUser) {
         this.joinUser = joinUser;
     }
-
-
 
     public void finishRoom() {
         this.nowPlaying = false;
