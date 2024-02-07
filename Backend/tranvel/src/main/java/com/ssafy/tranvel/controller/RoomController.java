@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.validation.annotation.Validated;
@@ -38,8 +39,8 @@ public class RoomController {
     private final AdjustmentGameHistoryRepository adjustmentGameHistoryRepository;
     private final SimpMessageSendingOperations sendingOperations;
 
-    @PostMapping("")
-    public ResponseEntity<ResponseDto> getRoomHistoryList(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
+    @PostMapping(value = "")
+    public ResponseEntity<ResponseDto> getRoomHistoryList() {
 
         // service 패키지로 이동예정
 //        RoomHistoryDto info = roomHistoryDto;
@@ -64,7 +65,7 @@ public class RoomController {
 //                    .build();
 //            roomResponse.add(roomMainResponseDto);
 //        }
-        List<RoomMainResponseDto> roomResponse = roomHistoryService.filteredRoomInfo(roomHistoryDto);
+        List<RoomMainResponseDto> roomResponse = roomHistoryService.filteredRoomInfo();
 
         response = new ResponseDto(true, "방 기록 전체 조회", roomResponse);
         return  ResponseEntity.status(HttpStatus.OK).body(response);
@@ -98,8 +99,8 @@ public class RoomController {
 
 
     @PostMapping("/detail")
-    public ResponseEntity<ResponseDto> getRoomDetailHistory(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
-        RoomHistory roomHistory = roomHistoryService.getRoomDetailHistory(roomHistoryDto);
+    public ResponseEntity<ResponseDto> getRoomDetailHistory(@RequestBody @Validated Long roomId) {
+        RoomHistory roomHistory = roomHistoryService.getRoomDetailHistory(roomId);
 
         RoomInsideDto roomInnerResponse = roomHistoryService.filteredRoomInsideInfo(roomHistory);
         response = new ResponseDto(true, "방 게임 기록 조회", roomInnerResponse);
@@ -122,18 +123,18 @@ public class RoomController {
 
 
     @PostMapping("/finish")
-    public ResponseEntity<ResponseDto> finishRoomHistory(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
-        roomHistoryService.finishRoomHistory(roomHistoryDto);
+    public ResponseEntity<ResponseDto> finishRoomHistory(@RequestBody @Validated Long roomId) {
+        roomHistoryService.finishRoomHistory(roomId);
 
-        response = new ResponseDto(true, "방 게임 기록 종료", roomHistoryRepository.findById(roomHistoryDto.getRoomId()).get());
+        response = new ResponseDto(true, "방 게임 기록 종료", null);
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<ResponseDto> deleteRoomHistory(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
-        roomHistoryService.deleteRoomHistory(roomHistoryDto);
+    public ResponseEntity<ResponseDto> deleteRoomHistory(@RequestBody @Validated Long roomId) {
+        roomHistoryService.deleteRoomHistory(roomId);
 
-        response = new ResponseDto(true, "방 게임 기록 삭제", roomHistoryDto.getRoomId());
+        response = new ResponseDto(true, "방 게임 기록 삭제", null);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

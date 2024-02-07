@@ -40,18 +40,16 @@ public class ImageUploadService {
     private  final AttractionImageRepository attractionImageRepository;
 
 
-    public String uploadImage(ImagePostDto imagePostDto, String category) throws IOException {
+    public String uploadImage(ImagePostDto imagePostDto, MultipartFile image, String category) throws IOException {
 //        String fileName = image.getOriginalFilename();
         // MultipartFile image, String category, Long roomId, Long contentId
         String fileName;
 
         String dir;
         if (category.equals("profile")) {
-            if (SecurityUtility.getCurrentUserId() != null) {
-                fileName = SecurityUtility.getCurrentUserId();
-            } else{
-                fileName = imagePostDto.getEmail();
-            }
+
+            fileName = SecurityUtility.getCurrentUserId();
+
             dir = "/" + category;
         } else {
             switch (category) {
@@ -92,10 +90,10 @@ public class ImageUploadService {
 
         }
 
-        InputStream inputStream = imagePostDto.getImage().getInputStream();
+        InputStream inputStream = image.getInputStream();
 
         ObjectMetadata metadata =  new ObjectMetadata();
-        metadata.setContentLength(imagePostDto.getImage().getSize());
+        metadata.setContentLength(image.getSize());
 
 
 

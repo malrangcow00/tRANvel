@@ -23,12 +23,14 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -64,21 +66,19 @@ public class UserController {
     public ResponseEntity<ResponseDto> nickNameCheck(@RequestBody @Validated
                                                      NickNameCheckDto nickNameCheckDto) {
         if (!userService.nickNameDuplicationCheck(nickNameCheckDto.getNickName(), nickNameCheckDto.getEmail())) {
-            response = new ResponseDto(false, "이미 존재하는 닉네임 입니다.", nickNameCheckDto.getNickName());
+            response = new ResponseDto(false, "이미 존재하는 닉네임 입니다.", null);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
-        response = new ResponseDto(true, "사용 가능한 닉네임 입니다.", nickNameCheckDto.getNickName());
+        response = new ResponseDto(true, "사용 가능한 닉네임 입니다.", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 프로필 이미지 등록
-    @PostMapping("/profileImage")
-    public ResponseEntity<ResponseDto> saveImage(ImagePostDto imagePostDto) throws IOException {
-        // image
+    @PostMapping(value = "/profileImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
+    public ResponseEntity<ResponseDto> saveImage(@RequestPart ImagePostDto imagePostDto, @RequestPart(value = "image",required = true) MultipartFile image) throws IOException {
 
-        String profileimage;
-        profileimage = imageUploadService.uploadImage(imagePostDto, "profile");
-        response = new ResponseDto(true, "프로필 사진 s3 저장", profileimage);
+        imageUploadService.uploadImage(imagePostDto, image, "profile");
+        response = new ResponseDto(true, "프로필 사진 s3 저장", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

@@ -42,9 +42,9 @@ public class RoomHistoryService {
     }
 
 
-    public List<RoomMainResponseDto> filteredRoomInfo(RoomHistoryDto roomHistoryDto) {
+    public List<RoomMainResponseDto> filteredRoomInfo() {
         // service 패키지로 이동예정
-        RoomHistoryDto info = roomHistoryDto;
+        RoomHistoryDto info = new RoomHistoryDto();
         info.setUserEmail(SecurityUtility.getCurrentUserId());
 
         /*
@@ -253,8 +253,8 @@ public class RoomHistoryService {
     }
 
 
-    public RoomHistory getRoomDetailHistory(RoomHistoryDto roomHistoryDto) {
-        RoomHistory roomHistory = roomHistoryRepository.findById(roomHistoryDto.getRoomId()).get();
+    public RoomHistory getRoomDetailHistory(Long roomId) {
+        RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
 
         return roomHistory;
     }
@@ -263,13 +263,12 @@ public class RoomHistoryService {
 
 
 
-    public void finishRoomHistory(RoomHistoryDto roomHistoryDto) {
-        roomHistoryRepository.findById(roomHistoryDto.getRoomId()).get().finishRoom();
+    public void finishRoomHistory(Long roomId) {
+        roomHistoryRepository.findById(roomId).get().finishRoom();
     }
 
 
-    public Long deleteRoomHistory(RoomHistoryDto roomHistoryDto) {
-        roomHistoryRepository.deleteById(roomHistoryDto.getRoomId());
-        return roomHistoryDto.getRoomId();
+    public void deleteRoomHistory(Long roomId) {
+        roomHistoryRepository.deleteById(roomId);
     }
 }

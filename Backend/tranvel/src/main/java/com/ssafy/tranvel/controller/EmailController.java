@@ -62,15 +62,15 @@ public class EmailController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/profileImage")
-    public ResponseEntity<ResponseDto> saveImage(ImagePostDto imagePostDto) throws IOException {
-        // image, email required
-
-        String profileimage;
-        profileimage = imageUploadService.uploadImage(imagePostDto, "profile");
-        response = new ResponseDto(true, "프로필 사진 s3 저장", profileimage);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
+//    @PostMapping("/profileImage")
+//    public ResponseEntity<ResponseDto> saveImage(ImagePostDto imagePostDto) throws IOException {
+//        // image, email required
+//
+//        String profileimage;
+//        profileimage = imageUploadService.uploadImage(imagePostDto, "profile");
+//        response = new ResponseDto(true, "프로필 사진 s3 저장", profileimage);
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
+//    }
 
 
     @PostMapping("/signup")

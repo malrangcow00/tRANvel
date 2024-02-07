@@ -7,9 +7,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -21,51 +24,41 @@ public class ImageController {
     private final ImageUploadService imageUploadService;
     private ResponseDto response;
 
-    @PostMapping("/image/room")
-    public ResponseEntity<ResponseDto> saveImage(ImagePostDto imagePostDto) throws IOException {
-        // image, roomId, contentId required
+    @PostMapping(value = "/image/room", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 
-        /*
-        MultipartFile image, String category, Long roomId, Long contentId
-         */
-        String image = imageUploadService.uploadImage(imagePostDto, "room");
-        response = new ResponseDto(true, "Room 사진 s3 저장", image);
+    // Param 두개 나눠서 앞은 Dto, 뒤는 Multipart
+    public ResponseEntity<ResponseDto> saveImage(@RequestPart ImagePostDto imagePostDto, @RequestPart(value = "image",required = true) MultipartFile image) throws IOException {
+
+        imageUploadService.uploadImage(imagePostDto, image, "room");
+        response = new ResponseDto(true, "Room 사진 s3 저장", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
-    @PostMapping("/image/food")
-    public ResponseEntity<ResponseDto> saveFoodImage(ImagePostDto imagePostDto) throws IOException {
-        // image, roomId, contentId required
+    @PostMapping(value = "/image/food", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseDto> saveFoodImage(@RequestPart ImagePostDto imagePostDto, @RequestPart(value = "image",required = true) MultipartFile image) throws IOException {
 
-        /*
-        MultipartFile image, String category, Long roomId, Long contentId
-         */
-
-        // 사진 먼저 DB 에 저장하고, 해당 사진의 Raw Id 를 image 이름으로 사용
-
-        String image = imageUploadService.uploadImage(imagePostDto, "food");
-        response = new ResponseDto(true, "food 사진 s3 저장", image);
+        imageUploadService.uploadImage(imagePostDto, image, "food");
+        response = new ResponseDto(true, "food 사진 s3 저장", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
-    @PostMapping("/image/attraction")
-    public ResponseEntity<ResponseDto> saveAttractionImage(ImagePostDto imagePostDto) throws IOException {
-        // image, roomId, contentId required
+    @PostMapping(value = "/image/attraction", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseDto> saveAttractionImage(@RequestPart ImagePostDto imagePostDto, @RequestPart(value = "image",required = true) MultipartFile image) throws IOException {
 
-        String image = imageUploadService.uploadImage(imagePostDto, "attraction");
-        response = new ResponseDto(true, "attraction 사진 s3 저장", image);
+        imageUploadService.uploadImage(imagePostDto, image, "attraction");
+        response = new ResponseDto(true, "attraction 사진 s3 저장", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
-    @PostMapping("/image/adjustment")
-    public ResponseEntity<ResponseDto> saveAdjustmentImage(ImagePostDto imagePostDto) throws IOException {
+    @PostMapping(value = "/image/adjustment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseDto> saveAdjustmentImage(@RequestPart ImagePostDto imagePostDto, @RequestPart(value = "image",required = true) MultipartFile image) throws IOException {
         // image, roomId, contentId required
 
-        String image = imageUploadService.uploadImage(imagePostDto, "adjustment");
-        response = new ResponseDto(true, "adjustment 사진 s3 저장", image);
+        imageUploadService.uploadImage(imagePostDto, image, "adjustment");
+        response = new ResponseDto(true, "adjustment 사진 s3 저장", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
