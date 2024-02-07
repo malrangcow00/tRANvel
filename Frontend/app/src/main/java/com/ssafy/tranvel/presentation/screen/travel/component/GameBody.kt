@@ -19,7 +19,6 @@ import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
 fun GameBody(
-    travelViewModel: TravelViewModel,
     innerPadding: PaddingValues
 ) {
     Column(

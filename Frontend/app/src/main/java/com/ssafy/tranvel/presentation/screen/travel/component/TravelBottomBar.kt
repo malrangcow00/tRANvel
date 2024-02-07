@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -28,13 +29,14 @@ class TravelBottomBar {
 
 sealed class Screen(val route: String?, val title: String?, val icon: ImageVector?) {
     object Restaurant : Screen("restaurant", "음식 뽑기", Icons.Default.Restaurant)
-    object Adjust : Screen("adjust", "가계부", Icons.Default.AddCard)
+    object Account : Screen("account", "가계부", Icons.Default.AddCard)
     object Draw : Screen("attraction_game_screen", null, null)
 }
 
 val items = listOf(
     Screen.Restaurant,
-    Screen.Adjust
+    Screen.Draw,
+    Screen.Account
 )
 
 @Composable
@@ -43,7 +45,7 @@ fun BottomNav(navController: NavController) {
     val currentRoute = navBackStackEntry?.destination
     BottomNavigation(
         modifier = Modifier
-            .padding(0.dp, 0.dp, 0.dp, 0.dp)
+            .padding(12.dp, 0.dp, 12.dp, 0.dp)
             .height(80.dp),
         backgroundColor = PrimaryColor,
         elevation = 0.dp
@@ -64,13 +66,14 @@ fun BottomNav(navController: NavController) {
                     it.title?.let {
                         Text(
                             text = it,
-                            color = TextColor
+                            color = TextColor,
+                            fontSize = 10.sp
                         )
                     }
                 },
                 selected = currentRoute?.hierarchy?.any { it.route == it.route } == true,
 
-                selectedContentColor = PrimaryColor,
+                selectedContentColor = Color.Black,
                 unselectedContentColor = Color.White.copy(alpha = 0.4f),
                 onClick = {
                     it.route?.let { it1 ->
@@ -78,9 +81,9 @@ fun BottomNav(navController: NavController) {
                             // Pop up to the start destination of the graph to
                             // avoid building up a large stack of destinations
                             // on the back stack as users select items
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
+//                            popUpTo(navController.graph.findStartDestination().id) {
+//                                saveState = true
+//                            }
                             // Avoid multiple copies of the same destination when
                             // reselecting the same item
                             launchSingleTop = true

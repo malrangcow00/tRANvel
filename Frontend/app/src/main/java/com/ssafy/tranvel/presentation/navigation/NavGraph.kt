@@ -12,6 +12,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.tranvel.presentation.screen.announcement.navigation.announcementScreen
 import com.ssafy.tranvel.presentation.screen.found.FoundPasswordScreen
+import com.ssafy.tranvel.presentation.screen.home.navigation.homeRoute
 import com.ssafy.tranvel.presentation.screen.home.navigation.homeScreen
 import com.ssafy.tranvel.presentation.screen.login.LoginScreen
 import com.ssafy.tranvel.presentation.screen.register.navigation.registerGraph

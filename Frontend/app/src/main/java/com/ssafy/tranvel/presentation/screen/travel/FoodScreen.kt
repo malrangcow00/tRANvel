@@ -30,35 +30,10 @@ fun FoodScreen(
     navController: NavController
 ) {
     Scaffold(
-        topBar = { GameHeader(drawerState = DrawerState(DrawerValue.Closed)) },
+        topBar = { GameHeader("오늘의 메뉴는?",false) },
         content = { paddingValues ->
             Column {
                 Text(text = "음식 작성 화면 입니다.", modifier = Modifier.padding(paddingValues))
-            }
-        },
-        bottomBar = {
-            BottomAppBar(
-                modifier = Modifier
-                    .height(65.dp)
-                    .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)),
-                cutoutShape = CircleShape,
-                backgroundColor = PrimaryColor,
-                elevation = 22.dp
-            ) {
-                BottomNav(navController = navController)
-            }
-        },
-        floatingActionButtonPosition = FabPosition.Center,
-        isFloatingActionButtonDocked = true,
-        floatingActionButton = {
-            FloatingActionButton(
-                shape = CircleShape,
-                onClick = {
-                    //뽑기
-                },
-                backgroundColor = PrimaryColor
-            ) {
-                Icon(imageVector = Icons.Filled.Casino, contentDescription = "Add icon")
             }
         }
     )

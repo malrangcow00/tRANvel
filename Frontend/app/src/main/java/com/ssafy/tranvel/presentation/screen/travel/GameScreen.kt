@@ -30,23 +30,23 @@ import com.ssafy.tranvel.presentation.screen.travel.component.GameBody
 import com.ssafy.tranvel.presentation.screen.travel.component.GameHeader
 import com.ssafy.tranvel.presentation.screen.travel.component.Screen
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
+import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor2
 
 @Composable
 fun GameScreen(
-    travelViewModel: TravelViewModel,
     navController: NavController
 ) {
     Scaffold(
-        topBar = { GameHeader(drawerState = DrawerState(DrawerValue.Closed)) },
+        topBar = { GameHeader("즐거운 여행 중", true) },
         content = { paddingValues ->
             Column {
-                GameBody(travelViewModel, paddingValues)
+                GameBody(paddingValues)
             }
         },
         bottomBar = {
             BottomAppBar(
                 modifier = Modifier
-                    .height(65.dp)
+                    .height(50.dp)
                     .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)),
                 cutoutShape = CircleShape,
                 backgroundColor = PrimaryColor,
@@ -61,9 +61,9 @@ fun GameScreen(
             FloatingActionButton(
                 shape = CircleShape,
                 onClick = {
-                          //뽑기
+                    //뽑기
                 },
-                backgroundColor = PrimaryColor
+                backgroundColor = PrimaryColor2
             ) {
                 Icon(imageVector = Icons.Filled.Casino, contentDescription = "Add icon")
             }

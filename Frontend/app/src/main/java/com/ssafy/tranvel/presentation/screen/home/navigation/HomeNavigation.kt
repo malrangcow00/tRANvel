@@ -18,15 +18,23 @@ fun NavController.navigateHome(
     this.navigate(homeRoute)
 }
 
-fun NavGraphBuilder.homeScreen(navController: NavController, navigateToDetailHistory: (HistoryDto?)->Unit) {
+fun NavGraphBuilder.homeScreen(
+    navController: NavController,
+    navigateToDetailHistory: (HistoryDto?) -> Unit
+) {
     composable(homeRoute) {
         HomeScreen(
-            hiltViewModel(it),
+            hiltViewModel(),
             hiltViewModel(),
             { navController.navigate("userInfoModify_route") },
             { navController.navigateAnnouncement() },
             { navController.navigate("userWithdrawal_route") },
-            { navController.navigate("game")},
+            {
+                navController.navigate("game") {
+                    it.viewModelStore.clear()
+                    popUpTo(homeRoute) { inclusive = true }
+                }
+            },
             { navigateToDetailHistory.invoke(it) }
         )
     }
