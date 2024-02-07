@@ -108,7 +108,6 @@ public class JwtProvider {
         }
     }
 
-
     private Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
