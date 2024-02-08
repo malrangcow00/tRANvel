@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @RestController
@@ -44,11 +45,25 @@ public class AttractionController {
 //        this.attractionRepository = attractionRepository;
 //    }
 
+//    @GetMapping("/attractions/nearby")
+//    public List<AttractionList> getAttractionsIn30Km(@RequestParam double latitude, @RequestParam double longitude) {
+//        List<AttractionList> allAttractions = attractionRepository.findAll();
+//
+//        return allAttractions.stream()
+//                .filter(attraction ->
+//                        DistanceCalculator.calculateDistance(
+//                                latitude,
+//                                longitude,
+//                                Double.parseDouble(attraction.getLatitude()),
+//                                Double.parseDouble(attraction.getLongitude())) <= 30)
+//                .collect(Collectors.toList());
+//    }
+
     @GetMapping("/attractions/nearby")
-    public List<AttractionList> getAttractionsIn30Km(@RequestParam double latitude, @RequestParam double longitude) {
+    public AttractionList getAttractionIn30KmRandomly(@RequestParam double latitude, @RequestParam double longitude) {
         List<AttractionList> allAttractions = attractionRepository.findAll();
 
-        return allAttractions.stream()
+        List<AttractionList> attractionsIn30Km = allAttractions.stream()
                 .filter(attraction ->
                         DistanceCalculator.calculateDistance(
                                 latitude,
@@ -56,6 +71,13 @@ public class AttractionController {
                                 Double.parseDouble(attraction.getLatitude()),
                                 Double.parseDouble(attraction.getLongitude())) <= 30)
                 .collect(Collectors.toList());
+
+        if (attractionsIn30Km.isEmpty()) {
+            return null; // 30km 이내에 관광지가 없을 경우
+        }
+
+        Random random = new Random();
+        return attractionsIn30Km.get(random.nextInt(attractionsIn30Km.size()));
     }
 
     @GetMapping("/check")
