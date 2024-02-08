@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -48,7 +49,7 @@ public class RoomController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDto> postRoomHistory(@RequestBody @Validated String roomPassword) {
+    public ResponseEntity<ResponseDto> postRoomHistory(String roomPassword) {
 
         RoomHistory roomHistory = roomHistoryService.createRoomHistory(roomPassword);
 
@@ -60,7 +61,7 @@ public class RoomController {
 
     //addJoinUser(Long userId, String roomCode, String inputRoomPassword
     @PostMapping("/enter")
-    public ResponseEntity<ResponseDto> enterRoom(@RequestBody @Validated String roomCode, String roomPassword) {
+    public ResponseEntity<ResponseDto> enterRoom(String roomCode, String roomPassword) {
         RoomHistory roomHistory = roomHistoryRepository.findByRoomCode(roomCode).get();
         roomHistoryService.addJoinUser(roomHistory, roomPassword);
 //        List<JoinUser> joinUser = roomHistoryRepository.findByRoomCode(roomHistoryDto.getRoomCode()).get().getJoinUser();
@@ -73,7 +74,7 @@ public class RoomController {
 
 
     @PostMapping("/detail")
-    public ResponseEntity<ResponseDto> getRoomDetailHistory(@RequestBody @Validated Long roomId) {
+    public ResponseEntity<ResponseDto> getRoomDetailHistory(Long roomId) {
         RoomHistory roomHistory = roomHistoryService.getRoomDetailHistory(roomId);
 
         RoomInsideDto roomInnerResponse = roomHistoryService.filteredRoomInsideInfo(roomHistory);
@@ -94,16 +95,16 @@ public class RoomController {
     }
 
 
-    @PostMapping("/finish")
-    public ResponseEntity<ResponseDto> finishRoomHistory(@RequestBody @Validated Long roomId) {
-        roomHistoryService.finishRoomHistory(roomId);
-
-        response = new ResponseDto(true, "방 게임 기록 종료", null);
-        return  ResponseEntity.status(HttpStatus.OK).body(response);
-    }
+//    @PostMapping("/finish")
+//    public ResponseEntity<ResponseDto> finishRoomHistory(@RequestBody @Validated Long roomId) {
+//        roomHistoryService.finishRoomHistory(roomId);
+//
+//        response = new ResponseDto(true, "방 게임 기록 종료", null);
+//        return  ResponseEntity.status(HttpStatus.OK).body(response);
+//    }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<ResponseDto> deleteRoomHistory(@RequestBody @Validated Long roomId) {
+    public ResponseEntity<ResponseDto> deleteRoomHistory(Long roomId) {
         roomHistoryService.deleteRoomHistory(roomId);
 
         response = new ResponseDto(true, "방 게임 기록 삭제", null);
@@ -113,17 +114,17 @@ public class RoomController {
 
     // 정산을 위해 방의 인원 목록을 불러옴. / param : roomId
     @PostMapping("/adjustment/select")
-    public ResponseEntity<ResponseDto> getRoomUsers(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
-        List<JoinUserInfoDto> joinUserInfoDtos = adjustmentGameHistoryService.getJoinUsers(adjustmentGameHistoryDto);
+    public ResponseEntity<ResponseDto> getRoomUsers(Long roomId) {
+        List<JoinUserInfoDto> joinUserInfoDtos = adjustmentGameHistoryService.getJoinUsers(roomId);
 
         response = new ResponseDto(true, "방의 인원 목록.",joinUserInfoDtos);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 입력된 정보에 따라, 선택된 인원들에 대해 price/인원 으로 정산 실시 및 기록, api 명세 참조
-    @PostMapping("/adjustment/record")
-    public ResponseEntity<ResponseDto> createAdjustmentGameHistory(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
-        int moneyResult = adjustmentGameHistoryService.adjustment(adjustmentGameHistoryDto); // 1인당 정산되는 금액
+    @PostMapping(value = "/adjustment/record", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseDto> createAdjustmentGameHistory(@RequestPart AdjustmentGameHistoryDto adjustmentGameHistoryDto, @RequestPart(value = "image",required = false) MultipartFile image) {
+        int moneyResult = adjustmentGameHistoryService.adjustment(adjustmentGameHistoryDto, image); // 1인당 정산되는 금액
 
         response = new ResponseDto(true,"정산 실시, 1/N 액수", moneyResult);
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -131,17 +132,17 @@ public class RoomController {
 
     // 방 id에 관련된 모든 정산 기록 정보 / param : roomId
     @PostMapping("/adjustment/getallhistory")
-    public ResponseEntity<ResponseDto> getAllAdjustmentHistory(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
-        List<AdjustmentGameHistory> adjustmentGameHistoryList = adjustmentGameHistoryService.getAllAdjustmentHistories(adjustmentGameHistoryDto);
+    public ResponseEntity<ResponseDto> getAllAdjustmentHistory(Long roomId) {
+        List<AdjustmentGameHistory> adjustmentGameHistoryList = adjustmentGameHistoryService.getAllAdjustmentHistories(roomId);
 
         response = new ResponseDto(true, "해당 방의 모든 정산 기록", adjustmentGameHistoryList);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // AdjustmentGameHistory 의 한 id에 대한 기록 / param : id
+    // AdjustmentGameHistory 의 한 id에 대한 기록 / param : contentId
     @PostMapping("/adjustment/gethistory")
-    public ResponseEntity<ResponseDto> getOneAdjustmentHistory(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
-        AdjustmentGameHistory adjustmentGameHistory = adjustmentGameHistoryService.getAdjustmentHistory(adjustmentGameHistoryDto);
+    public ResponseEntity<ResponseDto> getOneAdjustmentHistory(Long contentId) {
+        AdjustmentGameHistory adjustmentGameHistory = adjustmentGameHistoryService.getAdjustmentHistory(contentId);
 
         response = new ResponseDto(true, "해당 방의 해당 정산 기록", adjustmentGameHistory);
         return ResponseEntity.status(HttpStatus.OK).body(response);

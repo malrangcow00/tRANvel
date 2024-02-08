@@ -63,8 +63,7 @@ public class UserController {
 
     // 닉네임 유효성 검사
     @PostMapping("/duplication")
-    public ResponseEntity<ResponseDto> nickNameCheck(@RequestBody @Validated
-                                                     String email, String nickName) {
+    public ResponseEntity<ResponseDto> nickNameCheck(String email, String nickName) {
         if (!userService.nickNameDuplicationCheck(nickName, email)) {
             response = new ResponseDto(false, "이미 존재하는 닉네임 입니다.", null);
             return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -120,7 +119,7 @@ public class UserController {
 
     // 회원 문의글 작성
     @PostMapping("/auth/inquiry")
-    public ResponseEntity<ResponseDto> postInquiry(@RequestBody @Validated String title, String content) {
+    public ResponseEntity<ResponseDto> postInquiry(String title, String content) {
         Inquiry inquiry = inquiryService.createInquiry(title, content);
         response = new ResponseDto(true, "문의 작성 완료", inquiry);
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -136,7 +135,7 @@ public class UserController {
 
     // 회원 문의글 상세 조회
     @PostMapping("/auth/inquiry/detail")
-    public ResponseEntity<ResponseDto> getInquiry(@RequestBody @Validated Long inquiryId) {
+    public ResponseEntity<ResponseDto> getInquiry(Long inquiryId) {
         Inquiry inquiry = inquiryService.getInquiry(inquiryId);
         response = new ResponseDto(true, "상세 문의 글 조회", inquiry);
         return  ResponseEntity.status(HttpStatus.OK).body(response);
@@ -152,7 +151,7 @@ public class UserController {
 
     // 회원 문의글 삭제
     @DeleteMapping("/auth/inquiry/detail")
-    public ResponseEntity<ResponseDto> deleteInquiry(@RequestBody @Validated Long inquiryId) {
+    public ResponseEntity<ResponseDto> deleteInquiry(Long inquiryId) {
         inquiryService.deleteInquiry(inquiryId);
         response = new ResponseDto(true, "문의 글이 삭제되었습니다.", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);

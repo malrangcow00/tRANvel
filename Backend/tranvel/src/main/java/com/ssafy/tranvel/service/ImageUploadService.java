@@ -41,7 +41,7 @@ public class ImageUploadService {
 
     public String uploadProfileImage(MultipartFile image) throws IOException {
 
-        String fileName = SecurityUtility.getCurrentUserId();
+        String fileName = SecurityUtility.getCurrentUserId() + ".jpg";
 
         String dir = "/profile";
         InputStream inputStream = image.getInputStream();
@@ -59,9 +59,13 @@ public class ImageUploadService {
     public String uploadImage(ImagePostDto imagePostDto, MultipartFile image, String category) throws IOException {
 //        String fileName = image.getOriginalFilename();
         // MultipartFile image, String category, Long roomId, Long contentId
+        String originalFileName = image.getOriginalFilename();
+
         String fileName;
 
         String dir;
+
+//        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
 
         switch (category) {
             case "food" :
@@ -69,7 +73,7 @@ public class ImageUploadService {
                         .foodGameHistory(foodGameHistoryRepository.findById(imagePostDto.getContentId()).get())
                         .build();
                 ;
-                fileName = foodImageRepository.save(foodImage).getId().toString();
+                fileName = foodImageRepository.save(foodImage).getId().toString() + ".jpg";
                 dir = "/" + imagePostDto.getRoomId() + "/" + category;
                 break;
             case "adjustment" :
@@ -77,7 +81,7 @@ public class ImageUploadService {
                         .adjustmentGameHistory(adjustmentGameHistoryRepository.findById(imagePostDto.getContentId()).get())
                         .build();
 
-                fileName = adjustmentImageRepository.save(adjustmentImage).getId().toString();
+                fileName = adjustmentImageRepository.save(adjustmentImage).getId().toString() + ".jpg";
                 dir = "/" + imagePostDto.getRoomId() + "/" + category;
                 break;
             case "attraction":
@@ -85,7 +89,7 @@ public class ImageUploadService {
                         .attractionGameHistory(attractionGameRepository.findById(imagePostDto.getContentId()).get())
                         .build();
 
-                fileName = attractionImageRepository.save(attractionImage).getId().toString();
+                fileName = attractionImageRepository.save(attractionImage).getId().toString() + ".jpg";
                 dir = "/" + imagePostDto.getRoomId() + "/" + category;
                 break;
             default:
@@ -93,7 +97,7 @@ public class ImageUploadService {
                         .roomHistory(roomHistoryRepository.findById(imagePostDto.getRoomId()).get())
                         .build();
 
-                fileName = roomImageRepository.save(roomImage).getId().toString();
+                fileName = roomImageRepository.save(roomImage).getId().toString() + ".jpg";
                 dir = "/" + imagePostDto.getRoomId();
         }
             // 기록 별 해당 기록 id 로 저장
@@ -102,6 +106,7 @@ public class ImageUploadService {
 
 
         InputStream inputStream = image.getInputStream();
+
 
         ObjectMetadata metadata =  new ObjectMetadata();
         metadata.setContentLength(image.getSize());

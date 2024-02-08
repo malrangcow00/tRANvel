@@ -67,7 +67,7 @@ public class RoomHistoryService {
                         List<AdjustmentImage> adjustmentImages = adjustmentGameHistories.get(adjustmentGameHistory).getImages();
                         if (!adjustmentImages.isEmpty()) {
                             for (int adjustmentImage = 0; adjustmentImage < adjustmentImages.size(); adjustmentImage ++) {
-                                imageRoute = "/" + roomHistoryList.get(idx).getId() + "/adjustment/" + adjustmentImages.get(adjustmentImage).getId().toString();
+                                imageRoute = "/" + roomHistoryList.get(idx).getId() + "/adjustment/" + adjustmentImages.get(adjustmentImage).getId().toString() + ".jpg";
                                 imageList.add(imageRoute);
                             }
                         }
@@ -88,7 +88,7 @@ public class RoomHistoryService {
                         List<AttractionImage> attractionImages = attractionGameHistories.get(attractionGaemHistory).getImages();
                         if (!attractionImages.isEmpty()) {
                             for (int attractionImage = 0; attractionImage < attractionImages.size(); attractionImage ++) {
-                                imageRoute = "/" + roomHistoryList.get(idx).getId() + "/attraction/" + attractionImages.get(attractionImage).getId().toString();
+                                imageRoute = "/" + roomHistoryList.get(idx).getId() + "/attraction/" + attractionImages.get(attractionImage).getId().toString() + ".jpg";
                                 imageList.add(imageRoute);
                             }
                         }
@@ -106,7 +106,7 @@ public class RoomHistoryService {
                         List<FoodImage> foodImages = foodGameHistories.get(foodGameHistory).getImages();
                         if (!foodImages.isEmpty()) {
                             for (int foodImage = 0; foodImage < foodImages.size(); foodImage ++) {
-                                imageRoute = "/" + roomHistoryList.get(idx).getId() + "/food/" + foodImages.get(foodImage).getId().toString();
+                                imageRoute = "/" + roomHistoryList.get(idx).getId() + "/food/" + foodImages.get(foodImage).getId().toString() + ".jpg";
                                 imageList.add(imageRoute);
                             }
                         }

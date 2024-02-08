@@ -37,7 +37,7 @@ public class EmailController {
     private ResponseDto response;
 
     @PostMapping("/email-auth")
-    public ResponseEntity<ResponseDto> sendEmail(@RequestBody @Validated String email) throws MessagingException, UnsupportedEncodingException {
+    public ResponseEntity<ResponseDto> sendEmail(String email) throws MessagingException, UnsupportedEncodingException {
         if (emailAuthService.emailDuplication(email)) {
             response = new ResponseDto(false, "이미 회원가입 된 이메일입니다.", null);
             return ResponseEntity.status(HttpStatus.OK).body(response);
