@@ -35,8 +35,8 @@ public class EmailAuthService {
     private final JavaMailSender emailSender;
     private final UserRepository userRepository;
 
-    public boolean emailDuplication(EmailDto emailDto) {
-        return userRepository.findByEmail(emailDto.getEmail()).isPresent();
+    public boolean emailDuplication(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 
     public String createVerificationCode() {

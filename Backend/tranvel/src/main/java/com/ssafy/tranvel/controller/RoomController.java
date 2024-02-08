@@ -41,30 +41,6 @@ public class RoomController {
 
     @PostMapping(value = "")
     public ResponseEntity<ResponseDto> getRoomHistoryList() {
-
-        // service 패키지로 이동예정
-//        RoomHistoryDto info = roomHistoryDto;
-//        info.setUserEmail(SecurityUtility.getCurrentUserId());
-//
-//        /*
-//        List<RoomHistory>
-//        roomId, data, images, roomName, balanceResult
-//         */
-//        List<RoomMainResponseDto> roomResponse = new ArrayList<>();
-//
-//
-//        List<RoomHistory> roomHistoryList = roomHistoryService.getAllRoomHistories(info);
-//        for (int idx = 0; idx < roomHistoryList.size(); idx ++) {
-//            RoomMainResponseDto roomMainResponseDto = RoomMainResponseDto.builder()
-//                    .roomid(roomHistoryList.get(idx).getId())
-//                    .roomName(roomHistoryList.get(idx).getRoomName())
-//                    .startDate(roomHistoryList.get(idx).getStartDate())
-//                    .endDate(roomHistoryList.get(idx).getEndDate())
-//                    .balanceResult(roomHistoryList.get(idx).getBalanceResult())
-//                    .images(null)
-//                    .build();
-//            roomResponse.add(roomMainResponseDto);
-//        }
         List<RoomMainResponseDto> roomResponse = roomHistoryService.filteredRoomInfo();
 
         response = new ResponseDto(true, "방 기록 전체 조회", roomResponse);
@@ -72,9 +48,9 @@ public class RoomController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDto> postRoomHistory(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
+    public ResponseEntity<ResponseDto> postRoomHistory(@RequestBody @Validated String roomPassword) {
 
-        RoomHistory roomHistory = roomHistoryService.createRoomHistory(roomHistoryDto);
+        RoomHistory roomHistory = roomHistoryService.createRoomHistory(roomPassword);
 
         RoomInsideDto roomInnerResponse = roomHistoryService.filteredRoomInsideInfo(roomHistory);
         response = new ResponseDto(true, "방 생성 완료", roomInnerResponse);
@@ -84,12 +60,10 @@ public class RoomController {
 
     //addJoinUser(Long userId, String roomCode, String inputRoomPassword
     @PostMapping("/enter")
-    public ResponseEntity<ResponseDto> enterRoom(@RequestBody @Validated RoomHistoryDto roomHistoryDto) {
-        RoomHistoryDto info = roomHistoryDto;
-        RoomHistory roomHistory = roomHistoryRepository.findByRoomCode(roomHistoryDto.getRoomCode()).get();
-        roomHistoryDto.setUserEmail(SecurityUtility.getCurrentUserId());
-        roomHistoryService.addJoinUser(roomHistory);
-        List<JoinUser> joinUser = roomHistoryRepository.findByRoomCode(roomHistoryDto.getRoomCode()).get().getJoinUser();
+    public ResponseEntity<ResponseDto> enterRoom(@RequestBody @Validated String roomCode, String roomPassword) {
+        RoomHistory roomHistory = roomHistoryRepository.findByRoomCode(roomCode).get();
+        roomHistoryService.addJoinUser(roomHistory, roomPassword);
+//        List<JoinUser> joinUser = roomHistoryRepository.findByRoomCode(roomHistoryDto.getRoomCode()).get().getJoinUser();
 
         RoomInsideDto roomInnerResponse = roomHistoryService.filteredRoomInsideInfo(roomHistory);
 
@@ -104,8 +78,6 @@ public class RoomController {
 
         RoomInsideDto roomInnerResponse = roomHistoryService.filteredRoomInsideInfo(roomHistory);
         response = new ResponseDto(true, "방 게임 기록 조회", roomInnerResponse);
-
-
 
         /*
 

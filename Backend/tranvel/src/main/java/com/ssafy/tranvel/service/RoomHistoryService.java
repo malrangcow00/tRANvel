@@ -45,7 +45,7 @@ public class RoomHistoryService {
     public List<RoomMainResponseDto> filteredRoomInfo() {
         // service 패키지로 이동예정
         RoomHistoryDto info = new RoomHistoryDto();
-        info.setUserEmail(SecurityUtility.getCurrentUserId());
+//        info.setUserEmail(SecurityUtility.getCurrentUserId());
 
         /*
         List<RoomHistory>
@@ -181,12 +181,13 @@ public class RoomHistoryService {
 
 
     // Long userId, String roomCode, String inputRoomPassword
-    public void addJoinUser(RoomHistory info) {
+    public void addJoinUser(RoomHistory info, String roomPassword) {
         Long userId = userRepository.findByEmail(SecurityUtility.getCurrentUserId()).get().getId();
         System.out.println(userId);
-        RoomHistory roomHistory = roomHistoryRepository.findByRoomCode(info.getRoomCode()).get();
+//        RoomHistory roomHistory = roomHistoryRepository.findByRoomCode(info.getRoomCode()).get();
+        RoomHistory roomHistory = info;
 
-        if (roomHistory.getRoomPassword().equals(info.getRoomPassword())) {
+        if (roomHistory.getRoomPassword().equals(roomPassword)) {
             User user = userRepository.findById(userId).get();
             JoinUser joinUser = JoinUser.builder()
                     .authority(roomHistory.getJoinUser() == null)
@@ -231,7 +232,7 @@ public class RoomHistoryService {
 
     }
 
-    public RoomHistory createRoomHistory(RoomHistoryDto roomHistoryDto) {
+    public RoomHistory createRoomHistory(String roomPassword) {
 
         User user = userRepository.findByEmail(SecurityUtility.getCurrentUserId()).get();
         String roomCode = createRoomCode();
@@ -239,7 +240,7 @@ public class RoomHistoryService {
                 .user(user)
                 .roomCode(roomCode)
                 // 암호화
-                .roomPassword(roomHistoryDto.getRoomPassword())
+                .roomPassword(roomPassword)
                 .startDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")).toString())
                 .balanceResult(0)
                 .nowPlaying(true)
@@ -247,7 +248,7 @@ public class RoomHistoryService {
                 .build();
         roomHistoryRepository.save(roomHistory);
         RoomHistory roomHistory1 = roomHistoryRepository.findByRoomCode(roomCode).get();
-        addJoinUser(roomHistory1);
+        addJoinUser(roomHistory1, roomPassword);
 
         return roomHistory1;
     }
