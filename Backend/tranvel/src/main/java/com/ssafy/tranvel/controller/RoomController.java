@@ -10,6 +10,7 @@ import com.ssafy.tranvel.repository.AdjustmentGameHistoryRepository;
 import com.ssafy.tranvel.repository.RoomHistoryRepository;
 import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.AdjustmentGameHistoryService;
+import com.ssafy.tranvel.service.AttractionService;
 import com.ssafy.tranvel.service.RoomHistoryService;
 import com.ssafy.tranvel.utility.SecurityUtility;
 import lombok.Getter;
@@ -38,6 +39,8 @@ public class RoomController {
     private final AdjustmentGameHistoryService adjustmentGameHistoryService;
     private final AdjustmentGameHistoryRepository adjustmentGameHistoryRepository;
     private final SimpMessageSendingOperations sendingOperations;
+
+    private final AttractionService attractionService;
 
     @PostMapping(value = "")
     public ResponseEntity<ResponseDto> getRoomHistoryList() {
@@ -99,7 +102,7 @@ public class RoomController {
 
 
     @PostMapping("/detail")
-    public ResponseEntity<ResponseDto> getRoomDetailHistory(@RequestBody @Validated Long roomId) {
+    public ResponseEntity<ResponseDto> getRoomDetailHistory(Long roomId) {
         RoomHistory roomHistory = roomHistoryService.getRoomDetailHistory(roomId);
 
         RoomInsideDto roomInnerResponse = roomHistoryService.filteredRoomInsideInfo(roomHistory);
@@ -123,7 +126,7 @@ public class RoomController {
 
 
     @PostMapping("/finish")
-    public ResponseEntity<ResponseDto> finishRoomHistory(@RequestBody @Validated Long roomId) {
+    public ResponseEntity<ResponseDto> finishRoomHistory(Long roomId) {
         roomHistoryService.finishRoomHistory(roomId);
 
         response = new ResponseDto(true, "방 게임 기록 종료", null);
@@ -131,7 +134,7 @@ public class RoomController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<ResponseDto> deleteRoomHistory(@RequestBody @Validated Long roomId) {
+    public ResponseEntity<ResponseDto> deleteRoomHistory(Long roomId) {
         roomHistoryService.deleteRoomHistory(roomId);
 
         response = new ResponseDto(true, "방 게임 기록 삭제", null);
@@ -141,8 +144,8 @@ public class RoomController {
 
     // 정산을 위해 방의 인원 목록을 불러옴. / param : roomId
     @PostMapping("/adjustment/select")
-    public ResponseEntity<ResponseDto> getRoomUsers(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
-        List<JoinUserInfoDto> joinUserInfoDtos = adjustmentGameHistoryService.getJoinUsers(adjustmentGameHistoryDto);
+    public ResponseEntity<ResponseDto> getRoomUsers(Long roomId) {
+        List<JoinUserInfoDto> joinUserInfoDtos = adjustmentGameHistoryService.getJoinUsers(roomId);
 
         response = new ResponseDto(true, "방의 인원 목록.",joinUserInfoDtos);
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -159,19 +162,30 @@ public class RoomController {
 
     // 방 id에 관련된 모든 정산 기록 정보 / param : roomId
     @PostMapping("/adjustment/getallhistory")
-    public ResponseEntity<ResponseDto> getAllAdjustmentHistory(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
-        List<AdjustmentGameHistory> adjustmentGameHistoryList = adjustmentGameHistoryService.getAllAdjustmentHistories(adjustmentGameHistoryDto);
+    public ResponseEntity<ResponseDto> getAllAdjustmentHistory(Long roomId) {
+        List<AdjustmentGameHistory> adjustmentGameHistoryList = adjustmentGameHistoryService.getAllAdjustmentHistories(roomId);
 
         response = new ResponseDto(true, "해당 방의 모든 정산 기록", adjustmentGameHistoryList);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // AdjustmentGameHistory 의 한 id에 대한 기록 / param : id
+    // AdjustmentGameHistory 의 한 id에 대한 기록 / param : contentId
     @PostMapping("/adjustment/gethistory")
-    public ResponseEntity<ResponseDto> getOneAdjustmentHistory(@RequestBody @Validated AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
-        AdjustmentGameHistory adjustmentGameHistory = adjustmentGameHistoryService.getAdjustmentHistory(adjustmentGameHistoryDto);
+    public ResponseEntity<ResponseDto> getOneAdjustmentHistory(Long contentId) {
+        AdjustmentGameHistory adjustmentGameHistory = adjustmentGameHistoryService.getAdjustmentHistory(contentId);
 
         response = new ResponseDto(true, "해당 방의 해당 정산 기록", adjustmentGameHistory);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+//    // 방 인원 중 랜덤 한 명 닉네임
+//    @PostMapping("/test")
+//    public ResponseEntity<Long> test(Long roomId) {
+//        System.out.println("RoomController.test");
+//        System.out.println(roomId);
+//        String attractionGamePlayer = attractionService.getAttractionGamePlayer(roomId);
+//
+//        response = new ResponseDto(true, "ok", attractionGamePlayer);
+//        return ResponseEntity.status(HttpStatus.OK).body(roomId);
+//    }
 }

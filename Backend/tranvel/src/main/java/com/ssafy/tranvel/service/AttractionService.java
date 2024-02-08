@@ -4,7 +4,12 @@ package com.ssafy.tranvel.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.tranvel.dto.AttractionBaseDto;
 import com.ssafy.tranvel.entity.AttractionList;
+import com.ssafy.tranvel.entity.JoinUser;
+import com.ssafy.tranvel.entity.RoomHistory;
+import com.ssafy.tranvel.entity.User;
 import com.ssafy.tranvel.repository.AttractionRepository;
+import com.ssafy.tranvel.repository.RoomHistoryRepository;
+import com.ssafy.tranvel.repository.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -16,7 +21,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 
 @Service
@@ -25,7 +33,8 @@ import java.util.List;
 public class AttractionService {
 
     private final AttractionRepository attractionRepository;
-
+    private final RoomHistoryRepository roomHistoryRepository;
+    private final UserRepository userRepository;
 
     public Object loadAttractionList() throws UnsupportedEncodingException {
         String serviceKey = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzc2FmeS5qZW9uZ2h3NG5AZ21haWwuY29tIiwiYXV0aCI6IlVTRVIiLCJleHAiOjE3MDcxOTI1MDh9.I8rHsyEpiKW0huPaFUsi8sym0CKx-4dx_JdQolF8NeTwe8ynUpEVBfKQz0k9y8XXooICidTVVp-8CL-Kgsnyeg";
@@ -85,6 +94,31 @@ public class AttractionService {
             e.printStackTrace();
             // Handle exception
         }
+    }
+
+    // 'roomId' 받아서, 방의 인원 중 한명을 게임 플레이어로 선정해서 '닉네임 반환'
+    public String getAttractionGamePlayer(Long roomId) {
+        System.out.println("AttractionService.getAttractionGamePlayer");
+        RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
+        List<JoinUser> joinUsers = roomHistory.getJoinUser();
+        List<Long> joinUserUserIds = new ArrayList<>();
+
+        // 유효한 유저인지 확인
+        for (JoinUser joinUser : joinUsers) {
+            Optional<User> userOptional = userRepository.findById(joinUser.getUserId());
+            if (!userOptional.isPresent()) {
+                continue;
+            }
+            Long userId = userOptional.get().getId();
+            joinUserUserIds.add(userId);
+        }
+
+        Random random = new Random();
+        int randomIndex = random.nextInt(joinUserUserIds.size());
+        Long selectedJoinUserId = joinUserUserIds.get(randomIndex);
+        User user = userRepository.findById(selectedJoinUserId).get();
+        System.out.println("AttractionService - SelecetedUser's Nickname = " + user.getNickName());
+        return user.getNickName();
     }
 
 

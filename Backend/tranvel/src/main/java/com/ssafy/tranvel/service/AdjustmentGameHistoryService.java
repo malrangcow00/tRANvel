@@ -37,9 +37,8 @@ public class AdjustmentGameHistoryService {
 
 //    방 아이디를 받아서 이 방에 참가중인 유저들의{JoinUserId, Nickname, ProfileImage} 리스트를 반환(선택할 리스트 제공)
 //    JoinUserId : JoinUser의 id O / userId(User 상 Id) X
-    public List<JoinUserInfoDto> getJoinUsers(AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
+    public List<JoinUserInfoDto> getJoinUsers(Long roomId) {
         System.out.println("AdjustmentGameHistoryService.getJoinUsers");
-        Long roomId = adjustmentGameHistoryDto.getRoomId();
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
         List<JoinUser> joinUsers = roomHistory.getJoinUser();
         List<JoinUserInfoDto> joinUserReturn = new ArrayList<>();
@@ -86,7 +85,6 @@ public class AdjustmentGameHistoryService {
             User user = userOptional.get();
             user.setBalance(user.getBalance() - moneyResult);
             userRepository.save(user); // User 에서 moneyResult 반영
-
         }
 
         AdjustmentGameHistory adjustmentGameHistory = AdjustmentGameHistory.builder()
@@ -107,9 +105,9 @@ public class AdjustmentGameHistoryService {
     }
 
     // 모든 정산 게임 기록
-    public List<AdjustmentGameHistory> getAllAdjustmentHistories(AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
+    public List<AdjustmentGameHistory> getAllAdjustmentHistories(Long roomId) {
         System.out.println("AdjustmentGameHistoryService.getAllAdjustmentHistories");
-        RoomHistory roomHistory = roomHistoryRepository.findById(adjustmentGameHistoryDto.getRoomId()).get();
+        RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
         List<AdjustmentGameHistory> adjustmentGameHistoryList = roomHistory.getAdjustmentGameHistories();
 
         System.out.println("AdjustmentGameHistoryService.getAllAdjustmentHistories Ready");
@@ -117,8 +115,8 @@ public class AdjustmentGameHistoryService {
     }
 
     // 한 정산 게임 기록
-    public AdjustmentGameHistory getAdjustmentHistory(AdjustmentGameHistoryDto adjustmentGameHistoryDto) {
+    public AdjustmentGameHistory getAdjustmentHistory(Long contentId) {
         System.out.println("AdjustmentGameHistoryService.getAdjustmentHistory");
-        return adjustmentGameHistoryRepository.findById(adjustmentGameHistoryDto.getId()).get();
+        return adjustmentGameHistoryRepository.findById(contentId).get();
     }
 }
