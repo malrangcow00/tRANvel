@@ -67,14 +67,14 @@ public class EmailAuthService {
         message.setSubject(title);
 
         String msgOfEmail =
-                "<div class=\"container\" style=\"text-align: center; width: 50%; position: relative;\">"
-//                + "<img class=\"overlay-img responsive-img\" style=\"width: 40%;\" src=\"https://lh3.google.com/u/0/d/15K0WC6R8L23zDxpFVkzbZSTBK6cjCRSn=w2560-h1271-iv1\" alt=\"tRANvel Logo\"/>"
+                "<div class=\"container\" style=\"text-align: center; width: 100%; position: relative;\">"
+//                + "<img class=\"overlay-img responsive-img\" style=\"width: 40%;\" src=\"https://lh3.google.com/u/0/d/15K0WC6R8L23zDxpFVkzbZSTBK6cjCRSn=w1920-h919-iv1\" alt=\"tRANvel Logo\"/>"
                 + "<p class=\"overlay-text\" style=\"top: 50%; left: 50%; color: #5caad2; font-size: 70px; margin: 0; z-index: 1;\"><strong>tRANvel</strong></p>"
                 + "<p style=\"margin: 10px 0; font-size: 20px;\"><strong>랜덤 여행지 추천 서비스</strong></p>"
                 + "<p> </p>"
                 + "<p style=\"font-size: 15px;\"><strong>안녕하세요, tRANvel 여행자님!</strong></p>"
                 + "<p style=\"font-size: 15px;\"><strong>아래의 인증 코드를 입력하여 회원가입을 완료해주세요.</strong></p>"
-                + "<div style=\"background-color: #5caad2; color: #ffffff; padding: 20px; width: 40%; height: 50%; font-size: 50px; font-family: 'Work Sans', Calibri, sans-serif; border-radius: 20px; margin: 0 auto;\">"
+                + "<div style=\"background-color: #5caad2; color: #ffffff; padding: 20px; width: 45%; height: 50%; font-size: 50px; font-family: 'Work Sans', Calibri, sans-serif; border-radius: 20px; margin: 0 auto;\">"
                 + "<strong>"
                 + createdCode
                 + "</strong>"
