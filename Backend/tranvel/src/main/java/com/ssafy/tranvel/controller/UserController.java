@@ -7,7 +7,7 @@ import com.ssafy.tranvel.repository.EmailAuthDao;
 import com.ssafy.tranvel.repository.InquiryRepository;
 import com.ssafy.tranvel.repository.NickNameDao;
 import com.ssafy.tranvel.repository.UserRepository;
-import com.ssafy.tranvel.security.JwtAuthenticationFilter;
+//import com.ssafy.tranvel.security.JwtAuthenticationFilter;
 import com.ssafy.tranvel.service.EmailAuthService;
 import com.ssafy.tranvel.service.ImageUploadService;
 import com.ssafy.tranvel.service.InquiryService;
@@ -21,13 +21,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,10 +54,10 @@ public class UserController {
 
     private ResponseDto response;
 
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtProvider);
-    }
+//    @Bean
+//    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+//        return new JwtAuthenticationFilter(jwtProvider);
+//    }
 
     // 닉네임 유효성 검사
     @PostMapping("/duplication")
