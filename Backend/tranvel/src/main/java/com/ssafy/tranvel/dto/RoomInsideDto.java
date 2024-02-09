@@ -8,6 +8,8 @@ import lombok.Setter;
 @Builder
 public class RoomInsideDto<T> {
 
+    private Long roomId;
+
     private String roomCode;
 
     private String roomPassword;

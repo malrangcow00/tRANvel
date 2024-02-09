@@ -150,6 +150,7 @@ public class RoomHistoryService {
         }
 
         RoomInsideDto info = RoomInsideDto.builder()
+                .roomId(roomHistory.getId())
                 .roomCode(roomHistory.getRoomCode())
                 .roomPassword(roomHistory.getRoomPassword())
                 .authority(authority)
