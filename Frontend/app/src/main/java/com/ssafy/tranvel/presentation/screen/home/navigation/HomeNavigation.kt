@@ -22,8 +22,8 @@ fun NavController.navigateHome(
 fun NavGraphBuilder.homeScreen(navController: NavController) {
     composable(homeRoute) {
         HomeScreen(
-            navController,
             hiltViewModel(),
+            navController,
             hiltViewModel(),
             { navController.navigate("userInfoModify_route") },
             { navController.navigateAnnouncement() },
