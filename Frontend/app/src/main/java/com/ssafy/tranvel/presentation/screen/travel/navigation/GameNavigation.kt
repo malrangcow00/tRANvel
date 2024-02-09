@@ -18,7 +18,8 @@ fun NavGraphBuilder.gameNavGraph(navController: NavController) {
     navigation(startDestination = Screen.Draw.route!!, route = "game") {
         composable(route = Screen.Draw.route) {
             GameScreen(
-                navController
+                navController,
+                hiltViewModel(it)
             )
         }
 
@@ -35,7 +36,7 @@ fun NavGraphBuilder.gameNavGraph(navController: NavController) {
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(Screen.Draw.route)
             }
-            AccountScreen(){
+            AccountScreen() {
                 navController.popBackStack()
             }
         }

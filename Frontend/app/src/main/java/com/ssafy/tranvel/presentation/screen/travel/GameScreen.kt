@@ -34,13 +34,14 @@ import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor2
 
 @Composable
 fun GameScreen(
-    navController: NavController
+    navController: NavController,
+    gameViewModel: GameViewModel
 ) {
     Scaffold(
         topBar = { GameHeader("즐거운 여행 중", true) },
         content = { paddingValues ->
             Column {
-                GameBody(paddingValues)
+                GameBody(paddingValues,gameViewModel)
             }
         },
         bottomBar = {
