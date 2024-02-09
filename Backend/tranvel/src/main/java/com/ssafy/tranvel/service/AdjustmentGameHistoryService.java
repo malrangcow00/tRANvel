@@ -102,6 +102,7 @@ public class AdjustmentGameHistoryService {
                 .moneyResult(moneyResult)
                 .category(adjustmentGameHistoryDto.getCategory())
                 .detail(adjustmentGameHistoryDto.getDetail())
+                .location(adjustmentGameHistoryDto.getLocation())
                 .build();
         Long contentId = adjustmentGameHistoryRepository.save(adjustmentGameHistory).getId();
         ImagePostDto info = new ImagePostDto();

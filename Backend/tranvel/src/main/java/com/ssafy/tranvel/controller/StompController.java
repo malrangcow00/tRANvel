@@ -30,7 +30,6 @@ public class StompController {
     // room, Enter만이 모든 유저 적용 유저가 방에 입장 시, 방에 입장해 있던 인원 모두에게 그 사실을 알림
     @MessageMapping("/tranvel/rooms") // 클라이언트가 이 url로 메세지를 보내면 다음을 실행함
     public void room(StompDto message) {
-        System.out.println("StompController.room");
         if (StompDto.MessageType.ENTER.equals(message.getType())) {
             message.setMessage(userRepository.findById(Long.parseLong(message.getSender_id())).get().getNickName() + "님이 입장하였습니다.");
         } else if (StompDto.MessageType.CLOSE.equals(message.getType())) {
@@ -42,14 +41,12 @@ public class StompController {
     // 새로고침 요청
     @MessageMapping("/tranvel/callRefresh")
     public void callRefresh(StompDto message) {
-        System.out.println("StompController.callRefresh");
         message.setMessage("정보가 변경되었습니다. 새로고침 해주세요");
         sendingOperations.convertAndSend("/topic/tranvel/callRefresh/" + message.getRoomId(), message);
     }
 
     @MessageMapping("/tranvel/foodgame")
     public void foodGame(StompDto message) {
-        System.out.println("StompController.foodGame");
         if (StompDto.MessageType.ENTER.equals(message.getType())) {
             message.setMessage("음식 선택 게임을 시작합니다.");
         } else if (StompDto.MessageType.CLOSE.equals(message.getType())) {
@@ -60,7 +57,6 @@ public class StompController {
 
     @MessageMapping("/tranvel/attractiongame")
     public void attractionGame(StompDto message) {
-        System.out.println("StompController.attractionGame");
         if (StompDto.MessageType.ENTER.equals(message.getType())) {
             message.setMessage("행선지 선택 게임을 시작합니다.");
         } else if (StompDto.MessageType.CLOSE.equals(message.getType())) {
@@ -71,7 +67,6 @@ public class StompController {
 
     @MessageMapping("/tranvel/adjustmentgame")
     public void adjustmentGame(StompDto message) {
-        System.out.println("StompController.adjustmentGame");
         if (StompDto.MessageType.ENTER.equals(message.getType())) {
             message.setMessage("정산 게임을 시작합니다.");
         } else if (StompDto.MessageType.CLOSE.equals(message.getType())) {
@@ -84,7 +79,6 @@ public class StompController {
     //
     @MessageMapping("/tranvel/getplayer")
     public void getAttractionGamePlayer(StompDto message) {
-        System.out.println("StompController.attractionGameGetPlayer");
         String attractionGamePlayerNickname = attractionService.getAttractionGamePlayer(Long.parseLong(message.getRoomId()));
         if (attractionGamePlayerNickname == null) {
             attractionGamePlayerNickname = "이름없음 ";
@@ -94,5 +88,14 @@ public class StompController {
         System.out.println("Stomp Send : attractionGamePlayerNickname = " + attractionGamePlayerNickname);
 
         sendingOperations.convertAndSend("/topic/tranvel/getplayer/" + message.getRoomId(), message);
+    }
+
+    @MessageMapping("/tranvel/foodgameready")
+    public void foodGameReady(StompDto message) {
+        // 닉네임, 메뉴 접수
+        message.getSender_id();
+        message.getMessage();
+        // 참여자 닉네임 리스트, 불참자 닉네임 리스트, 메뉴 리스트 발송
+
     }
 }

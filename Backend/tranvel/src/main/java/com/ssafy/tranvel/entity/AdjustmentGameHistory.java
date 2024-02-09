@@ -60,4 +60,9 @@ public class AdjustmentGameHistory {
     @Column(length = 100, name = "Detail")
     @Nullable
     private String detail;
+
+    // 추가
+    @Column(length = 20, name = "Location")
+    @Nullable
+    private String location;
 }

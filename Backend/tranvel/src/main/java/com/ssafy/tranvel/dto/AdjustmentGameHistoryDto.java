@@ -23,4 +23,6 @@ public class AdjustmentGameHistoryDto {
     private String category;
 
     private String detail;
+
+    private String location;
 }
