@@ -90,7 +90,6 @@ public class AdjustmentGameHistoryService {
             User user = userOptional.get();
             user.setBalance(user.getBalance() - moneyResult);
             userRepository.save(user); // User 에서 moneyResult 반영
-
         }
 
         AdjustmentGameHistory adjustmentGameHistory = AdjustmentGameHistory.builder()

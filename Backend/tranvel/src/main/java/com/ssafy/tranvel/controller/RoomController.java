@@ -10,6 +10,7 @@ import com.ssafy.tranvel.repository.AdjustmentGameHistoryRepository;
 import com.ssafy.tranvel.repository.RoomHistoryRepository;
 import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.AdjustmentGameHistoryService;
+import com.ssafy.tranvel.service.AttractionService;
 import com.ssafy.tranvel.service.RoomHistoryService;
 import com.ssafy.tranvel.utility.SecurityUtility;
 import lombok.Getter;
@@ -39,6 +40,8 @@ public class RoomController {
     private final AdjustmentGameHistoryService adjustmentGameHistoryService;
     private final AdjustmentGameHistoryRepository adjustmentGameHistoryRepository;
     private final SimpMessageSendingOperations sendingOperations;
+
+    private final AttractionService attractionService;
 
     @PostMapping(value = "")
     public ResponseEntity<ResponseDto> getRoomHistoryList() {
@@ -95,13 +98,13 @@ public class RoomController {
     }
 
 
-//    @PostMapping("/finish")
-//    public ResponseEntity<ResponseDto> finishRoomHistory(@RequestBody @Validated Long roomId) {
-//        roomHistoryService.finishRoomHistory(roomId);
-//
-//        response = new ResponseDto(true, "방 게임 기록 종료", null);
-//        return  ResponseEntity.status(HttpStatus.OK).body(response);
-//    }
+    @PostMapping("/finish")
+    public ResponseEntity<ResponseDto> finishRoomHistory(Long roomId) {
+        roomHistoryService.finishRoomHistory(roomId);
+
+        response = new ResponseDto(true, "방 게임 기록 종료", null);
+        return  ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto> deleteRoomHistory(Long roomId) {
@@ -147,4 +150,15 @@ public class RoomController {
         response = new ResponseDto(true, "해당 방의 해당 정산 기록", adjustmentGameHistory);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+//    // 방 인원 중 랜덤 한 명 닉네임
+//    @PostMapping("/test")
+//    public ResponseEntity<Long> test(Long roomId) {
+//        System.out.println("RoomController.test");
+//        System.out.println(roomId);
+//        String attractionGamePlayer = attractionService.getAttractionGamePlayer(roomId);
+//
+//        response = new ResponseDto(true, "ok", attractionGamePlayer);
+//        return ResponseEntity.status(HttpStatus.OK).body(roomId);
+//    }
 }
