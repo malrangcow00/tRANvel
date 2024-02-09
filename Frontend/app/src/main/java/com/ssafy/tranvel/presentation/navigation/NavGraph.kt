@@ -31,7 +31,7 @@ fun NavGraph() {
     Scaffold { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = homeRoute,
+            startDestination = "login_screen",
             Modifier.padding(innerPadding)
         ) {
             announcementScreen()

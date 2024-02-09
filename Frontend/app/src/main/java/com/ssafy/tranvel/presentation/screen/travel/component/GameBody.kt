@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.presentation.screen.travel.component
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,13 +14,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.NaverMap
+import com.ssafy.tranvel.presentation.screen.travel.GameViewModel
+import com.ssafy.tranvel.presentation.screen.travel.RoomInfo
 import com.ssafy.tranvel.presentation.screen.travel.TravelViewModel
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 
 @OptIn(ExperimentalNaverMapApi::class)
 @Composable
 fun GameBody(
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    gameViewModel: GameViewModel
 ) {
     Column(
         modifier = Modifier
@@ -32,6 +36,7 @@ fun GameBody(
                 .fillMaxWidth()
                 .fillMaxHeight(0.3f)
         )
+        Log.d("TAG", "GameBody: ${RoomInfo.roomCode},  ${RoomInfo.roomPassword}")
 //        HomeHistoryBody(historyViewModel = , navigateToHistory = )
     }
 }
