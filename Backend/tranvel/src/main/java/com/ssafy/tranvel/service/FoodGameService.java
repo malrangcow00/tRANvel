@@ -130,7 +130,11 @@ public class FoodGameService {
         Random random = new Random();
         int foodCandidatesSize = foodCandidates.size();
         int randomIndex = random.nextInt(foodCandidatesSize);
+        String selectedFood = foodCandidates.get(randomIndex);
 
-        return foodCandidates.get(randomIndex);
+        foodGameHistory.setFoodName(selectedFood);
+        foodGameHistoryRepository.save(foodGameHistory);
+
+        return selectedFood;
     }
 }
