@@ -15,7 +15,5 @@ public class StompFoodSubmitDto {
 
     private String roomId;
 
-    private String foodGameHistoryId;
-
     private String food;
 }

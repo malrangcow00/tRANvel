@@ -1,11 +1,9 @@
 package com.ssafy.tranvel.service;
 
+import com.ssafy.tranvel.dto.StompDto;
 import com.ssafy.tranvel.dto.StompFoodGameDto;
 import com.ssafy.tranvel.dto.StompFoodSubmitDto;
-import com.ssafy.tranvel.entity.FoodGameHistory;
-import com.ssafy.tranvel.entity.JoinUser;
-import com.ssafy.tranvel.entity.RoomHistory;
-import com.ssafy.tranvel.entity.User;
+import com.ssafy.tranvel.entity.*;
 import com.ssafy.tranvel.repository.FoodGameHistoryRepository;
 import com.ssafy.tranvel.repository.JoinUserRepository;
 import com.ssafy.tranvel.repository.RoomHistoryRepository;
@@ -59,13 +57,20 @@ public class FoodGameService {
         return foodGameHistory.getId();
     }
 
+    // 바로 recentFoodGameHistory로 보내도 될 것 같은데,
+    public Long getRecentFoodGameId(Long roomId) {
+        RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
+        FoodGameHistory recentFoodGameHistory = foodGameHistoryRepository.findFirstByRoomHistoryOrderByIdDesc(roomHistory).get();
+        return recentFoodGameHistory.getId();
+    }
+
     @Transactional
-    public StompFoodGameDto receiveFood(StompFoodSubmitDto message) {
+    public StompFoodGameDto receiveFood(StompDto message) {
 
         // 제출된 음식메뉴를 리스트에 더하고, 선택/미선택 인원 리스트를 갱신합니다.
-        Long foodGameHistoryId = Long.parseLong(message.getFoodGameHistoryId());
+        Long foodGameHistoryId = getRecentFoodGameId(Long.parseLong(message.getRoomId()));
         Long joinUserId = findJoinUserId(Long.parseLong(message.getRoomId()), Long.parseLong(message.getSender_id()));
-        String submittedFood = message.getFood();
+        String submittedFood = message.getMessage();
 
         FoodGameHistory foodGameHistory = foodGameHistoryRepository.findById(foodGameHistoryId).get();
         List<String> foodCandidates = foodGameHistory.getFoodCandidates();
@@ -82,28 +87,28 @@ public class FoodGameService {
 
         foodGameHistoryRepository.save(foodGameHistory);
 
-        // 선택/미선택 인원의 닉네임 정보로 반환합니다.
-        List<String> responseSelectedNicknames = new ArrayList<>();
-        List<String> responseUnSelectedNicknames = new ArrayList<>();
+        // 선택/미선택 인원의 프로필 사진으로 반환합니다.
+        List<String> responseSelectedProfileImages = new ArrayList<>();
+        List<String> responseUnSelectedProfileImages = new ArrayList<>();
 
         for (Long selectedUserId : selectedUsers) {
             JoinUser joinUser = joinUserRepository.findById(selectedUserId).get();
             User user = userRepository.findById(joinUser.getUserId()).get();
-            String selectedUserNickname = user.getNickName();
-            responseSelectedNicknames.add(selectedUserNickname);
+            String selectedUserProfileImages = user.getProfileImage();
+            responseSelectedProfileImages.add(selectedUserProfileImages);
         }
         for (Long unSelectedUserId : unSelectedUsers) {
             JoinUser joinUser = joinUserRepository.findById(unSelectedUserId).get();
             User user = userRepository.findById(joinUser.getUserId()).get();
-            String unSelectedUserNickname = user.getNickName();
-            responseUnSelectedNicknames.add(unSelectedUserNickname);
+            String unSelectedUserProfileImages = user.getProfileImage();
+            responseUnSelectedProfileImages.add(unSelectedUserProfileImages);
         }
 
         StompFoodGameDto response = StompFoodGameDto.builder()
                 .sender_id(message.getSender_id())
                 .roomId(message.getRoomId())
-                .selectedUserNicknames(responseSelectedNicknames)
-                .unSelectedUserNicknames(responseUnSelectedNicknames)
+                .selectedUserNicknames(responseSelectedProfileImages)
+                .unSelectedUserNicknames(responseUnSelectedProfileImages)
                 .foodCandidates(foodCandidates)
                 .build();
         return response;
@@ -123,18 +128,24 @@ public class FoodGameService {
         return null;
     }
 
-    public String getFood(Long foodGameHistoryId) {
+    // 가장 최근 음식게임기록에 선정된 음식 기록
+    public void foodSelected(StompDto message) {
+        Long foodGameHistoryId = getRecentFoodGameId(Long.parseLong(message.getRoomId()));
         FoodGameHistory foodGameHistory = foodGameHistoryRepository.findById(foodGameHistoryId).get();
-        List<String> foodCandidates = foodGameHistory.getFoodCandidates();
 
-        Random random = new Random();
-        int foodCandidatesSize = foodCandidates.size();
-        int randomIndex = random.nextInt(foodCandidatesSize);
-        String selectedFood = foodCandidates.get(randomIndex);
-
-        foodGameHistory.setFoodName(selectedFood);
+        foodGameHistory.setFoodName(message.getMessage());
         foodGameHistoryRepository.save(foodGameHistory);
+    }
 
-        return selectedFood;
+    // 모든 음식 게임 기록
+    public List<FoodGameHistory> getAllFoodGameHistories(Long roomId) {
+        RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
+
+        return roomHistory.getFoodGameHistories();
+    }
+
+    // 한 음식 게임 기록
+    public FoodGameHistory getFoodGameHistory(Long contentId) {
+        return foodGameHistoryRepository.findById(contentId).get();
     }
 }

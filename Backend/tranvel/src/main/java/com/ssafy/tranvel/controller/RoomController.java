@@ -2,15 +2,13 @@ package com.ssafy.tranvel.controller;
 
 
 import com.ssafy.tranvel.dto.*;
-import com.ssafy.tranvel.entity.AdjustmentGameHistory;
-import com.ssafy.tranvel.entity.JoinUser;
-import com.ssafy.tranvel.entity.RoomHistory;
-import com.ssafy.tranvel.entity.User;
+import com.ssafy.tranvel.entity.*;
 import com.ssafy.tranvel.repository.AdjustmentGameHistoryRepository;
 import com.ssafy.tranvel.repository.RoomHistoryRepository;
 import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.AdjustmentGameHistoryService;
 import com.ssafy.tranvel.service.AttractionService;
+import com.ssafy.tranvel.service.FoodGameService;
 import com.ssafy.tranvel.service.RoomHistoryService;
 import com.ssafy.tranvel.utility.SecurityUtility;
 import lombok.Getter;
@@ -40,6 +38,7 @@ public class RoomController {
     private final AdjustmentGameHistoryService adjustmentGameHistoryService;
     private final AdjustmentGameHistoryRepository adjustmentGameHistoryRepository;
     private final SimpMessageSendingOperations sendingOperations;
+    private final FoodGameService foodGameService;
 
     private final AttractionService attractionService;
 
@@ -149,6 +148,25 @@ public class RoomController {
         AdjustmentGameHistory adjustmentGameHistory = adjustmentGameHistoryService.getAdjustmentHistory(contentId);
 
         response = new ResponseDto(true, "해당 방의 해당 정산 기록", adjustmentGameHistory);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    // 방 id에 관련된 모든 FoodGame 기록 정보 / param : roomId
+    @PostMapping("/foodgame/getallhistory")
+    public ResponseEntity<ResponseDto> getAllFoodGameHistory(Long roomId) {
+        List<FoodGameHistory> foodGameHistoryList = foodGameService.getAllFoodGameHistories(roomId);
+
+        response = new ResponseDto(true, "해당 방의 모든 FoodGame 기록", foodGameHistoryList);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // AdjustmentGameHistory 의 한 id에 대한 기록 / param : contentId
+    @PostMapping("/foodgame/gethistory")
+    public ResponseEntity<ResponseDto> getOneFoodGameHistory(Long contentId) {
+        FoodGameHistory foodGameHistory = foodGameService.getFoodGameHistory(contentId);
+
+        response = new ResponseDto(true, "해당 방의 해당 FoodGame 기록", foodGameHistory);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

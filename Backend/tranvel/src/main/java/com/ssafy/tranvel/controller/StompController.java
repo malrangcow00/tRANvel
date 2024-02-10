@@ -95,6 +95,7 @@ public class StompController {
     }
 
 //    방장이 음식게임 시작. roomId를 받으면 새로운 foodGame 시작. 해당 게임의 Id(foodGameHistoryId) 브로드캐스팅
+    // foodGameHistoryId는 알아서 찾도록 바꿈, setMessage는 안쓰이지만 굳이 바꿀 필요 없을 것 같아서 놔둠
     @MessageMapping("/tranvel/foodgamestart")
     public void foodGamestart(StompDto message) {
         Long foodGameHistoryId = foodGameService.startFoodGame(Long.parseLong(message.getRoomId()));
@@ -102,20 +103,19 @@ public class StompController {
         sendingOperations.convertAndSend("/topic/tranvel/foodgamestart/" + message.getRoomId(), message);
     }
 
-    // foodGameHistoryId, food 받아서(StompFoodSubmitDto).. StompFoodGameDto로 반환
+    // Message에 음식 후보 받아서 StompFoodGameDto로 반환
     @MessageMapping("/tranvel/foodgameready")
-    public void foodGameReady(StompFoodSubmitDto message) {
+    public void foodGameReady(StompDto message) {
         // 닉네임, 방, 메뉴 접수
         StompFoodGameDto response = foodGameService.receiveFood(message);
-        // 참여자 닉네임 리스트, 불참자 닉네임 리스트, 메뉴 리스트 발송
+        // 참여자 닉네임 리스트, 불참자 프로필 이미지값 리스트, 지금까지 제출된 음식메뉴 리스트 발송
         sendingOperations.convertAndSend("/topic/tranvel/foodgameready/" + message.getRoomId(), response);
     }
 
-    // StompDto.message에 foodGameHistoryId를 받아서 StompDto.message에 랜덤선택된 음식을 하나 담아 보냄.
-    @MessageMapping("/tranvel/getfood")
-    public void getFood(StompDto message) {
-        String selectedFood = foodGameService.getFood(Long.parseLong(message.getMessage()));
-        message.setMessage(selectedFood);
-        sendingOperations.convertAndSend("/topic/tranvel/getfood/" + message.getRoomId(), message);
+    // 방장이 StompDto.message에 선정된 음식 담아 쏘면 그 음식을 저장하고 발송함
+    @MessageMapping("/tranvel/selectedfood")
+    public void foodSelected(StompDto message) {
+        foodGameService.foodSelected(message);
+        sendingOperations.convertAndSend("/topic/tranvel/selectedfood/" + message.getRoomId(), message);
     }
 }
