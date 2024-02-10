@@ -35,7 +35,7 @@ public class FoodGameService {
         System.out.println("FoodGameService.startFoodGame");
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
         List<JoinUser> joinUsers = roomHistory.getJoinUser();
-        List<Long> joinUserIds = new ArrayList<>(); // UserId 아닌, JoinUserId
+        List<Long> joinUserUserIds = new ArrayList<>();
 
         for (JoinUser joinUser : joinUsers) {
             Optional<User> userOptional = userRepository.findById(joinUser.getUserId());
@@ -43,12 +43,12 @@ public class FoodGameService {
                 continue;
             }
             User user = userOptional.get();
-            joinUserIds.add(user.getId());
+            joinUserUserIds.add(user.getId());
         }
 
         FoodGameHistory foodGameHistory = FoodGameHistory.builder()
                 .roomHistory(roomHistory)
-                .unselectedUsers(joinUserIds) // 방 인원들의 JoinUserId
+                .unselectedUsers(joinUserUserIds) // 방 인원(JoinUser)들의 UserId
                 .dateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")).toString())
                 .build();
         foodGameHistoryRepository.save(foodGameHistory);
@@ -64,20 +64,21 @@ public class FoodGameService {
 
     @Transactional
     public StompFoodGameDto receiveFood(StompDto message) {
-
         // 제출된 음식메뉴를 리스트에 더하고, 선택/미선택 인원 리스트를 갱신합니다.
         Long foodGameHistoryId = getRecentFoodGameId(Long.parseLong(message.getRoomId()));
-        Long joinUserId = findJoinUserId(Long.parseLong(message.getRoomId()), Long.parseLong(message.getSender_id()));
+//        Long joinUserId = findJoinUserId(Long.parseLong(message.getRoomId()), Long.parseLong(message.getSender_id()));
+        Long Userid = Long.parseLong(message.getSender_id());
         String submittedFood = message.getMessage();
 
         FoodGameHistory foodGameHistory = foodGameHistoryRepository.findById(foodGameHistoryId).get();
         List<String> foodCandidates = foodGameHistory.getFoodCandidates();
         List<Long> selectedUsers = foodGameHistory.getSelectedUsers();
         List<Long> unSelectedUsers = foodGameHistory.getUnselectedUsers();
+        System.out.println();
 
         foodCandidates.add(submittedFood);
-        selectedUsers.add(joinUserId);
-        unSelectedUsers.remove(joinUserId);
+        selectedUsers.add(Userid);
+        unSelectedUsers.remove(Userid);
 
         foodGameHistory.setFoodCandidates(foodCandidates);
         foodGameHistory.setSelectedUsers(selectedUsers);
@@ -90,14 +91,12 @@ public class FoodGameService {
         List<String> responseUnSelectedProfileImages = new ArrayList<>();
 
         for (Long selectedUserId : selectedUsers) {
-            JoinUser joinUser = joinUserRepository.findById(selectedUserId).get();
-            User user = userRepository.findById(joinUser.getUserId()).get();
+            User user = userRepository.findById(selectedUserId).get();
             String selectedUserProfileImages = user.getProfileImage();
             responseSelectedProfileImages.add(selectedUserProfileImages);
         }
         for (Long unSelectedUserId : unSelectedUsers) {
-            JoinUser joinUser = joinUserRepository.findById(unSelectedUserId).get();
-            User user = userRepository.findById(joinUser.getUserId()).get();
+            User user = userRepository.findById(unSelectedUserId).get();
             String unSelectedUserProfileImages = user.getProfileImage();
             responseUnSelectedProfileImages.add(unSelectedUserProfileImages);
         }
@@ -114,6 +113,7 @@ public class FoodGameService {
 
     // userId로 roomId에 해당하는 방의 joinUserId 찾기
     public Long findJoinUserId(Long roomId, Long userId) {
+        System.out.println("FoodGameService.findJoinUserId");
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
         List<JoinUser> joinUsers = roomHistory.getJoinUser();
 
