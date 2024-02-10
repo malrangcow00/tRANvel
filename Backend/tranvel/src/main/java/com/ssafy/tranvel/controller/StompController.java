@@ -2,12 +2,16 @@ package com.ssafy.tranvel.controller;
 
 import com.ssafy.tranvel.dto.JoinUserInfoDto;
 import com.ssafy.tranvel.dto.StompDto;
+import com.ssafy.tranvel.dto.StompFoodGameDto;
+import com.ssafy.tranvel.dto.StompFoodSubmitDto;
+import com.ssafy.tranvel.entity.FoodGameHistory;
 import com.ssafy.tranvel.entity.JoinUser;
 import com.ssafy.tranvel.entity.RoomHistory;
 import com.ssafy.tranvel.entity.User;
 import com.ssafy.tranvel.repository.RoomHistoryRepository;
 import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.AttractionService;
+import com.ssafy.tranvel.service.FoodGameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -24,6 +28,7 @@ public class StompController {
 
     private final UserRepository userRepository;
     private final AttractionService attractionService;
+    private final FoodGameService foodGameService;
     private final SimpMessageSendingOperations sendingOperations;
 
     // ENTER : 유저 방에 입장 시, CLOSE : 방장이 여행 종료 시, NOTICE : 방장이 공지사항 띄울 때(메세지내용필요)
@@ -76,7 +81,6 @@ public class StompController {
     }
 
     // roomId 필요. 방 인원 중 한명을 뽑아 닉네임을 보냄.
-    //
     @MessageMapping("/tranvel/getplayer")
     public void getAttractionGamePlayer(StompDto message) {
         String attractionGamePlayerNickname = attractionService.getAttractionGamePlayer(Long.parseLong(message.getRoomId()));
@@ -90,12 +94,28 @@ public class StompController {
         sendingOperations.convertAndSend("/topic/tranvel/getplayer/" + message.getRoomId(), message);
     }
 
-    @MessageMapping("/tranvel/foodgameready")
-    public void foodGameReady(StompDto message) {
-        // 닉네임, 메뉴 접수
-        message.getSender_id();
-        message.getMessage();
-        // 참여자 닉네임 리스트, 불참자 닉네임 리스트, 메뉴 리스트 발송
+//    방장이 음식게임 시작. roomId를 받으면 새로운 foodGame 시작. 해당 게임의 Id(foodGameHistoryId) 브로드캐스팅
+    @MessageMapping("/tranvel/foodgamestart")
+    public void foodGamestart(StompDto message) {
+        Long foodGameHistoryId = foodGameService.startFoodGame(Long.parseLong(message.getRoomId()));
+        message.setMessage(Long.toString(foodGameHistoryId));
+        sendingOperations.convertAndSend("/topic/tranvel/foodgamestart/" + message.getRoomId(), message);
+    }
 
+    // foodGameHistoryId, food 받아서(StompFoodSubmitDto).. StompFoodGameDto로 반환
+    @MessageMapping("/tranvel/foodgameready")
+    public void foodGameReady(StompFoodSubmitDto message) {
+        // 닉네임, 방, 메뉴 접수
+        StompFoodGameDto response = foodGameService.receiveFood(message);
+        // 참여자 닉네임 리스트, 불참자 닉네임 리스트, 메뉴 리스트 발송
+        sendingOperations.convertAndSend("/topic/tranvel/foodgameready/" + message.getRoomId(), response);
+    }
+
+    // StompDto.message에 foodGameHistoryId를 받아서 StompDto.message에 랜덤선택된 음식을 하나 담아 보냄.
+    @MessageMapping("/tranvel/getfood")
+    public void getFood(StompDto message) {
+        String selectedFood = foodGameService.getFood(Long.parseLong(message.getMessage()));
+        message.setMessage(selectedFood);
+        sendingOperations.convertAndSend("/topic/tranvel/getfood/" + message.getRoomId(), message);
     }
 }
