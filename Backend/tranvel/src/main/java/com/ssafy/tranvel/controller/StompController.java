@@ -1,9 +1,6 @@
 package com.ssafy.tranvel.controller;
 
-import com.ssafy.tranvel.dto.StompAttractionDto;
-import com.ssafy.tranvel.dto.StompAttractionResponseDto;
-import com.ssafy.tranvel.dto.StompDto;
-import com.ssafy.tranvel.dto.StompFoodGameDto;
+import com.ssafy.tranvel.dto.*;
 import com.ssafy.tranvel.entity.AttractionList;
 import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.AttractionService;
@@ -12,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Random;
 
 @RestController
 @RequiredArgsConstructor
@@ -113,7 +112,16 @@ public class StompController {
     @MessageMapping("/tranvel/foodgamestart")
     public void foodGamestart(StompDto message) {
         Long foodGameHistoryId = foodGameService.startFoodGame(Long.parseLong(message.getRoomId()));
-        message.setMessage(Long.toString(foodGameHistoryId));
+
+        Random random = new Random();
+        Float randFloat = 5000f + random.nextFloat() * (5000f);
+        Long randLong = 4000L + (long) (random.nextFloat() * 1000L);
+        StompFoodGameStartDto stompFoodGameStartDto = StompFoodGameStartDto.builder()
+                .sender_id(message.getSender_id())
+                .roomId(message.getRoomId())
+                .randFloat(randFloat)
+                .randLong(randLong)
+                .build();
         sendingOperations.convertAndSend("/topic/tranvel/foodgamestart/" + message.getRoomId(), message);
     }
 
