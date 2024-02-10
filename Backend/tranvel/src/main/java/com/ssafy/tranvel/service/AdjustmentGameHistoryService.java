@@ -109,7 +109,10 @@ public class AdjustmentGameHistoryService {
         info.setRoomId(adjustmentGameHistoryDto.getRoomId());
         info.setContentId(contentId);
         try {
-            imageUploadService.uploadImage(info, image, "adjustment");
+            if (image != null) {
+                imageUploadService.uploadImage(info, image, "adjustment");
+            }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -24,7 +24,7 @@ public class FoodGameHistory {
     @JsonBackReference
     private RoomHistory roomHistory;
 
-    @OneToMany(mappedBy = "foodGameHistory")
+    @OneToMany(mappedBy = "foodGameHistory", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<FoodImage> images;
 

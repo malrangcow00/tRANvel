@@ -49,7 +49,7 @@ public class AdjustmentGameHistory {
     @ElementCollection
     private List<Long> selectedUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "adjustmentGameHistory")
+    @OneToMany(mappedBy = "adjustmentGameHistory", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<AdjustmentImage> images;
 

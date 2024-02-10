@@ -127,6 +127,7 @@ public class RoomController {
     // 입력된 정보에 따라, 선택된 인원들에 대해 price/인원 으로 정산 실시 및 기록, api 명세 참조
     @PostMapping(value = "/adjustment/record", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDto> createAdjustmentGameHistory(@RequestPart AdjustmentGameHistoryDto adjustmentGameHistoryDto, @RequestPart(value = "image",required = false) MultipartFile image) {
+        System.out.println(image == null);
         int moneyResult = adjustmentGameHistoryService.adjustment(adjustmentGameHistoryDto, image); // 1인당 정산되는 금액
 
         response = new ResponseDto(true,"정산 실시, 1/N 액수", moneyResult);
