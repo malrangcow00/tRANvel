@@ -71,7 +71,7 @@ public class UserController {
     }
 
     // 프로필 이미지 등록
-    @PostMapping(value = "/profileImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
+    @PostMapping(value = "/profileImage", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ResponseDto> saveProfileImage(@RequestPart(value = "image",required = true) MultipartFile image) throws IOException {
 
         imageUploadService.uploadProfileImage(image);
