@@ -122,7 +122,7 @@ public class StompController {
                 .randFloat(randFloat)
                 .randLong(randLong)
                 .build();
-        sendingOperations.convertAndSend("/topic/tranvel/foodgamestart/" + message.getRoomId(), message);
+        sendingOperations.convertAndSend("/topic/tranvel/foodgamestart/" + message.getRoomId(), stompFoodGameStartDto);
     }
 
     // Message에 음식 후보 받아서 StompFoodGameDto로 반환
