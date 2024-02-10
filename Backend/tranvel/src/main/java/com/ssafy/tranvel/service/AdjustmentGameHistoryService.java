@@ -120,7 +120,7 @@ public class AdjustmentGameHistoryService {
         return moneyResult;
     }
 
-    // 모든 정산 게임 기록
+    // 모든 정산 게임 기록 열람
     public List<AdjustmentGameHistory> getAllAdjustmentHistories(Long roomId) {
         System.out.println("AdjustmentGameHistoryService.getAllAdjustmentHistories");
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
@@ -130,7 +130,7 @@ public class AdjustmentGameHistoryService {
         return adjustmentGameHistoryList;
     }
 
-    // 한 정산 게임 기록
+    // 한 정산 게임 기록 열람
     public AdjustmentGameHistory getAdjustmentHistory(Long contentId) {
         System.out.println("AdjustmentGameHistoryService.getAdjustmentHistory");
         return adjustmentGameHistoryRepository.findById(contentId).get();

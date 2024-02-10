@@ -1,7 +1,10 @@
 package com.ssafy.tranvel.controller;
 
+import com.ssafy.tranvel.dto.StompAttractionDto;
+import com.ssafy.tranvel.dto.StompAttractionResponseDto;
 import com.ssafy.tranvel.dto.StompDto;
 import com.ssafy.tranvel.dto.StompFoodGameDto;
+import com.ssafy.tranvel.entity.AttractionList;
 import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.AttractionService;
 import com.ssafy.tranvel.service.FoodGameService;
@@ -80,6 +83,29 @@ public class StompController {
         System.out.println("Stomp Send : attractionGamePlayerNickname = " + attractionGamePlayerNickname);
 
         sendingOperations.convertAndSend("/topic/tranvel/getplayer/" + message.getRoomId(), message);
+    }
+
+    // 위도, 경도 정보를 보내면 30km 이내 랜덤한 위치를 방의 모든 인원들에게 발송
+    // 관광지 뽑기 결과 저장
+    @MessageMapping("/tranvel/attractionrandom")
+    public void getAttractionIn30KmRandomly(StompAttractionDto message) {
+        AttractionList attractionsIn30Km = attractionService.getAttractionIn30KmRandomly(Double.parseDouble(message.getLatitude()), Double.parseDouble(message.getLongitude()));
+
+        StompAttractionResponseDto stompAttractionResponseDto = StompAttractionResponseDto.builder()
+                .sender_id(message.getSender_id())
+                .roomId(message.getRoomId())
+                .name(attractionsIn30Km.getName())
+                .latitude(attractionsIn30Km.getLatitude())
+                .longitude(attractionsIn30Km.getLongitude())
+                .description(attractionsIn30Km.getDescription())
+                .city(attractionsIn30Km.getCity())
+                .image(attractionsIn30Km.getImage())
+                .build();
+
+        // 결과 저장
+        attractionService.saveAttractionGame(Long.parseLong(message.getRoomId()), attractionsIn30Km.getId());
+
+        sendingOperations.convertAndSend("/topic/tranvel/attractionrandom/" + message.getRoomId(), stompAttractionResponseDto);
     }
 
 //    방장이 음식게임 시작. roomId를 받으면 새로운 foodGame 시작. 해당 게임의 Id(foodGameHistoryId) 브로드캐스팅
