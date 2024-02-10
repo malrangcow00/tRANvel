@@ -152,7 +152,7 @@ public class RoomController {
     }
 
 
-    // 방 id에 관련된 모든 FoodGame 기록 정보 / param : roomId
+    // 방 id에 관련된 모든 FoodGameHistory 기록 정보 / param : roomId
     @PostMapping("/foodgame/getallhistory")
     public ResponseEntity<ResponseDto> getAllFoodGameHistory(Long roomId) {
         List<FoodGameHistory> foodGameHistoryList = foodGameService.getAllFoodGameHistories(roomId);
@@ -167,6 +167,24 @@ public class RoomController {
         FoodGameHistory foodGameHistory = foodGameService.getFoodGameHistory(contentId);
 
         response = new ResponseDto(true, "해당 방의 해당 FoodGame 기록", foodGameHistory);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // 방 id에 관련된 모든 AttractionGameHistory 기록 정보 / param : roomId
+    @PostMapping("/attractiongame/getallhistory")
+    public ResponseEntity<ResponseDto> getAllAttractionGameHistory(Long roomId) {
+        List<AttractionGameHistory> attractionGameHistoryList = attractionService.getAllAttractionGameHistories(roomId);
+
+        response = new ResponseDto(true, "해당 방의 모든 AttractionGame 기록", attractionGameHistoryList);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // AttractionGameHistory 의 한 id에 대한 기록 / param : contentId
+    @PostMapping("/attractiongame/gethistory")
+    public ResponseEntity<ResponseDto> getOneAttractionGameHistory(Long contentId) {
+        AttractionGameHistory attractionGameHistory = attractionService.getAttractionGameHistory(contentId);
+
+        response = new ResponseDto(true, "해당 방의 해당 AttractionGame 기록", attractionGameHistory);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

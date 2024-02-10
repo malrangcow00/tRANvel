@@ -3,17 +3,17 @@ package com.ssafy.tranvel.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.tranvel.dto.AttractionBaseDto;
-import com.ssafy.tranvel.entity.AttractionList;
-import com.ssafy.tranvel.entity.JoinUser;
-import com.ssafy.tranvel.entity.RoomHistory;
-import com.ssafy.tranvel.entity.User;
-import com.ssafy.tranvel.repository.AttractionRepository;
-import com.ssafy.tranvel.repository.RoomHistoryRepository;
-import com.ssafy.tranvel.repository.UserRepository;
+import com.ssafy.tranvel.dto.AttractionGameRecordDto;
+import com.ssafy.tranvel.dto.ImagePostDto;
+import com.ssafy.tranvel.entity.*;
+import com.ssafy.tranvel.repository.*;
+import com.ssafy.tranvel.utility.DistanceCalculator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
@@ -21,10 +21,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -32,8 +35,11 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class AttractionService {
 
-    private final AttractionRepository attractionRepository;
     private final RoomHistoryRepository roomHistoryRepository;
+    private final AttractionRepository attractionRepository;
+    private final AttractionGameRepository attractionGameRepository;
+    private final AttractionListRepository attractionListRepository;
+    private final ImageUploadService imageUploadService;
     private final UserRepository userRepository;
 
     public Object loadAttractionList() throws UnsupportedEncodingException {
@@ -121,5 +127,92 @@ public class AttractionService {
         return user.getNickName();
     }
 
+    public List<AttractionList> getAttractionsIn30Km(double latitude, double longitude) {
+        List<AttractionList> allAttractions = attractionRepository.findAll();
 
+        return allAttractions.stream()
+                .filter(attraction ->
+                        DistanceCalculator.calculateDistance(
+                                latitude,
+                                longitude,
+                                Double.parseDouble(attraction.getLatitude()),
+                                Double.parseDouble(attraction.getLongitude())) <= 30)
+                .collect(Collectors.toList());
+    }
+
+    public AttractionList getAttractionIn30KmRandomly(double latitude, double longitude) {
+        List<AttractionList> attractionsIn30Km = getAttractionsIn30Km(latitude, longitude);
+
+        if (attractionsIn30Km.isEmpty()) {
+            System.out.println("주어진 위/경도의 30km 이내 관광지 부재");
+            return null; // 30km 이내에 관광지가 없을 경우
+        }
+
+        Random random = new Random();
+        return attractionsIn30Km.get(random.nextInt(attractionsIn30Km.size()));
+    }
+
+//    // 여행지게임 기록
+//    public void saveAttractionGame(AttractionGameRecordDto attractionGameRecordDto, MultipartFile image) {
+//        RoomHistory roomHistory = roomHistoryRepository.findById(attractionGameRecordDto.getRoomId()).get();
+//        AttractionList attractionList = attractionListRepository.findById(attractionGameRecordDto.getAttractionListId()).get();
+//
+//        AttractionGameHistory attractionGameHistory = AttractionGameHistory.builder()
+//                .roomHistory(roomHistory)
+//        //        .images()
+//                .attractionList(attractionList) // 관광지 정보
+//                .dateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")).toString())
+//                .build();
+//
+//        Long contentId = attractionGameRepository.save(attractionGameHistory).getId();
+//
+//        // 이미지 저장?
+//        ImagePostDto info = new ImagePostDto();
+//        info.setRoomId(attractionGameRecordDto.getRoomId());
+//        info.setContentId(contentId);
+//        try {
+//            if (image != null) {
+//                imageUploadService.uploadImage(info, image, "attraction");
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        System.out.println("AttractionGameHistory saved");
+//    }
+
+    // 여행지게임 기록
+    public void saveAttractionGame(Long roomId, Long attractionListId) {
+        RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
+        AttractionList attractionList = attractionListRepository.findById(attractionListId).get();
+
+        AttractionGameHistory attractionGameHistory = AttractionGameHistory.builder()
+                .roomHistory(roomHistory)
+        //        .images()
+                .attractionList(attractionList) // 관광지 정보
+                .dateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")).toString())
+                .build();
+
+        attractionGameRepository.save(attractionGameHistory).getId();
+
+        System.out.println("AttractionGameHistory saved");
+    }
+
+    // 모든 관광지게임 기록 열람
+    public List<AttractionGameHistory> getAllAttractionGameHistories(Long roomId) {
+        RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
+
+        return roomHistory.getAttractionGameHistories();
+    }
+
+    // 한 관광지게임 기록 열람
+    public AttractionGameHistory getAttractionGameHistory(Long contentId) {
+        return attractionGameRepository.findById(contentId).get();
+    }
+
+    public void deleteAttractionGameHistory(Long contentId) {
+        AttractionGameHistory attractionGameHistory = attractionGameRepository.findById(contentId).get();
+        attractionGameRepository.delete(attractionGameHistory);
+        System.out.println("해당 contentId" + contentId + "의 attractionGameHistory 삭제 완료");
+    }
 }
