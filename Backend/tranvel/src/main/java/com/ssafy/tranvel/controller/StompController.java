@@ -117,7 +117,6 @@ public class StompController {
         Float randFloat = 5000f + random.nextFloat() * (5000f);
         Long randLong = 4000L + (long) (random.nextFloat() * 1000L);
         StompFoodGameStartDto stompFoodGameStartDto = StompFoodGameStartDto.builder()
-                .sender_id(message.getSender_id())
                 .roomId(message.getRoomId())
                 .randFloat(randFloat)
                 .randLong(randLong)

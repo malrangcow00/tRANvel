@@ -9,8 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 public class StompFoodGameStartDto {
 
-    private String sender_id;
-
     private String roomId;
 
     private Float randFloat;
