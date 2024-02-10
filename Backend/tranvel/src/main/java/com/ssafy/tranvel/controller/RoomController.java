@@ -161,7 +161,7 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // AdjustmentGameHistory 의 한 id에 대한 기록 / param : contentId
+    // FoodGameHistory 의 한 id에 대한 기록 / param : contentId
     @PostMapping("/foodgame/gethistory")
     public ResponseEntity<ResponseDto> getOneFoodGameHistory(Long contentId) {
         FoodGameHistory foodGameHistory = foodGameService.getFoodGameHistory(contentId);

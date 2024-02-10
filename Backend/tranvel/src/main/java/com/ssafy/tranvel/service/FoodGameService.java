@@ -127,6 +127,7 @@ public class FoodGameService {
     }
 
     // 가장 최근 음식게임기록에 선정된 음식 기록
+    @Transactional
     public void foodSelected(StompDto message) {
         Long foodGameHistoryId = getRecentFoodGameId(Long.parseLong(message.getRoomId()));
         FoodGameHistory foodGameHistory = foodGameHistoryRepository.findById(foodGameHistoryId).get();
