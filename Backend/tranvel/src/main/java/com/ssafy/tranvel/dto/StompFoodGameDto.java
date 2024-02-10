@@ -15,9 +15,9 @@ public class StompFoodGameDto {
 
     private String roomId;
 
-    private List<String> selectedUserNicknames;
+    private List<String> selectedUserProfileImages;
 
-    private List<String> unSelectedUserNicknames;
+    private List<String> unSelectedUserProfileImages;
 
     private List<String> foodCandidates;
 

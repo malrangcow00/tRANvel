@@ -1,14 +1,7 @@
 package com.ssafy.tranvel.controller;
 
-import com.ssafy.tranvel.dto.JoinUserInfoDto;
 import com.ssafy.tranvel.dto.StompDto;
 import com.ssafy.tranvel.dto.StompFoodGameDto;
-import com.ssafy.tranvel.dto.StompFoodSubmitDto;
-import com.ssafy.tranvel.entity.FoodGameHistory;
-import com.ssafy.tranvel.entity.JoinUser;
-import com.ssafy.tranvel.entity.RoomHistory;
-import com.ssafy.tranvel.entity.User;
-import com.ssafy.tranvel.repository.RoomHistoryRepository;
 import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.AttractionService;
 import com.ssafy.tranvel.service.FoodGameService;
@@ -16,11 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
 @RestController
 @RequiredArgsConstructor

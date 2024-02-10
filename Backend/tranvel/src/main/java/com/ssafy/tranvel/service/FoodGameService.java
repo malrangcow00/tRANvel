@@ -2,7 +2,6 @@ package com.ssafy.tranvel.service;
 
 import com.ssafy.tranvel.dto.StompDto;
 import com.ssafy.tranvel.dto.StompFoodGameDto;
-import com.ssafy.tranvel.dto.StompFoodSubmitDto;
 import com.ssafy.tranvel.entity.*;
 import com.ssafy.tranvel.repository.FoodGameHistoryRepository;
 import com.ssafy.tranvel.repository.JoinUserRepository;
@@ -19,7 +18,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 @Getter
@@ -107,8 +105,8 @@ public class FoodGameService {
         StompFoodGameDto response = StompFoodGameDto.builder()
                 .sender_id(message.getSender_id())
                 .roomId(message.getRoomId())
-                .selectedUserNicknames(responseSelectedProfileImages)
-                .unSelectedUserNicknames(responseUnSelectedProfileImages)
+                .selectedUserProfileImages(responseSelectedProfileImages)
+                .unSelectedUserProfileImages(responseUnSelectedProfileImages)
                 .foodCandidates(foodCandidates)
                 .build();
         return response;
