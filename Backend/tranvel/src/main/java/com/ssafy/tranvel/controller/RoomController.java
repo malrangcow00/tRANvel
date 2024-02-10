@@ -10,7 +10,6 @@ import com.ssafy.tranvel.service.AdjustmentGameHistoryService;
 import com.ssafy.tranvel.service.AttractionService;
 import com.ssafy.tranvel.service.FoodGameService;
 import com.ssafy.tranvel.service.RoomHistoryService;
-import com.ssafy.tranvel.utility.SecurityUtility;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -18,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -92,6 +90,18 @@ public class RoomController {
 
         date, images, user : { userId, userProfile, profit}
          */
+
+        return  ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    @PostMapping("/history")
+    public ResponseEntity<ResponseDto> getRoomDetailHistoryTmp(Long roomId) {
+        RoomHistory roomHistory = roomHistoryService.getRoomDetailHistory(roomId);
+
+//        Map<String, List<RoomDetailDto>> info = roomHistoryService.roomDetailHistory(roomHistory);
+        List<RoomDetailDto> info = roomHistoryService.roomDetailHistory(roomHistory);
+        response = new ResponseDto(true, "방 히스토리 상세 기록 조회", info);
 
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
