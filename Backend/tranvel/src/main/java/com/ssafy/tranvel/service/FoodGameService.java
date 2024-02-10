@@ -119,6 +119,7 @@ public class FoodGameService {
                 return joinUser.getId();
             }
         }
+        System.out.println("FoodGameService.findJoinUserId 실행에 있어, 해당하는 joinUser의 UserId를 찾지 못함");
         return null;
     }
 
