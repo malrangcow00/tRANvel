@@ -1,6 +1,6 @@
 package com.ssafy.tranvel.service;
 
-import com.ssafy.tranvel.dto.AttractionResponseDto;
+import com.ssafy.tranvel.dto.FoodResponseDto;
 import com.ssafy.tranvel.dto.StompDto;
 import com.ssafy.tranvel.dto.StompFoodGameDto;
 import com.ssafy.tranvel.entity.*;
@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service

@@ -1,4 +1,4 @@
-package com.ssafy.tranvel.service;
+package com.ssafy.tranvel.dto;
 
 
 import com.ssafy.tranvel.entity.FoodGameHistory;
