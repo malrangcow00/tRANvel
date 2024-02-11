@@ -43,8 +43,10 @@ public class StompController {
     @MessageMapping("/tranvel/foodgame")
     public void foodGame(StompDto message) {
         if (StompDto.MessageType.ENTER.equals(message.getType())) {
+            foodGameService.startFoodGame(Long.parseLong(message.getRoomId()));
             message.setMessage("음식 선택 게임을 시작합니다.");
-        } else if (StompDto.MessageType.CLOSE.equals(message.getType())) {
+        } else if (StompDto.MessageType.CLOSE.equals(message.getType())) { // 방장이 message에 선정된 음식 메뉴 이름을 돌림
+            foodGameService.foodSelected(message);
             message.setMessage("음식 선택 게임이 완료되었습니다.");
         }
         sendingOperations.convertAndSend("/topic/tranvel/foodgame/" + message.getRoomId(), message);
@@ -107,12 +109,9 @@ public class StompController {
         sendingOperations.convertAndSend("/topic/tranvel/attractionrandom/" + message.getRoomId(), stompAttractionResponseDto);
     }
 
-//    방장이 음식게임 시작. roomId를 받으면 새로운 foodGame 시작. 해당 게임의 Id(foodGameHistoryId) 브로드캐스팅
-    // foodGameHistoryId는 알아서 찾도록 바꿈, setMessage는 안쓰이지만 굳이 바꿀 필요 없을 것 같아서 놔둠
+//  방장이 뽑기 버튼을 눌러 룰렛 돌리기 위한 난수를 발생시켜 브로드캐스트
     @MessageMapping("/tranvel/foodgamestart")
     public void foodGamestart(StompDto message) {
-        Long foodGameHistoryId = foodGameService.startFoodGame(Long.parseLong(message.getRoomId()));
-
         Random random = new Random();
         Float randFloat = 5000f + random.nextFloat() * (5000f);
         Long randLong = 4000L + (long) (random.nextFloat() * 1000L);
@@ -133,10 +132,10 @@ public class StompController {
         sendingOperations.convertAndSend("/topic/tranvel/foodgameready/" + message.getRoomId(), response);
     }
 
-    // 방장이 StompDto.message에 선정된 음식 담아 쏘면 그 음식을 저장하고 발송함
-    @MessageMapping("/tranvel/selectedfood")
-    public void foodSelected(StompDto message) {
-        foodGameService.foodSelected(message);
-        sendingOperations.convertAndSend("/topic/tranvel/selectedfood/" + message.getRoomId(), message);
-    }
+//    // 방장이 StompDto.message에 선정된 음식 담아 쏘면 그 음식을 저장하고 발송함
+//    @MessageMapping("/tranvel/selectedfood")
+//    public void foodSelected(StompDto message) {
+//        foodGameService.foodSelected(message);
+//        sendingOperations.convertAndSend("/topic/tranvel/selectedfood/" + message.getRoomId(), message);
+//    }
 }
