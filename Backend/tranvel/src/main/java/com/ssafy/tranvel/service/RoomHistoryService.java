@@ -1,9 +1,9 @@
 package com.ssafy.tranvel.service;
 
 import com.ssafy.tranvel.dto.RoomHistoryDto;
-import com.ssafy.tranvel.dto.RoomInsideDto;
+import com.ssafy.tranvel.dto.RoomInsideResponseDto;
 import com.ssafy.tranvel.dto.RoomMainResponseDto;
-import com.ssafy.tranvel.dto.RoomDetailDto;
+import com.ssafy.tranvel.dto.RoomDetailResponseDto;
 import com.ssafy.tranvel.entity.*;
 import com.ssafy.tranvel.repository.JoinUserRepository;
 import com.ssafy.tranvel.repository.RoomHistoryRepository;
@@ -130,7 +130,7 @@ public class RoomHistoryService {
     }
 
 
-    public RoomInsideDto filteredRoomInsideInfo(RoomHistory roomHistory) {
+    public RoomInsideResponseDto filteredRoomInsideInfo(RoomHistory roomHistory) {
         Long userId = userRepository.findByEmail(SecurityUtility.getCurrentUserId()).get().getId();
         List<JoinUser> joinUser = roomHistoryRepository.findByRoomCode(roomHistory.getRoomCode()).get().getJoinUser();
 
@@ -143,7 +143,7 @@ public class RoomHistoryService {
             }
         }
 
-        RoomInsideDto info = RoomInsideDto.builder()
+        RoomInsideResponseDto info = RoomInsideResponseDto.builder()
                 .roomId(roomHistory.getId())
                 .roomCode(roomHistory.getRoomCode())
                 .roomPassword(roomHistory.getRoomPassword())
@@ -156,9 +156,9 @@ public class RoomHistoryService {
 
 
 //    public Map<String, List<RoomDetailDto>> roomDetailHistory(RoomHistory roomHistory) {
-    public List<RoomDetailDto> roomDetailHistory(RoomHistory roomHistory) {
+    public List<RoomDetailResponseDto> roomDetailHistory(RoomHistory roomHistory) {
 //        Map<String, List<RoomDetailDto>> info = new HashMap<>();
-        List<RoomDetailDto> info = new ArrayList<>();
+        List<RoomDetailResponseDto> info = new ArrayList<>();
 
         List<AdjustmentGameHistory> adjustmentGameHistories = new ArrayList<>(roomHistory.getAdjustmentGameHistories());
         List<AttractionGameHistory> attractionGameHistories = new ArrayList<>(roomHistory.getAttractionGameHistories());
@@ -186,7 +186,7 @@ public class RoomHistoryService {
                         adjustmentImageList.add(imageRoute);
                     }
                 }
-                RoomDetailDto roomDetailDto = RoomDetailDto.builder()
+                RoomDetailResponseDto roomDetailResponseDto = RoomDetailResponseDto.builder()
                         .contentId(adjustmentGameHistory.getId())
                         .historyCategory("adjustment")
                         .dateTime(adjustmentGameHistory.getDateTime())
@@ -205,7 +205,7 @@ public class RoomHistoryService {
 //                    innerList.add(roomDetailDto);
 //                    info.put(date, innerList);
 //                }
-                info.add(roomDetailDto);
+                info.add(roomDetailResponseDto);
             }
         }
 
@@ -218,7 +218,7 @@ public class RoomHistoryService {
                         attractionImageList.add(imageRoute);
                     }
                 }
-                RoomDetailDto roomDetailDto = RoomDetailDto.builder()
+                RoomDetailResponseDto roomDetailResponseDto = RoomDetailResponseDto.builder()
                         .contentId(attractionGameHistory.getId())
                         .historyCategory("attraction")
                         .dateTime(attractionGameHistory.getDateTime())
@@ -236,7 +236,7 @@ public class RoomHistoryService {
 //                    innerList.add(roomDetailDto);
 //                    info.put(date, innerList);
 //                }
-                info.add(roomDetailDto);
+                info.add(roomDetailResponseDto);
             }
         }
         if (!foodGameHistories.isEmpty()) {
@@ -248,7 +248,7 @@ public class RoomHistoryService {
                         foodGameImageList.add(imageRoute);
                     }
                 }
-                RoomDetailDto roomDetailDto = RoomDetailDto.builder()
+                RoomDetailResponseDto roomDetailResponseDto = RoomDetailResponseDto.builder()
                         .contentId(foodGameHistory.getId())
                         .historyCategory("food")
                         .dateTime(foodGameHistory.getDateTime())
@@ -266,7 +266,7 @@ public class RoomHistoryService {
 //                    innerList.add(roomDetailDto);
 //                    info.put(date, innerList);
 //                }
-                info.add(roomDetailDto);
+                info.add(roomDetailResponseDto);
             }
         }
         if (!info.isEmpty()) {

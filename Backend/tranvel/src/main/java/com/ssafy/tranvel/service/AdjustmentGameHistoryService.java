@@ -1,7 +1,6 @@
 package com.ssafy.tranvel.service;
 
-import com.ssafy.tranvel.dto.AdjustmentGameHistoryDto;
-import com.ssafy.tranvel.dto.ImagePostDto;
+import com.ssafy.tranvel.dto.*;
 import com.ssafy.tranvel.entity.AdjustmentGameHistory;
 import com.ssafy.tranvel.entity.AdjustmentImage;
 import com.ssafy.tranvel.entity.RandomGame;
@@ -9,8 +8,6 @@ import com.ssafy.tranvel.entity.RoomHistory;
 import com.ssafy.tranvel.repository.AdjustmentGameHistoryRepository;
 import com.ssafy.tranvel.repository.RandomGameRepository;
 import com.ssafy.tranvel.repository.RoomHistoryRepository;
-import com.ssafy.tranvel.dto.JoinUserInfoDto;
-import com.ssafy.tranvel.dto.RoomHistoryDto;
 import com.ssafy.tranvel.entity.*;
 import com.ssafy.tranvel.repository.*;
 import jakarta.transaction.Transactional;
@@ -121,13 +118,36 @@ public class AdjustmentGameHistoryService {
     }
 
     // 모든 정산 게임 기록 열람
-    public List<AdjustmentGameHistory> getAllAdjustmentHistories(Long roomId) {
+    public List<AdjustmentResponseDto> getAllAdjustmentHistories(Long roomId) {
         System.out.println("AdjustmentGameHistoryService.getAllAdjustmentHistories");
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
         List<AdjustmentGameHistory> adjustmentGameHistoryList = roomHistory.getAdjustmentGameHistories();
 
+        List<AdjustmentResponseDto> info = new ArrayList<>();
+        String imageRoute;
+
+        for (AdjustmentGameHistory adjustmentGameHistory : adjustmentGameHistoryList) {
+            List<String> adjustmentImageList = new ArrayList<>();
+            if (!adjustmentGameHistory.getImages().isEmpty()) {
+                for (AdjustmentImage image : adjustmentGameHistory.getImages()) {
+                    imageRoute = "/" + roomHistory.getId() + "/adjustment/" + image.getId().toString() + ".jpg";
+                    adjustmentImageList.add(imageRoute);
+                }
+            }
+            AdjustmentResponseDto adjustmentResponseDto = AdjustmentResponseDto.builder()
+                    .id(adjustmentGameHistory.getId())
+                    .dateTime(adjustmentGameHistory.getDateTime())
+                    .price(adjustmentGameHistory.getPrice())
+                    .moneyResult(adjustmentGameHistory.getMoneyResult())
+                    .selectedUsers(adjustmentGameHistory.getSelectedUsers())
+                    .images(adjustmentImageList)
+                    .category(adjustmentGameHistory.getCategory())
+                    .location(adjustmentGameHistory.getLocation())
+                    .build();
+            info.add(adjustmentResponseDto);
+        }
         System.out.println("AdjustmentGameHistoryService.getAllAdjustmentHistories Ready");
-        return adjustmentGameHistoryList;
+        return info;
     }
 
     // 한 정산 게임 기록 열람

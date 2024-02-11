@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class RoomDetailDto {
+public class RoomDetailResponseDto {
 
     private Long contentId;
 

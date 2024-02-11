@@ -53,7 +53,7 @@ public class RoomController {
 
         RoomHistory roomHistory = roomHistoryService.createRoomHistory(roomPassword);
 
-        RoomInsideDto roomInnerResponse = roomHistoryService.filteredRoomInsideInfo(roomHistory);
+        RoomInsideResponseDto roomInnerResponse = roomHistoryService.filteredRoomInsideInfo(roomHistory);
         response = new ResponseDto(true, "방 생성 완료", roomInnerResponse);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -66,7 +66,7 @@ public class RoomController {
         roomHistoryService.addJoinUser(roomHistory, roomPassword);
 //        List<JoinUser> joinUser = roomHistoryRepository.findByRoomCode(roomHistoryDto.getRoomCode()).get().getJoinUser();
 
-        RoomInsideDto roomInnerResponse = roomHistoryService.filteredRoomInsideInfo(roomHistory);
+        RoomInsideResponseDto roomInnerResponse = roomHistoryService.filteredRoomInsideInfo(roomHistory);
 
         response = new ResponseDto(true, "방 게임 입장", roomInnerResponse);
         return  ResponseEntity.status(HttpStatus.OK).body(response);
@@ -77,7 +77,7 @@ public class RoomController {
     public ResponseEntity<ResponseDto> getRoomDetailHistory(Long roomId) {
         RoomHistory roomHistory = roomHistoryService.getRoomDetailHistory(roomId);
 
-        RoomInsideDto roomInnerResponse = roomHistoryService.filteredRoomInsideInfo(roomHistory);
+        RoomInsideResponseDto roomInnerResponse = roomHistoryService.filteredRoomInsideInfo(roomHistory);
         response = new ResponseDto(true, "방 게임 기록 조회", roomInnerResponse);
 
         /*
@@ -100,7 +100,7 @@ public class RoomController {
         RoomHistory roomHistory = roomHistoryService.getRoomDetailHistory(roomId);
 
 //        Map<String, List<RoomDetailDto>> info = roomHistoryService.roomDetailHistory(roomHistory);
-        List<RoomDetailDto> info = roomHistoryService.roomDetailHistory(roomHistory);
+        List<RoomDetailResponseDto> info = roomHistoryService.roomDetailHistory(roomHistory);
         response = new ResponseDto(true, "방 히스토리 상세 기록 조회", info);
 
         return  ResponseEntity.status(HttpStatus.OK).body(response);
@@ -146,7 +146,7 @@ public class RoomController {
     // 방 id에 관련된 모든 정산 기록 정보 / param : roomId
     @PostMapping("/adjustment/getallhistory")
     public ResponseEntity<ResponseDto> getAllAdjustmentHistory(Long roomId) {
-        List<AdjustmentGameHistory> adjustmentGameHistoryList = adjustmentGameHistoryService.getAllAdjustmentHistories(roomId);
+        List<AdjustmentResponseDto> adjustmentGameHistoryList = adjustmentGameHistoryService.getAllAdjustmentHistories(roomId);
 
         response = new ResponseDto(true, "해당 방의 모든 정산 기록", adjustmentGameHistoryList);
         return ResponseEntity.status(HttpStatus.OK).body(response);
