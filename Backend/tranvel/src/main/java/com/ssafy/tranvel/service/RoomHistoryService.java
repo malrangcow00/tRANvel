@@ -3,6 +3,7 @@ package com.ssafy.tranvel.service;
 import com.ssafy.tranvel.dto.RoomHistoryDto;
 import com.ssafy.tranvel.dto.RoomInsideDto;
 import com.ssafy.tranvel.dto.RoomMainResponseDto;
+import com.ssafy.tranvel.dto.RoomDetailDto;
 import com.ssafy.tranvel.entity.*;
 import com.ssafy.tranvel.repository.JoinUserRepository;
 import com.ssafy.tranvel.repository.RoomHistoryRepository;
@@ -43,7 +44,6 @@ public class RoomHistoryService {
 
 
     public List<RoomMainResponseDto> filteredRoomInfo() {
-        // service 패키지로 이동예정
         RoomHistoryDto info = new RoomHistoryDto();
 //        info.setUserEmail(SecurityUtility.getCurrentUserId());
 
@@ -71,15 +71,11 @@ public class RoomHistoryService {
                                 imageList.add(imageRoute);
                             }
                         }
-
                         System.out.println("c");
                     }
                     System.out.println(adjustmentGameHistories.get(adjustmentGameHistory).getId());
-
                 }
-
             }
-
             List<AttractionGameHistory> attractionGameHistories = roomHistoryList.get(idx).getAttractionGameHistories();
             if (!attractionGameHistories.isEmpty()) {
                 System.out.println("d");
@@ -114,9 +110,7 @@ public class RoomHistoryService {
 //                        imageList.add(foodGameHistories.get(foodGameHistory).getImages());
                     }
                 }
-
             }
-
 
             RoomMainResponseDto roomMainResponseDto = RoomMainResponseDto.builder()
                     .roomid(roomHistoryList.get(idx).getId())
@@ -159,6 +153,132 @@ public class RoomHistoryService {
 
         return info;
     }
+
+
+//    public Map<String, List<RoomDetailDto>> roomDetailHistory(RoomHistory roomHistory) {
+    public List<RoomDetailDto> roomDetailHistory(RoomHistory roomHistory) {
+//        Map<String, List<RoomDetailDto>> info = new HashMap<>();
+        List<RoomDetailDto> info = new ArrayList<>();
+
+        List<AdjustmentGameHistory> adjustmentGameHistories = new ArrayList<>(roomHistory.getAdjustmentGameHistories());
+        List<AttractionGameHistory> attractionGameHistories = new ArrayList<>(roomHistory.getAttractionGameHistories());
+        List<FoodGameHistory> foodGameHistories = new ArrayList<>(roomHistory.getFoodGameHistories());
+
+        String imageRoute;
+        /*
+        날짜별로 info 에 content 들을 리스트 형태로 넣을것
+        Map info ={
+         "2024-02-15" : [["contentId": 1, "dateTime": 20240201...], ["contentId": 2, "dateTime": 20240201...], ["contentId": 3, "dateTime": 20240201...]].
+         "2024-02-16" : [["contentId": 4, "dateTime": 20240201...], ["contentId": 5, "dateTime": 20240201...], ["contentId": 6, "dateTime": 20240201...]].
+         "2024-02-17" : [["contentId": 7, "dateTime": 20240201...], ["contentId": 8, "dateTime": 20240201...], ["contentId": 9, "dateTime": 20240201...]].
+         "2024-02-18" : [["contentId": 10, "dateTime": 20240201...], ["contentId": 11, "dateTime": 20240201...], ["contentId": 12, "dateTime": 20240201...]].
+        }
+
+        각 content 리스트들을 순회하며 tmpDto 에 해당 정보를 담고, dateTime 을 format 하여 해당 dateTime 을 키값으로 info 에 저장
+         */
+
+        if (!adjustmentGameHistories.isEmpty()) {
+            for (AdjustmentGameHistory adjustmentGameHistory : adjustmentGameHistories) {
+                List<String> adjustmentImageList = new ArrayList<>();
+                if (!adjustmentGameHistory.getImages().isEmpty()) {
+                    for (AdjustmentImage image : adjustmentGameHistory.getImages()) {
+                        imageRoute = "/" + roomHistory.getId() + "/adjustment/" + image.getId().toString() + ".jpg";
+                        adjustmentImageList.add(imageRoute);
+                    }
+                }
+                RoomDetailDto roomDetailDto = RoomDetailDto.builder()
+                        .contentId(adjustmentGameHistory.getId())
+                        .historyCategory("adjustment")
+                        .dateTime(adjustmentGameHistory.getDateTime())
+                        .detail(adjustmentGameHistory.getDetail())
+                        .images(adjustmentImageList)
+                        .moneyResult(adjustmentGameHistory.getMoneyResult())
+                        .build();
+//                String date = roomDetailDto.getDateTime().substring(0, 10);
+//                String date = String.join("",roomDetailDto.getDateTime().substring(0, 10).split("-").toString());
+//                if (info.get(date).isEmpty()) {
+//                    List<RoomDetailDto> innerList = new ArrayList<>();
+//                    innerList.add(roomDetailDto);
+//                    info.put(date, innerList);
+//                } else {
+//                    List<RoomDetailDto> innerList = info.get(date);
+//                    innerList.add(roomDetailDto);
+//                    info.put(date, innerList);
+//                }
+                info.add(roomDetailDto);
+            }
+        }
+
+        if (!attractionGameHistories.isEmpty()) {
+            for (AttractionGameHistory attractionGameHistory : attractionGameHistories) {
+                List<String> attractionImageList = new ArrayList<>();
+                if (!attractionGameHistory.getImages().isEmpty()) {
+                    for (AttractionImage image : attractionGameHistory.getImages()) {
+                        imageRoute = "/" + roomHistory.getId() + "/attraction/" + image.getId().toString() + ".jpg";
+                        attractionImageList.add(imageRoute);
+                    }
+                }
+                RoomDetailDto roomDetailDto = RoomDetailDto.builder()
+                        .contentId(attractionGameHistory.getId())
+                        .historyCategory("attraction")
+                        .dateTime(attractionGameHistory.getDateTime())
+                        .detail(attractionGameHistory.getAttractionList().getCity())
+                        .images(attractionImageList)
+//                        .moneyResult(attractionGameHistory.getMoneyResult())
+                        .build();
+//                String date = roomDetailDto.getDateTime().substring(0, 10);
+//                if (info.get(date).isEmpty()) {
+//                    List<RoomDetailDto> innerList = new ArrayList<>();
+//                    innerList.add(roomDetailDto);
+//                    info.put(date, innerList);
+//                } else {
+//                    List<RoomDetailDto> innerList = info.get(date);
+//                    innerList.add(roomDetailDto);
+//                    info.put(date, innerList);
+//                }
+                info.add(roomDetailDto);
+            }
+        }
+        if (!foodGameHistories.isEmpty()) {
+            for (FoodGameHistory foodGameHistory : foodGameHistories) {
+                List<String> foodGameImageList = new ArrayList<>();
+                if (!foodGameHistory.getImages().isEmpty()) {
+                    for (FoodImage image : foodGameHistory.getImages()) {
+                        imageRoute = "/" + roomHistory.getId() + "/food/" + image.getId().toString() + ".jpg";
+                        foodGameImageList.add(imageRoute);
+                    }
+                }
+                RoomDetailDto roomDetailDto = RoomDetailDto.builder()
+                        .contentId(foodGameHistory.getId())
+                        .historyCategory("food")
+                        .dateTime(foodGameHistory.getDateTime())
+                        .detail(foodGameHistory.getFoodName())
+                        .images(foodGameImageList)
+//                        .moneyResult(foodGameHistory)
+                        .build();
+//                String date = roomDetailDto.getDateTime().substring(0, 10);
+//                if (info.get(date).isEmpty()) {
+//                    List<RoomDetailDto> innerList = new ArrayList<>();
+//                    innerList.add(roomDetailDto);
+//                    info.put(date, innerList);
+//                } else {
+//                    List<RoomDetailDto> innerList = info.get(date);
+//                    innerList.add(roomDetailDto);
+//                    info.put(date, innerList);
+//                }
+                info.add(roomDetailDto);
+            }
+        }
+        if (!info.isEmpty()) {
+            Collections.sort(info, (o1, o2) -> o2.getDateTime().compareTo(o1.getDateTime()));
+        }
+
+//        List<List<?>> tmp = new ArrayList<>();
+//        for ()
+        return info;
+
+    }
+
 
 
 
