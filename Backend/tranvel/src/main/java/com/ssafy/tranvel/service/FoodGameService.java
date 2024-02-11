@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.service;
 
+import com.ssafy.tranvel.dto.AttractionResponseDto;
 import com.ssafy.tranvel.dto.StompDto;
 import com.ssafy.tranvel.dto.StompFoodGameDto;
 import com.ssafy.tranvel.entity.*;
@@ -137,14 +138,59 @@ public class FoodGameService {
     }
 
     // 모든 음식 게임 기록
-    public List<FoodGameHistory> getAllFoodGameHistories(Long roomId) {
+    public List<FoodResponseDto> getAllFoodGameHistories(Long roomId) {
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
+        List<FoodGameHistory> foodGameHistoryList = roomHistory.getFoodGameHistories();
+        List<FoodResponseDto> info = new ArrayList<>();
 
-        return roomHistory.getFoodGameHistories();
+        String imageRoute;
+
+        for (FoodGameHistory foodGameHistory : foodGameHistoryList) {
+            List<String> foodImageList = new ArrayList<>();
+            if (!foodGameHistory.getImages().isEmpty()) {
+                for (FoodImage image : foodGameHistory.getImages()) {
+                    imageRoute = "/" + roomHistory.getId() + "/food/" + image.getId().toString() + ".jpg";
+                    foodImageList.add(imageRoute);
+                }
+            }
+            FoodResponseDto foodResponseDto = FoodResponseDto.builder()
+                    .id(foodGameHistory.getId())
+                    .dateTime(foodGameHistory.getDateTime())
+                    .selectedUsers(foodGameHistory.getSelectedUsers())
+                    .unselectedUsers(foodGameHistory.getUnselectedUsers())
+                    .foodCandidates(foodGameHistory.getFoodCandidates())
+                    .foodName(foodGameHistory.getFoodName())
+                    .images(foodImageList)
+                    .build();
+            info.add(foodResponseDto);
+        }
+        return info;
     }
 
     // 한 음식 게임 기록
-    public FoodGameHistory getFoodGameHistory(Long contentId) {
-        return foodGameHistoryRepository.findById(contentId).get();
+    public FoodResponseDto getFoodGameHistory(Long contentId) {
+        FoodGameHistory foodGameHistory = foodGameHistoryRepository.findById(contentId).get();
+        RoomHistory roomHistory = roomHistoryRepository.findById(foodGameHistory.getRoomHistory().getId()).get();
+
+        String imageRoute;
+
+        List<String> foodImageList = new ArrayList<>();
+        if (!foodGameHistory.getImages().isEmpty()) {
+            for (FoodImage image : foodGameHistory.getImages()) {
+                imageRoute = "/" + roomHistory.getId() + "/food/" + image.getId().toString() + ".jpg";
+                foodImageList.add(imageRoute);
+            }
+        }
+
+        FoodResponseDto info = FoodResponseDto.builder()
+                .id(foodGameHistory.getId())
+                .dateTime(foodGameHistory.getDateTime())
+                .selectedUsers(foodGameHistory.getSelectedUsers())
+                .unselectedUsers(foodGameHistory.getUnselectedUsers())
+                .foodCandidates(foodGameHistory.getFoodCandidates())
+                .foodName(foodGameHistory.getFoodName())
+                .images(foodImageList)
+                .build();
+        return info;
     }
 }

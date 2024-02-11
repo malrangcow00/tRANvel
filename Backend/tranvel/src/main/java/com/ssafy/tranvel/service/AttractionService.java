@@ -2,9 +2,7 @@ package com.ssafy.tranvel.service;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.tranvel.dto.AttractionBaseDto;
-import com.ssafy.tranvel.dto.AttractionGameRecordDto;
-import com.ssafy.tranvel.dto.ImagePostDto;
+import com.ssafy.tranvel.dto.*;
 import com.ssafy.tranvel.entity.*;
 import com.ssafy.tranvel.repository.*;
 import com.ssafy.tranvel.utility.DistanceCalculator;
@@ -199,15 +197,61 @@ public class AttractionService {
     }
 
     // 모든 관광지게임 기록 열람
-    public List<AttractionGameHistory> getAllAttractionGameHistories(Long roomId) {
+    public List<AttractionResponseDto> getAllAttractionGameHistories(Long roomId) {
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
+        List<AttractionGameHistory> attractionGameHistoryList = roomHistory.getAttractionGameHistories();
+        List<AttractionResponseDto> info = new ArrayList<>();
 
-        return roomHistory.getAttractionGameHistories();
+        String imageRoute;
+
+        for (AttractionGameHistory attractionGameHistory : attractionGameHistoryList) {
+            List<String> attractionImageList = new ArrayList<>();
+            if (!attractionGameHistory.getImages().isEmpty()) {
+                for (AttractionImage image : attractionGameHistory.getImages()) {
+                    imageRoute = "/" + roomHistory.getId() + "/attraction/" + image.getId().toString() + ".jpg";
+                    attractionImageList.add(imageRoute);
+                }
+            }
+            AttractionResponseDto attractionResponseDto = AttractionResponseDto.builder()
+                    .id(attractionGameHistory.getId())
+                    .dateTime(attractionGameHistory.getDateTime())
+                    .nickName(attractionGameHistory.getNickName())
+                    .attractionList(attractionGameHistory.getAttractionList())
+                    .images(attractionImageList)
+                    .build();
+            info.add(attractionResponseDto);
+        }
+
+
+        return info;
     }
 
     // 한 관광지게임 기록 열람
-    public AttractionGameHistory getAttractionGameHistory(Long contentId) {
-        return attractionGameRepository.findById(contentId).get();
+    public AttractionResponseDto getAttractionGameHistory(Long contentId) {
+        AttractionGameHistory attractionGameHistory = attractionGameRepository.findById(contentId).get();
+        RoomHistory roomHistory = roomHistoryRepository.findById(attractionGameHistory.getRoomHistory().getId()).get();
+
+//        AttractionResponseDto info =
+
+        String imageRoute;
+
+        List<String> attractionImageList = new ArrayList<>();
+        if (!attractionGameHistory.getImages().isEmpty()) {
+            for (AttractionImage image : attractionGameHistory.getImages()) {
+                imageRoute = "/" + roomHistory.getId() + "/attraction/" + image.getId().toString() + ".jpg";
+                attractionImageList.add(imageRoute);
+            }
+        }
+
+        AttractionResponseDto info = AttractionResponseDto.builder()
+                .id(attractionGameHistory.getId())
+                .dateTime(attractionGameHistory.getDateTime())
+                .nickName(attractionGameHistory.getNickName())
+                .attractionList(attractionGameHistory.getAttractionList())
+                .images(attractionImageList)
+                .build();
+
+        return info;
     }
 
     public void deleteAttractionGameHistory(Long contentId) {

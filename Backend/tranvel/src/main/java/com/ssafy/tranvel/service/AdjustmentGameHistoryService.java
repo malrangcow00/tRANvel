@@ -151,8 +151,30 @@ public class AdjustmentGameHistoryService {
     }
 
     // 한 정산 게임 기록 열람
-    public AdjustmentGameHistory getAdjustmentHistory(Long contentId) {
+    public AdjustmentResponseDto getAdjustmentHistory(Long contentId) {
+        AdjustmentGameHistory adjustmentGameHistory = adjustmentGameHistoryRepository.findById(contentId).get();
+        RoomHistory roomHistory = roomHistoryRepository.findById(adjustmentGameHistory.getRoomHistory().getId()).get();
+        String imageRoute;
+
+        List<String> adjustmentImageList = new ArrayList<>();
+        if (!adjustmentGameHistory.getImages().isEmpty()) {
+            for (AdjustmentImage image : adjustmentGameHistory.getImages()) {
+                imageRoute = "/" + roomHistory.getId() + "/adjustment/" + image.getId().toString() + ".jpg";
+                adjustmentImageList.add(imageRoute);
+            }
+        }
+        AdjustmentResponseDto adjustmentResponseDto = AdjustmentResponseDto.builder()
+                .id(adjustmentGameHistory.getId())
+                .dateTime(adjustmentGameHistory.getDateTime())
+                .price(adjustmentGameHistory.getPrice())
+                .moneyResult(adjustmentGameHistory.getMoneyResult())
+                .selectedUsers(adjustmentGameHistory.getSelectedUsers())
+                .images(adjustmentImageList)
+                .category(adjustmentGameHistory.getCategory())
+                .location(adjustmentGameHistory.getLocation())
+                .build();
+
         System.out.println("AdjustmentGameHistoryService.getAdjustmentHistory");
-        return adjustmentGameHistoryRepository.findById(contentId).get();
+        return adjustmentResponseDto;
     }
 }
