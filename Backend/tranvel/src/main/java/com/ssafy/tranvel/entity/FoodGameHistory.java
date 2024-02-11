@@ -34,12 +34,19 @@ public class FoodGameHistory {
 
     @ElementCollection
     @Nullable
-    private List<Long> selectedUsers = new ArrayList<>();
+    private List<submitUserInfo> selectedUserInfos = new ArrayList<>(); // 선택 인원은 userid와 제출음식을 묶어 저장
+
+    @Embeddable
+    @Getter
+    @Setter
+    public static class submitUserInfo {
+        private Long userId;
+        private String submittedFood;
+    }
 
     @ElementCollection
     @Nullable
-    private List<Long> unselectedUsers = new ArrayList<>();  // UserId X , JoinUserId O.
-    // UserId,Nickname 등 뽑고 싶다면 AdjustmentGameHistoryService.getJoinUsers 참조
+    private List<Long> unSelectedUserIds = new ArrayList<>(); // 미선택 인원은 userid만
 
     @ElementCollection
     @Nullable

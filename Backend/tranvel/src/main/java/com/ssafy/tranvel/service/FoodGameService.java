@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -50,7 +51,7 @@ public class FoodGameService {
 
         FoodGameHistory foodGameHistory = FoodGameHistory.builder()
                 .roomHistory(roomHistory)
-                .unselectedUsers(joinUserUserIds) // 방 인원(JoinUser)들의 UserId
+                .unSelectedUserIds(joinUserUserIds) // 방 인원(JoinUser)들의 UserId
                 .dateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")).toString())
                 .build();
         foodGameHistoryRepository.save(foodGameHistory);
@@ -68,47 +69,54 @@ public class FoodGameService {
     public StompFoodGameDto receiveFood(StompDto message) {
         // 제출된 음식메뉴를 리스트에 더하고, 선택/미선택 인원 리스트를 갱신합니다.
         Long foodGameHistoryId = getRecentFoodGameId(Long.parseLong(message.getRoomId()));
-//        Long joinUserId = findJoinUserId(Long.parseLong(message.getRoomId()), Long.parseLong(message.getSender_id()));
-        Long Userid = Long.parseLong(message.getSender_id());
-        String submittedFood = message.getMessage();
 
         FoodGameHistory foodGameHistory = foodGameHistoryRepository.findById(foodGameHistoryId).get();
-        List<String> foodCandidates = foodGameHistory.getFoodCandidates();
-        List<Long> selectedUsers = foodGameHistory.getSelectedUsers();
-        List<Long> unSelectedUsers = foodGameHistory.getUnselectedUsers();
-        System.out.println();
+        List<FoodGameHistory.submitUserInfo> selectedUserInfos = foodGameHistory.getSelectedUserInfos();
+        List<Long> unSelectedUserIds = foodGameHistory.getUnSelectedUserIds();
 
-        foodCandidates.add(submittedFood);
-        selectedUsers.add(Userid);
-        unSelectedUsers.remove(Userid);
+        FoodGameHistory.submitUserInfo submitUserInfo = new FoodGameHistory.submitUserInfo();
+        Long Userid = Long.parseLong(message.getSender_id());
+        submitUserInfo.setUserId(Userid); // userid
+        submitUserInfo.setSubmittedFood(message.getMessage()); // 제출된 음식
 
-        foodGameHistory.setFoodCandidates(foodCandidates);
-        foodGameHistory.setSelectedUsers(selectedUsers);
-        foodGameHistory.setUnselectedUsers(unSelectedUsers);
+        selectedUserInfos.add(submitUserInfo); // 을 묶어 저장
+        unSelectedUserIds.remove(Userid); // 미선택은 userid만
 
-        foodGameHistoryRepository.save(foodGameHistory);
+        foodGameHistory.setSelectedUserInfos(selectedUserInfos);
+        foodGameHistory.setUnSelectedUserIds(unSelectedUserIds);
 
-        // 선택/미선택 인원의 프로필 사진으로 반환합니다.
-        List<String> responseSelectedProfileImages = new ArrayList<>();
-        List<String> responseUnSelectedProfileImages = new ArrayList<>();
+        foodGameHistoryRepository.save(foodGameHistory); // 여기까지가 제출에 따른 db 정보 갱신
 
-        for (Long selectedUserId : selectedUsers) {
-            User user = userRepository.findById(selectedUserId).get();
-            String selectedUserProfileImages = user.getProfileImage();
-            responseSelectedProfileImages.add(selectedUserProfileImages);
+        // 선택 인원은 각각 [닉네임, 프로필이미지, 제출 음식]로 반환.
+        // 미선택 인원은 각각 [닉네임, 프로필이미지]로 반환.
+        List<List<String>> responseSelectedUserInfos = new ArrayList<>();
+        List<List<String>> responseUnSelectedUserInfos = new ArrayList<>();
+
+        for (FoodGameHistory.submitUserInfo selectedUserInfo : selectedUserInfos) {
+            List<String> responseSelectedUserInfo = new ArrayList<>();
+
+            User user = userRepository.findById(selectedUserInfo.getUserId()).get();
+            responseSelectedUserInfo.add(user.getNickName()); // nickname
+            responseSelectedUserInfo.add(user.getProfileImage()); // profileImage
+            responseSelectedUserInfo.add(selectedUserInfo.getSubmittedFood()); // 제출음식
+
+            responseSelectedUserInfos.add(responseSelectedUserInfo);
         }
-        for (Long unSelectedUserId : unSelectedUsers) {
+        for (Long unSelectedUserId : unSelectedUserIds) {
+            List<String> responseUnSelectedUserInfo = new ArrayList<>();
+
             User user = userRepository.findById(unSelectedUserId).get();
-            String unSelectedUserProfileImages = user.getProfileImage();
-            responseUnSelectedProfileImages.add(unSelectedUserProfileImages);
+            responseUnSelectedUserInfo.add(user.getNickName()); // nickname
+            responseUnSelectedUserInfo.add(user.getProfileImage()); // profileImage
+
+            responseUnSelectedUserInfos.add(responseUnSelectedUserInfo);
         }
 
         StompFoodGameDto response = StompFoodGameDto.builder()
                 .sender_id(message.getSender_id())
                 .roomId(message.getRoomId())
-                .selectedUserProfileImages(responseSelectedProfileImages)
-                .unSelectedUserProfileImages(responseUnSelectedProfileImages)
-                .foodCandidates(foodCandidates)
+                .selectedUserInfos(responseSelectedUserInfos)
+                .unSelectedUserInfos(responseUnSelectedUserInfos)
                 .build();
         return response;
     }
@@ -157,8 +165,8 @@ public class FoodGameService {
             FoodResponseDto foodResponseDto = FoodResponseDto.builder()
                     .id(foodGameHistory.getId())
                     .dateTime(foodGameHistory.getDateTime())
-                    .selectedUsers(foodGameHistory.getSelectedUsers())
-                    .unselectedUsers(foodGameHistory.getUnselectedUsers())
+                    .selectedUsers(foodGameHistory.getSelectedUserInfos())
+                    .unselectedUsers(foodGameHistory.getUnSelectedUserIds())
                     .foodCandidates(foodGameHistory.getFoodCandidates())
                     .foodName(foodGameHistory.getFoodName())
                     .images(foodImageList)
@@ -186,8 +194,8 @@ public class FoodGameService {
         FoodResponseDto info = FoodResponseDto.builder()
                 .id(foodGameHistory.getId())
                 .dateTime(foodGameHistory.getDateTime())
-                .selectedUsers(foodGameHistory.getSelectedUsers())
-                .unselectedUsers(foodGameHistory.getUnselectedUsers())
+                .selectedUsers(foodGameHistory.getSelectedUserInfos())
+                .unselectedUsers(foodGameHistory.getUnSelectedUserIds())
                 .foodCandidates(foodGameHistory.getFoodCandidates())
                 .foodName(foodGameHistory.getFoodName())
                 .images(foodImageList)

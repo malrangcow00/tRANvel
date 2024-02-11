@@ -128,7 +128,7 @@ public class StompController {
     public void foodGameReady(StompDto message) {
         // 닉네임, 방, 메뉴 접수
         StompFoodGameDto response = foodGameService.receiveFood(message);
-        // 참여자 닉네임 리스트, 불참자 프로필 이미지값 리스트, 지금까지 제출된 음식메뉴 리스트 발송
+        // 선택 인원은 각각 [닉네임, 프로필이미지, 제출 음식], 미선택 인원은 각각 [닉네임, 프로필이미지]로 반환.
         sendingOperations.convertAndSend("/topic/tranvel/foodgameready/" + message.getRoomId(), response);
     }
 

@@ -1,6 +1,7 @@
 package com.ssafy.tranvel.service;
 
 
+import com.ssafy.tranvel.entity.FoodGameHistory;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,7 +15,7 @@ public class FoodResponseDto {
 
     private String dateTime;
 
-    private List<Long> selectedUsers;
+    private List<FoodGameHistory.submitUserInfo> selectedUsers;
 
     private List<Long> unselectedUsers;
 
