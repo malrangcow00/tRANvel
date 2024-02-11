@@ -106,8 +106,15 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
             User user = userOptional.get();
+            UserProfileDto userProfileDto = UserProfileDto.builder()
+                    .id(user.getId())
+                    .email(userId)
+                    .nickName(user.getNickName())
+                    .profileImage(user.getProfileImage())
+                    .balance(user.getBalance())
+                    .build();
             // 필요한 사용자 정보만 ResponseDto에 포함하여 반환
-            response = new ResponseDto(true, "사용자 정보 조회 성공", user);
+            response = new ResponseDto(true, "사용자 정보 조회 성공", userProfileDto);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             response = new ResponseDto(false, "오류 발생: " + e.getMessage(), null);
