@@ -32,6 +32,7 @@ public class FoodGameService {
     private final JoinUserRepository joinUserRepository;
     private StompFoodGameDto stompFoodGameDto;
 
+    @Transactional
     public Long startFoodGame(Long roomId) {
         System.out.println("FoodGameService.startFoodGame");
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
