@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.ssafy.tranvel.data.model.dto.HistoryDto
 import com.ssafy.tranvel.presentation.screen.announcement.navigation.navigateAnnouncement
 import com.ssafy.tranvel.presentation.screen.history.navigation.navigateHistory
@@ -22,8 +23,8 @@ fun NavController.navigateHome(
 fun NavGraphBuilder.homeScreen(navController: NavController) {
     composable(homeRoute) {
         HomeScreen(
-            navController,
             hiltViewModel(),
+            navController,
             hiltViewModel(),
             { navController.navigate("userInfoModify_route") },
             { navController.navigateAnnouncement() },

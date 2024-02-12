@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class HistoryDto(
     val roomid: Long,
-    val roomName : String,
+    val roomName : String?,
     val startDate : String,
     val endDate : String?,
     val images: List<String>?,

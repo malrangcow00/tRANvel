@@ -19,26 +19,32 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavController
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.tranvel.R
 import com.ssafy.tranvel.data.model.dto.HistoryDto
-import com.ssafy.tranvel.presentation.screen.announcement.component.rememberFlowWithLifecycle
 import com.ssafy.tranvel.presentation.screen.components.EmptyIndicator
 import com.ssafy.tranvel.presentation.screen.components.LoadingIndicator
+import com.ssafy.tranvel.presentation.screen.history.DetailHistoryRecordViewModel
+import com.ssafy.tranvel.presentation.screen.history.DetailHistoryViewModel
 import com.ssafy.tranvel.presentation.screen.history.HistoryViewModel
 import com.ssafy.tranvel.presentation.ui.theme.bmjua
 import kotlinx.coroutines.flow.Flow
@@ -78,7 +84,6 @@ fun HomeHistoryBody(
                 .width(1.dp)
         )
     }
-
     Content(
         historyViewModel,
         viewState.isLoading,
@@ -102,7 +107,6 @@ private fun Content(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 15.dp)
     ) {
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -123,8 +127,9 @@ private fun Content(
                 Log.d(TAG, "Cnt: ${historyViewModel.cnt}")
                 items(count = historyViewModel.cnt) { index ->
                     HomeHistoryCard(
+                        index,
                         historyViewModel,
-                        dto = pagingItems!![index],
+                        pagingItems!![index],
                         navController
                     )
                     Spacer(modifier = Modifier.height(20.dp))
@@ -157,4 +162,16 @@ private fun Content(
             }
         }
     }
+}
+
+@Composable
+private fun <T> rememberFlowWithLifecycle(
+    flow: Flow<T>,
+    lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
+    minActiveState: Lifecycle.State = Lifecycle.State.STARTED
+): Flow<T> = remember(flow, lifecycle) {
+    flow.flowWithLifecycle(
+        lifecycle = lifecycle,
+        minActiveState = minActiveState
+    )
 }

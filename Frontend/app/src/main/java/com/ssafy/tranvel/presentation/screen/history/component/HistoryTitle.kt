@@ -37,7 +37,7 @@ fun HistoryTitle(
             modifier = Modifier.height(50.dp)
         ) {
             Text(
-                text = dto?.roomName.orEmpty(),
+                text = if(dto?.roomName == null) "방 이름 없음" else dto.roomName,
                 fontSize = 20.sp,
             )
             HistoryIndicator()

@@ -113,7 +113,7 @@ private fun Content(
 }
 
 @Composable
-fun <T> rememberFlowWithLifecycle(
+private fun <T> rememberFlowWithLifecycle(
     flow: Flow<T>,
     lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED

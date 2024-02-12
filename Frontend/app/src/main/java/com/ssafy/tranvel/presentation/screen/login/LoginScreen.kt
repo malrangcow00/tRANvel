@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Mail
@@ -37,12 +36,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogWindowProvider
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -86,7 +87,6 @@ fun LoginScreen(
             // 로딩 화면 재생
             Log.d("MYTAG", "LoginScreen: loading")
             LoadingDialog {
-
             }
         }
     }
@@ -234,11 +234,12 @@ fun LoadingDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit
 ) {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.emptyanimation))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loadinganimation))
     val progress by animateLottieCompositionAsState(
         composition, true, iterations = LottieConstants.IterateForever, restartOnPlay = false
     )
-    Dialog(onDismissRequest = { onDismissRequest() }) {
+    Dialog(
+        onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -250,6 +251,7 @@ fun LoadingDialog(
                 composition = composition,
                 progress = { progress },
                 modifier = modifier.fillMaxSize()
+                    .background(color = Color(0xFFFFFFFF))
             )
         }
     }

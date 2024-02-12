@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.tranvel.BuildConfig
-import com.ssafy.tranvel.data.local.PreferenceDataSource
 import com.ssafy.tranvel.data.model.dto.Room
 import com.ssafy.tranvel.data.utils.DataState
 import com.ssafy.tranvel.domain.repository.TokenRepository
@@ -14,11 +13,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
 import org.json.JSONObject
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.dto.LifecycleEvent
-import ua.naiksoftware.stomp.dto.StompHeader
 import javax.inject.Inject
 
 @HiltViewModel

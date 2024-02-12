@@ -4,6 +4,6 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class HistoryRequest (
-    val userId : Long,
-):Parcelable
+data class DetailHistoryRequest(
+    val roomId : Long
+) : Parcelable

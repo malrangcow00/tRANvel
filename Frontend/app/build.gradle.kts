@@ -26,6 +26,7 @@ android {
         buildConfigField("String", "API_KEY",getApiKey("API_KEY"))
         buildConfigField("String", "WEBSOCKET_URL",getApiKey("WEBSOCKET_URL"))
         resValue("string","NAVER_API_KEY",getApiKey("NAVER_API_KEY"))
+        buildConfigField("String", "S3_ADDRESS",getApiKey("S3_ADDRESS"))
     }
 
     buildTypes {

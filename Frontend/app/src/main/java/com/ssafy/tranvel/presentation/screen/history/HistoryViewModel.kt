@@ -19,7 +19,8 @@ class HistoryViewModel @Inject constructor(
     private val getHistoryUseCase: GetHistoryUseCase
 ) : ViewModel() {
     private val config = PagingConfig(pageSize = 10)
-    var cnt = 0;
+    var cnt = 0
+    var userId : Long = -1
 
     fun createInitialState() = HistoryViewState()
     private val initialState:HistoryViewState by lazy{createInitialState()}
@@ -39,7 +40,7 @@ class HistoryViewModel @Inject constructor(
         viewModelScope.launch {
             setState { currentState.copy(isLoading = true) }
 
-            val params = GetHistoryUseCase.Params(config)
+            val params = GetHistoryUseCase.Params(config,userId)
             val pagedFlow = getHistoryUseCase(params).cachedIn(scope = viewModelScope)
             delay(2000)
             setState { currentState.copy(isLoading = false, pagedData = pagedFlow) }

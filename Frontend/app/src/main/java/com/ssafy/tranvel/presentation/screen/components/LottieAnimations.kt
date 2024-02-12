@@ -52,19 +52,19 @@ fun HistoryIndicator() {
     LottieAnimation(
         composition = composition,
         progress = { progress },
-        modifier = Modifier.fillMaxWidth(0.2f).fillMaxHeight(0.5f)
+        modifier = Modifier.fillMaxWidth(0.25f).fillMaxHeight(0.55f)
     )
 }
 
 @Composable
 fun ResultLoadingIndicator(){
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.historyanimation))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.fillinganimation))
     val progress by animateLottieCompositionAsState(
         composition, true, iterations = LottieConstants.IterateForever, restartOnPlay = false
     )
     LottieAnimation(
         composition = composition,
         progress = { progress },
-        modifier = Modifier.fillMaxWidth(0.2f).fillMaxHeight(0.5f)
+        modifier = Modifier.fillMaxSize()
     )
 }

@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.tranvel.data.model.dto.HistoryDto
+import com.ssafy.tranvel.presentation.screen.history.DetailHistoryRecordViewModel
+import com.ssafy.tranvel.presentation.screen.history.DetailHistoryViewModel
 import com.ssafy.tranvel.presentation.screen.history.HistoryViewModel
 import com.ssafy.tranvel.presentation.screen.home.component.HomeBody
 import com.ssafy.tranvel.presentation.screen.home.component.HomeHeader
@@ -28,11 +30,10 @@ fun HomeScreen(
     onSettingClicked: () -> Unit,
     onAnnouncementClicked: () -> Unit,
     onWithdrawalClicked: () -> Unit,
-    onEnterButtonClicked: () -> Unit,
+    onEnterButtonClicked: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val navController = rememberNavController()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
