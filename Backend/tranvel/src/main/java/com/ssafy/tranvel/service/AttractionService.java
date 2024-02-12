@@ -184,6 +184,7 @@ public class AttractionService {
 //    }
 
     // 여행지게임 기록
+    @Transactional
     public void saveAttractionGame(Long roomId, Long attractionListId) {
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
         AttractionList attractionList = attractionListRepository.findById(attractionListId).get();
@@ -201,6 +202,7 @@ public class AttractionService {
     }
 
     // 모든 관광지게임 기록 열람
+    @Transactional
     public List<AttractionResponseDto> getAllAttractionGameHistories(Long roomId) {
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
         List<AttractionGameHistory> attractionGameHistoryList = roomHistory.getAttractionGameHistories();
@@ -231,6 +233,7 @@ public class AttractionService {
     }
 
     // 한 관광지게임 기록 열람
+    @Transactional
     public AttractionResponseDto getAttractionGameHistory(Long contentId) {
         AttractionGameHistory attractionGameHistory = attractionGameRepository.findById(contentId).get();
         RoomHistory roomHistory = roomHistoryRepository.findById(attractionGameHistory.getRoomHistory().getId()).get();
@@ -258,6 +261,7 @@ public class AttractionService {
         return info;
     }
 
+    @Transactional
     public void deleteAttractionGameHistory(Long contentId) {
         AttractionGameHistory attractionGameHistory = attractionGameRepository.findById(contentId).get();
         attractionGameRepository.delete(attractionGameHistory);
