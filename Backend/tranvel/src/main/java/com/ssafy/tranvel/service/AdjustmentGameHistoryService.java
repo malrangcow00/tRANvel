@@ -38,7 +38,7 @@ public class AdjustmentGameHistoryService {
     private final RandomGameRepository randomGameRepository;
     private final ImageUploadService imageUploadService;
 
-//    방 아이디를 받아서 이 방에 참가중인 유저들의{JoinUserId, Nickname, ProfileImage} 리스트를 반환(선택할 리스트 제공)
+//    방 아이디를 받아서 이 방에 참가중인 유저들의[JoinUserId, Nickname, ProfileImage] 리스트를 반환(선택할 리스트 제공)
 //    JoinUserId : JoinUser의 id O / userId(User 상 Id) X
     public List<JoinUserInfoDto> getJoinUsers(Long roomId) {
         System.out.println("AdjustmentGameHistoryService.getJoinUsers");
@@ -76,7 +76,7 @@ public class AdjustmentGameHistoryService {
         for (Long selectedUser:selectedUsers) {
 
             JoinUser joinUser = joinUserRepository.findById(selectedUser).get();
-            joinUser.setProfit(joinUser.getProfit() - moneyResult);
+            joinUser.setProfit(joinUser.getProfit() + moneyResult);  // User 에서 moneyResult 반영
             joinUserRepository.save(joinUser);
 
             Optional<User> userOptional = userRepository.findById(joinUser.getUserId());
@@ -85,7 +85,7 @@ public class AdjustmentGameHistoryService {
             }
 
             User user = userOptional.get();
-            user.setBalance(user.getBalance() - moneyResult);
+            user.setBalance(user.getBalance() + moneyResult);
             userRepository.save(user); // User 에서 moneyResult 반영
         }
 
