@@ -127,6 +127,7 @@ public class AttractionService {
         return user.getNickName();
     }
 
+    @Transactional
     public List<AttractionList> getAttractionsIn30Km(double latitude, double longitude) {
         List<AttractionList> allAttractions = attractionRepository.findAll();
 
@@ -140,6 +141,7 @@ public class AttractionService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public AttractionList getAttractionIn30KmRandomly(double latitude, double longitude) {
         List<AttractionList> attractionsIn30Km = getAttractionsIn30Km(latitude, longitude);
 

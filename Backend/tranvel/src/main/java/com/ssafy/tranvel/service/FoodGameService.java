@@ -58,6 +58,7 @@ public class FoodGameService {
     }
 
     // 바로 recentFoodGameHistory로 보내도 될 것 같은데,
+    @Transactional
     public Long getRecentFoodGameId(Long roomId) {
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
         FoodGameHistory recentFoodGameHistory = foodGameHistoryRepository.findFirstByRoomHistoryOrderByIdDesc(roomHistory).get();
@@ -121,6 +122,7 @@ public class FoodGameService {
     }
 
     // userId로 roomId에 해당하는 방의 joinUserId 찾기
+    @Transactional
     public Long findJoinUserId(Long roomId, Long userId) {
         System.out.println("FoodGameService.findJoinUserId");
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
@@ -145,6 +147,7 @@ public class FoodGameService {
         foodGameHistoryRepository.save(foodGameHistory);
     }
 
+    @Transactional
     // 모든 음식 게임 기록
     public List<FoodResponseDto> getAllFoodGameHistories(Long roomId) {
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
@@ -176,6 +179,7 @@ public class FoodGameService {
     }
 
     // 한 음식 게임 기록
+    @Transactional
     public FoodResponseDto getFoodGameHistory(Long contentId) {
         FoodGameHistory foodGameHistory = foodGameHistoryRepository.findById(contentId).get();
         RoomHistory roomHistory = roomHistoryRepository.findById(foodGameHistory.getRoomHistory().getId()).get();

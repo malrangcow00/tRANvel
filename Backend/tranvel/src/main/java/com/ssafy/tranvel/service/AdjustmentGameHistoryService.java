@@ -40,6 +40,7 @@ public class AdjustmentGameHistoryService {
 
 //    방 아이디를 받아서 이 방에 참가중인 유저들의[JoinUserId, Nickname, ProfileImage] 리스트를 반환(선택할 리스트 제공)
 //    JoinUserId : JoinUser의 id O / userId(User 상 Id) X
+    @Transactional
     public List<JoinUserInfoDto> getJoinUsers(Long roomId) {
         System.out.println("AdjustmentGameHistoryService.getJoinUsers");
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
@@ -118,6 +119,7 @@ public class AdjustmentGameHistoryService {
     }
 
     // 모든 정산 게임 기록 열람
+    @Transactional
     public List<AdjustmentResponseDto> getAllAdjustmentHistories(Long roomId) {
         System.out.println("AdjustmentGameHistoryService.getAllAdjustmentHistories");
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
@@ -151,6 +153,7 @@ public class AdjustmentGameHistoryService {
     }
 
     // 한 정산 게임 기록 열람
+    @Transactional
     public AdjustmentResponseDto getAdjustmentHistory(Long contentId) {
         AdjustmentGameHistory adjustmentGameHistory = adjustmentGameHistoryRepository.findById(contentId).get();
         RoomHistory roomHistory = roomHistoryRepository.findById(adjustmentGameHistory.getRoomHistory().getId()).get();
