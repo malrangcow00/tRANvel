@@ -6,6 +6,7 @@ import com.ssafy.tranvel.dto.*;
 import com.ssafy.tranvel.entity.*;
 import com.ssafy.tranvel.repository.*;
 import com.ssafy.tranvel.utility.DistanceCalculator;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -101,6 +102,7 @@ public class AttractionService {
     }
 
     // 'roomId' 받아서, 방의 인원 중 한명을 게임 플레이어로 선정해서 '닉네임 반환'
+    @Transactional
     public String getAttractionGamePlayer(Long roomId) {
         System.out.println("AttractionService.getAttractionGamePlayer");
         RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
