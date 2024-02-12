@@ -80,7 +80,7 @@ public class StompController {
             attractionGamePlayerNickname = "이름없음 ";
         }
 
-        message.setMessage("여행지를 뽑을 사람은 " + attractionGamePlayerNickname + "님 입니다.");
+        message.setMessage(attractionGamePlayerNickname);
         System.out.println("Stomp Send : attractionGamePlayerNickname = " + attractionGamePlayerNickname);
 
         sendingOperations.convertAndSend("/topic/tranvel/getplayer/" + message.getRoomId(), message);
@@ -105,6 +105,7 @@ public class StompController {
 
         // 결과 저장
         attractionService.saveAttractionGame(Long.parseLong(message.getRoomId()), attractionsIn30Km.getId());
+        System.out.println("stompAttractionResponseDto.getName = " + stompAttractionResponseDto.getName());
 
         sendingOperations.convertAndSend("/topic/tranvel/attractionrandom/" + message.getRoomId(), stompAttractionResponseDto);
     }
