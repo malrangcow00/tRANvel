@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -384,8 +385,9 @@ public class RoomHistoryService {
     // 히스토리 수정은 후순위
 
 
-
+    @Transactional
     public void finishRoomHistory(Long roomId) {
+        System.out.println("RoomHistoryService.finishRoomHistory");
         roomHistoryRepository.findById(roomId).get().finishRoom();
     }
 
