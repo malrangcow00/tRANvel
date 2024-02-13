@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,39 +26,64 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavController
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.tranvel.BuildConfig
 import com.ssafy.tranvel.data.model.dto.DetailHistoryDto
+import com.ssafy.tranvel.data.model.dto.DetailHistoryRecordDto
 import com.ssafy.tranvel.data.model.dto.HistoryDto
 import com.ssafy.tranvel.presentation.screen.announcement.AnnouncementDetailScreen
 import com.ssafy.tranvel.presentation.screen.history.DetailHistoryRecordViewModel
 import com.ssafy.tranvel.presentation.screen.history.DetailHistoryViewModel
 import com.ssafy.tranvel.presentation.screen.history.navigation.navigateHistory
 import com.ssafy.tranvel.presentation.screen.home.component.moneyFormatter
+import kotlinx.coroutines.flow.Flow
 
 private const val TAG = "HistoryDetailCard_싸피"
 
 @Composable
 fun HistoryDetailCard(
-    roomId : Long,
+    roomId: Long,
     index: Int,
     dto: DetailHistoryDto?,
     detailHistoryViewModel: DetailHistoryViewModel,
-    detailHistoryRecordViewModel: DetailHistoryRecordViewModel
+    detailHistoryRecordViewModel: DetailHistoryRecordViewModel,
+    isLoading: Boolean,
+    pagedData: Flow<PagingData<DetailHistoryRecordDto>>?
 ) {
-    Log.d(TAG, "HistoryDetailCard: ${index}")
+    var pagingItems: LazyPagingItems<DetailHistoryRecordDto>? = null
+    pagedData?.let {
+        pagingItems = rememberFlowWithLifecycle(it).collectAsLazyPagingItems()
+    }
+
+    if (pagingItems != null && pagingItems!!.itemCount != 0 && detailHistoryRecordViewModel.cnt == 0) {
+        detailHistoryRecordViewModel.cnt = pagingItems!!.itemCount
+    }
+
+    Log.d(TAG,"HistoryDetailCard: 여기서 detailHistoryRecordViewModel.cnt : ${detailHistoryRecordViewModel.cnt}")
+    Log.d(TAG, "HistoryDetailCard: 여기서 pagingItems.itemCount : ${pagingItems?.itemCount}")
+
     //무지개색 색상 hex code list
     var colors = listOf<Long>(
         0xFFFF0000,
@@ -68,15 +94,19 @@ fun HistoryDetailCard(
         0xFF4B0082,
         0xFF9400D3
     )
+    var showDialog = remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
 
-    var showDialog = remember{mutableStateOf(false)}
-    if(showDialog.value){
+    if (showDialog.value) {
         HistoryDetailDialog(
             roomId = roomId,
             dto = dto!!,
             onDismiss = { showDialog.value = false },
             showDialog = showDialog.value,
-            detailHistoryRecordViewModel
+            detailHistoryRecordViewModel,
+            isLoading =  isLoading,
+            pagedData = pagedData,
+            pagingItems
         )
     }
 
@@ -84,10 +114,12 @@ fun HistoryDetailCard(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp)
-            .clickable(
-                onClick = { showDialog.value = true }
-            ),
+            .clickable {
+                expanded = !expanded
+            }
+//            .clickable(
+//                onClick = { showDialog.value = true }
+//            ),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -100,7 +132,7 @@ fun HistoryDetailCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth(0.15f)
-                    .fillMaxWidth()
+                    .fillMaxHeight()
             ) {
                 Spacer(modifier = Modifier.height(10.dp))
                 Box(
@@ -204,4 +236,16 @@ fun DetailHistoryImageContent(
             imgUrl = (BuildConfig.S3_ADDRESS) + dto?.images?.get(itemIndex)!!
         )
     }
+}
+
+@Composable
+private fun <T> rememberFlowWithLifecycle(
+    flow: Flow<T>,
+    lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
+    minActiveState: Lifecycle.State = Lifecycle.State.STARTED
+): Flow<T> = remember(flow, lifecycle) {
+    flow.flowWithLifecycle(
+        lifecycle = lifecycle,
+        minActiveState = minActiveState
+    )
 }

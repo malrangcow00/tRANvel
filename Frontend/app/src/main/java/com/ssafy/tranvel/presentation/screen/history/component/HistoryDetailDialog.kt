@@ -45,6 +45,7 @@ import com.ssafy.tranvel.presentation.screen.components.HistoryIndicator
 import com.ssafy.tranvel.presentation.screen.components.LoadingIndicator
 import com.ssafy.tranvel.presentation.screen.components.ResultLoadingIndicator
 import com.ssafy.tranvel.presentation.screen.history.DetailHistoryRecordViewModel
+import com.ssafy.tranvel.presentation.screen.home.component.moneyFormatter
 import com.ssafy.tranvel.presentation.ui.theme.bmjua
 import kotlinx.coroutines.flow.Flow
 
@@ -52,29 +53,26 @@ private const val TAG = "HistoryDetailDialog_싸피"
 
 @Composable
 fun HistoryDetailDialog(
-    roomId : Long,
+    roomId: Long,
     dto: DetailHistoryDto,
     onDismiss: () -> Unit,
     showDialog: Boolean,
-    detailHistoryRecordViewModel: DetailHistoryRecordViewModel
+    detailHistoryRecordViewModel: DetailHistoryRecordViewModel,
+    isLoading: Boolean,
+    pagedData: Flow<PagingData<DetailHistoryRecordDto>>?,
+    pagingItems : LazyPagingItems<DetailHistoryRecordDto>?
 ) {
-
-    LaunchedEffect(dto) {
-        detailHistoryRecordViewModel.cnt = 0
-        detailHistoryRecordViewModel.getDetailHistoryRecord(roomId)
-    }
-
-    val viewState = detailHistoryRecordViewModel.uiState.collectAsState().value
-
     if (showDialog) {
         Dialog(
             onDismissRequest = onDismiss,
         ) {
             DetailHistoryContent(
+                roomId,
                 dto,
                 showDialog,
-                viewState.isLoading,
-                viewState.pagedData,
+                isLoading,
+                pagedData,
+                pagingItems,
                 detailHistoryRecordViewModel
             )
         }
@@ -83,17 +81,15 @@ fun HistoryDetailDialog(
 
 @Composable
 fun DetailHistoryContent(
+    roomId: Long,
     dto: DetailHistoryDto,
     showDialog: Boolean,
-    isLoading: Boolean = false,
-    pagedData: Flow<PagingData<DetailHistoryRecordDto>>? = null,
+    isLoading: Boolean,
+    pagedData: Flow<PagingData<DetailHistoryRecordDto>>?,
+    pagingItems : LazyPagingItems<DetailHistoryRecordDto>?,
     detailHistoryRecordViewModel: DetailHistoryRecordViewModel
 ) {
-    var pagingItems: LazyPagingItems<DetailHistoryRecordDto>? = null
-    pagedData?.let {
-        pagingItems = rememberFlowWithLifecycle(it).collectAsLazyPagingItems()
-    }
-
+    Log.d(TAG, "DetailHistoryContent: detailHistoryRecordViewModel.cnt at Dialog에서: ${detailHistoryRecordViewModel.cnt}")
     Column(
         modifier = Modifier
             .fillMaxHeight(0.7f)
@@ -135,21 +131,26 @@ fun DetailHistoryContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (isLoading) {
-                    if (pagingItems != null && detailHistoryRecordViewModel.cnt == 0) {
-                        detailHistoryRecordViewModel.cnt = pagingItems!!.itemCount
-                    }
+//                    if (pagingItems != null && detailHistoryRecordViewModel.cnt == 0) {
+//                        Log.d(TAG, "DetailHistoryContent: detailHistoryRecordViewModel.cnt1 : ${detailHistoryRecordViewModel.cnt}")
+//                        Log.d(TAG, "DetailHistoryContent: pagingItems1 : ${pagingItems?.itemCount}")
+//                        detailHistoryRecordViewModel.cnt = pagingItems!!.itemCount
+//                    }
                     items(1) {
                         ResultLoadingIndicator()
                     }
                 } else if (pagedData != null && pagingItems != null) {
-                    if (detailHistoryRecordViewModel.cnt == 0 && pagingItems!!.itemCount != 0) {
-                        detailHistoryRecordViewModel.cnt = pagingItems!!.itemCount
-                    }
-                    Log.d(
-                        TAG,
-                        "DetailHistoryContent: detailHistoryRecordViewModel.cnt : ${detailHistoryRecordViewModel.cnt}"
-                    )
+//                    Log.d(TAG, "DetailHistoryContent: pagingItems2 : ${pagingItems?.itemCount}")
+//                    Log.d(TAG, "DetailHistoryContent: pagingData2 : ${pagedData}")
+//                    if (detailHistoryRecordViewModel.cnt == 0 && pagingItems!!.itemCount != 0) {
+//                        detailHistoryRecordViewModel.cnt = pagingItems!!.itemCount
+//                    }
+//                    Log.d(
+//                        TAG,
+//                        "DetailHistoryContent: detailHistoryRecordViewModel.cnt3 : ${detailHistoryRecordViewModel.cnt}"
+//                    )
                     items(count = detailHistoryRecordViewModel.cnt) { index ->
+                        Log.d(TAG, "DetailHistoryContent: index : ${index} dto.roomId : ${roomId}")
                         HistoryRecordCard(
                             index = index,
                             dateTime = dto?.dateTime,
@@ -224,7 +225,7 @@ fun HistoryRecordCard(
         Card(
             colors = CardDefaults.cardColors(containerColor = Color.White),
             modifier = Modifier
-                .fillMaxWidth(0.8f)
+                .fillMaxWidth()
                 .height(100.dp),
             shape = RoundedCornerShape(10.dp)
         ) {
@@ -237,6 +238,12 @@ fun HistoryRecordCard(
             ) {
                 Text(
                     text = matchCategory(dto.historyCategory)
+                )
+                Text(
+                    text = dto.detail.orEmpty()
+                )
+                Text(
+                    text = if (matchCategory(dto.historyCategory).equals("정산")) moneyFormatter(dto.moneyResult!!.toInt()) else ""
                 )
             }
         }

@@ -79,7 +79,6 @@ fun TravelImage(
 ) {
     val bitmap: MutableState<Bitmap??> = mutableStateOf(null)
 
-    Log.d(TAG, "TravelImage: url값 : ${imgUrl}")
     val imageModifier = modifier
         .fillMaxSize()
 
