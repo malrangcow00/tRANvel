@@ -1,6 +1,7 @@
 package com.ssafy.tranvel.data.remote.datasource.register.impl
 
 import com.ssafy.tranvel.data.model.TokenDto
+import com.ssafy.tranvel.data.model.dto.User
 import com.ssafy.tranvel.data.model.request.EmailAuthRequest
 import com.ssafy.tranvel.data.model.request.EmailInfoRequest
 import com.ssafy.tranvel.data.model.request.UserRequest
@@ -23,6 +24,10 @@ class RegisterDataSourceImpl @Inject constructor(
         userRequest: UserRequest
     ): Flow<DataState<DataResponse<TokenDto>>> =
         getResult { registerService.login(userRequest) }
+
+    override suspend fun getUser(accessToken:String): Flow<DataState<DataResponse<User>>> {
+        return getResult { registerService.getUser(accessToken) }
+    }
 
     override suspend fun sendEmailAuth(
         emailInfoRequest: EmailInfoRequest

@@ -1,6 +1,7 @@
 package com.ssafy.tranvel.data.remote.api
 
 import com.ssafy.tranvel.data.model.TokenDto
+import com.ssafy.tranvel.data.model.dto.User
 import com.ssafy.tranvel.data.model.request.EmailAuthRequest
 import com.ssafy.tranvel.data.model.request.EmailInfoRequest
 import com.ssafy.tranvel.data.model.request.UserRequest
@@ -10,6 +11,8 @@ import com.ssafy.tranvel.data.model.response.EmailAuthResponse
 import com.ssafy.tranvel.data.model.response.EmailInfoResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface RegisterService {
@@ -30,4 +33,8 @@ interface RegisterService {
 
     @POST("user/duplication")
     suspend fun duplicateNickName(@Body nicknameRequest: NicknameRequest): Response<EmailInfoResponse>
+
+    @GET("user/auth/profile")
+    suspend fun getUser(@Header("Access-token") accessToken: String): Response<DataResponse<User>>
+
 }

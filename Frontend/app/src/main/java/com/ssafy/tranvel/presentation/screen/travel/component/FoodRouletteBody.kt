@@ -21,6 +21,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,14 +38,23 @@ import androidx.compose.ui.viewinterop.AndroidViewBinding
 import com.jhdroid.view.RotateListener
 import com.ssafy.tranvel.R
 import com.ssafy.tranvel.databinding.FoodRouletteLayoutBinding
+import com.ssafy.tranvel.presentation.screen.travel.GameViewModel
+import com.ssafy.tranvel.presentation.screen.travel.RoomInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
 fun FoodRouletteBody(
+    gameViewModel: GameViewModel,
+    onNextPressed: () -> (Unit)
 ) {
-    val rouletteData =
-        listOf("JhDroid", "Android", "Blog", "IT", "Developer", "Kotlin", "Java", "Happy")
+    val rouletteData by gameViewModel.foodGameData.collectAsState()
+    val rouletteRandom by gameViewModel.random.collectAsState()
+    val uiState by gameViewModel.foodScreen.collectAsState()
+
+    var rouletteState by remember {
+        mutableStateOf(false)
+    }
+
     val rouletteListener = object : RotateListener {
         override fun onRotateStart() {
             // rotate animation start
@@ -46,31 +62,46 @@ fun FoodRouletteBody(
 
         override fun onRotateEnd(result: String) {
             // rotate animation end, get result here
-            Log.d("TAG", "onRotateEnd: $result")
+            if (RoomInfo.authority) {
+                gameViewModel.sendFoodGameMessage("CLOSE", result)
+            }
         }
     }
+
+    if (uiState) {
+        gameViewModel.setFoodScreenState()
+        onNextPressed()
+    }
+
     var listener: ButtonClick? = null
-    Box(modifier = Modifier.fillMaxSize()){
-        AndroidViewBinding(
-            FoodRouletteLayoutBinding::inflate,
-            modifier = Modifier
-                .fillMaxSize()
-                .align(Alignment.TopCenter),
-            onReset = {
-                // Null out the OnClickListener to avoid leaking the `action` lambda.
-            },
-            update = {
-                roulette.apply {
-                    rouletteSize = 8
-                    setRouletteDataList(rouletteData)
-                }
-                listener = object : ButtonClick {
-                    override fun onClick() {
-                        roulette.rotateRoulette(10000f, 4000L, rouletteListener)
+
+    if (rouletteRandom.randFloat != 0f && !rouletteState) {
+        rouletteState = true
+        Log.d("TAG", "FoodRouletteBody: ${rouletteRandom.randFloat}")
+        listener?.onClick()
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (rouletteData.foodCandidates.size >= 2) {
+            AndroidViewBinding(
+                FoodRouletteLayoutBinding::inflate,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .align(Alignment.TopCenter),
+                onReset = {
+                    // Null out the OnClickListener to avoid leaking the `action` lambda.
+                },
+                update = {
+                    roulette.apply {
+                        rouletteSize = rouletteData.foodCandidates.size
+                        setRouletteDataList(rouletteData.foodCandidates)
+                    }
+                    if (rouletteRandom.randFloat != 0f) {
+                        roulette.rotateRoulette(rouletteRandom.randFloat, rouletteRandom.randLong, rouletteListener)
                     }
                 }
-            }
-        )
+            )
+        }
         Image(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -78,10 +109,8 @@ fun FoodRouletteBody(
             painter = painterResource(id = R.drawable.down),
             contentDescription = "pointRoulette",
         )
-        val imageList = List(20) {
-
-        }
-        Box(modifier = Modifier.align(Alignment.BottomCenter)){
+        val selectedImageList = rouletteData.selectedUserProfileImages
+        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
             Column {
                 Text(text = "입력한 멤버")
                 LazyRow(
@@ -89,7 +118,7 @@ fun FoodRouletteBody(
                         .padding(top = 10.dp)
                         .fillMaxWidth()
                 ) {
-                    items(imageList.size) { item ->
+                    items(selectedImageList.size) { item ->
                         Card(
                             modifier = Modifier
                                 .padding(end = 3.dp),
@@ -108,31 +137,19 @@ fun FoodRouletteBody(
                                             .size(50.dp)
                                             .align(Alignment.Center)
                                     )
-                                    androidx.compose.material.Icon(
-                                        imageVector = Icons.Default.CheckCircle,
-                                        contentDescription = "checking",
-                                        modifier = Modifier
-                                            .size(10.dp)
-                                            .align(Alignment.TopEnd),
-                                        tint = Color.Green
-                                    )
                                 }
-                                Text(
-                                    text = "$item",
-                                    modifier = Modifier
-                                        .padding(top = 5.dp)
-                                )
                             }
                         }
                     }
                 }
-                Text(text = "입력하지 않은 멤버",modifier=Modifier.padding(top = 10.dp))
+                val unSelectedImageList = rouletteData.unSelectedUserProfileImages
+                Text(text = "입력하지 않은 멤버", modifier = Modifier.padding(top = 10.dp))
                 LazyRow(
                     modifier = Modifier
                         .padding(top = 10.dp)
                         .fillMaxWidth()
                 ) {
-                    items(imageList.size) { item ->
+                    items(unSelectedImageList.size) { item ->
                         Card(
                             modifier = Modifier
                                 .padding(end = 3.dp),
@@ -151,20 +168,7 @@ fun FoodRouletteBody(
                                             .size(50.dp)
                                             .align(Alignment.Center)
                                     )
-                                    androidx.compose.material.Icon(
-                                        imageVector = Icons.Default.CheckCircle,
-                                        contentDescription = "checking",
-                                        modifier = Modifier
-                                            .size(10.dp)
-                                            .align(Alignment.TopEnd),
-                                        tint = Color.Green
-                                    )
                                 }
-                                Text(
-                                    text = "$item",
-                                    modifier = Modifier
-                                        .padding(top = 5.dp)
-                                )
                             }
                         }
                     }
@@ -174,7 +178,7 @@ fun FoodRouletteBody(
                         .fillMaxWidth()
                         .padding(top = 10.dp),
                     onClick = {
-                        listener?.onClick()
+                        gameViewModel.sendFoodGameStartMessage("ENTER", "")
                     },
                 ) {
                     Text(text = "뽑기")

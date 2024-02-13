@@ -19,6 +19,8 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -37,23 +39,33 @@ fun GameScreen(
     navController: NavController,
     gameViewModel: GameViewModel
 ) {
+    // 방장이 아니라면 음식 화면으로 이동
+    val navigateFoodScreen by gameViewModel.navigateFoodScreen.collectAsState()
+    val drawPerson by gameViewModel.drawPerson.collectAsState()
+    val drawState by gameViewModel.drawState.collectAsState()
+
+    if (navigateFoodScreen) {
+        Screen.Restaurant.route?.let { navController.navigate(it) }
+    }
     Scaffold(
         topBar = { GameHeader("즐거운 여행 중", true) },
         content = { paddingValues ->
             Column {
-                GameBody(paddingValues,gameViewModel)
+                GameBody(paddingValues, gameViewModel)
             }
         },
         bottomBar = {
-            BottomAppBar(
-                modifier = Modifier
-                    .height(50.dp)
-                    .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)),
-                cutoutShape = CircleShape,
-                backgroundColor = PrimaryColor,
-                elevation = 22.dp
-            ) {
-                BottomNav(navController = navController)
+            if (RoomInfo.authority) {
+                BottomAppBar(
+                    modifier = Modifier
+                        .height(50.dp)
+                        .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)),
+                    cutoutShape = CircleShape,
+                    backgroundColor = PrimaryColor,
+                    elevation = 22.dp
+                ) {
+                    BottomNav(navController = navController)
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.Center,
@@ -62,7 +74,12 @@ fun GameScreen(
             FloatingActionButton(
                 shape = CircleShape,
                 onClick = {
-                    //뽑기
+                    if (RoomInfo.authority && drawState) {
+                        gameViewModel.sendAttractionPersonMessage("ENTER", "")
+                    }
+                    if (drawPerson && !drawState) {
+                        gameViewModel.sendAttractionDrawMessage()
+                    }
                 },
                 backgroundColor = PrimaryColor2
             ) {

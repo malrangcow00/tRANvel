@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.presentation.screen.travel
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -18,6 +19,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,9 +37,15 @@ import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 
 @Composable
 fun FoodScreen(
+    gameViewModel: GameViewModel,
     onBackPressed: () -> (Unit),
 ) {
     var visibility: Boolean by remember { mutableStateOf(true) }
+    if (RoomInfo.authority) {
+        gameViewModel.sendFoodGameMessage("ENTER","")
+    } else {
+        gameViewModel.setNavigateFoodState()
+    }
     Scaffold(
         topBar = { GameHeader("오늘의 메뉴는?", false) },
         content = { paddingValues ->
@@ -49,12 +57,15 @@ fun FoodScreen(
             ) {
                 if (visibility) {
                     FoodBody(
+                        gameViewModel,
                         onBackPressed
                     ) {
                         visibility = !visibility
                     }
                 } else {
-                    FoodRouletteBody()
+                    FoodRouletteBody(gameViewModel){
+                        onBackPressed()
+                    }
                 }
             }
         }

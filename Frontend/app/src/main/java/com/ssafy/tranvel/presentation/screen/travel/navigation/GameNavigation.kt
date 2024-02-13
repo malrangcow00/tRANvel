@@ -4,10 +4,8 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ssafy.tranvel.presentation.screen.home.navigation.homeRoute
 import com.ssafy.tranvel.presentation.screen.travel.AccountScreen
 import com.ssafy.tranvel.presentation.screen.travel.FoodScreen
 import com.ssafy.tranvel.presentation.screen.travel.GameScreen
@@ -28,6 +26,7 @@ fun NavGraphBuilder.gameNavGraph(navController: NavController) {
                 navController.getBackStackEntry(Screen.Draw.route)
             }
             FoodScreen(
+                hiltViewModel(parentEntry),
                 onBackPressed = { navController.popBackStack() }
             )
         }
@@ -36,7 +35,9 @@ fun NavGraphBuilder.gameNavGraph(navController: NavController) {
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(Screen.Draw.route)
             }
-            AccountScreen() {
+            AccountScreen(
+                hiltViewModel(parentEntry)
+            ) {
                 navController.popBackStack()
             }
         }

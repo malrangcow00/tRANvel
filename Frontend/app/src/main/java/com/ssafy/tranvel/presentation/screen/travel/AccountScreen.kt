@@ -9,13 +9,17 @@ import com.ssafy.tranvel.presentation.screen.travel.component.GameHeader
 
 @Composable
 fun AccountScreen(
+    gameViewModel: GameViewModel,
     onBackPressed: () -> (Unit)
 ) {
     Scaffold(
         topBar = { GameHeader("비용 추가", false) },
         content = { paddingValues ->
             Column {
-                AccountBody(paddingValues){
+                AccountBody(
+                    paddingValues,
+                    gameViewModel
+                ){
                     onBackPressed()
                 }
             }

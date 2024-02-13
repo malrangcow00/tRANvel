@@ -1,6 +1,7 @@
 package com.ssafy.tranvel.data.remote.datasource.register
 
 import com.ssafy.tranvel.data.model.TokenDto
+import com.ssafy.tranvel.data.model.dto.User
 import com.ssafy.tranvel.data.model.request.EmailAuthRequest
 import com.ssafy.tranvel.data.model.request.EmailInfoRequest
 import com.ssafy.tranvel.data.model.request.UserRequest
@@ -19,4 +20,5 @@ interface RegisterDataSource {
     suspend fun resetPassword(emailInfoRequest: EmailInfoRequest): Flow<DataState<EmailInfoResponse>>
     suspend fun registerUser(userRequest: UserRequest): Flow<DataState<EmailInfoResponse>>
     suspend fun duplicateNickName(nicknameRequest: NicknameRequest): Flow<DataState<EmailInfoResponse>>
+    suspend fun getUser(accessToken:String): Flow<DataState<DataResponse<User>>>
 }
