@@ -27,11 +27,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ssafy.tranvel.presentation.screen.travel.GameViewModel
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 import com.ssafy.tranvel.presentation.ui.theme.TextColor
 
 @Composable
 fun FoodBody(
+    gameViewModel: GameViewModel,
     onBackPressed: () -> (Unit),
     onNextPressed: () -> (Unit)
 ) {
@@ -71,15 +73,22 @@ fun FoodBody(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             OutlinedButton(
-                modifier = Modifier.weight(1f).padding(end = 5.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 5.dp),
                 onClick = { onBackPressed() },
                 border = BorderStroke(color = PrimaryColor, width = 1.dp)
             ) {
                 Text(text = "취소", color = TextColor)
             }
             Button(
-                modifier = Modifier.weight(1f).padding(start = 5.dp),
-                onClick = { onNextPressed() },
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 5.dp),
+                onClick = {
+                    gameViewModel.sendFoodGameReadyMessage("ENTER", inputFood)
+                    onNextPressed()
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = PrimaryColor,
                 ),

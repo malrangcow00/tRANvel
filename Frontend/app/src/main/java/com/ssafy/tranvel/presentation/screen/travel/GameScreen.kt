@@ -17,14 +17,25 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material.Scaffold
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.ssafy.tranvel.presentation.screen.home.navigation.homeRoute
 import com.ssafy.tranvel.presentation.screen.travel.component.BottomNav
 import com.ssafy.tranvel.presentation.screen.travel.component.GameBody
 import com.ssafy.tranvel.presentation.screen.travel.component.GameHeader
@@ -37,23 +48,44 @@ fun GameScreen(
     navController: NavController,
     gameViewModel: GameViewModel
 ) {
+    // 방장이 아니라면 음식 화면으로 이동
+    val navigateFoodScreen by gameViewModel.navigateFoodScreen.collectAsState()
+    val drawPerson by gameViewModel.drawPerson.collectAsState()
+    val drawState by gameViewModel.drawState.collectAsState()
+    val uiState by gameViewModel.gameState.collectAsState()
+
+    if (uiState) {
+        gameViewModel.setGameState()
+        navController.navigate(homeRoute){
+            this.popUpTo("game")
+        }
+    }
+
+    if (navigateFoodScreen) {
+        EnterFoodGameDialog {
+            gameViewModel.setNavigateFoodState()
+            Screen.Restaurant.route?.let { navController.navigate(it) }
+        }
+    }
     Scaffold(
-        topBar = { GameHeader("즐거운 여행 중", true) },
+        topBar = { GameHeader("즐거운 여행 중", true, gameViewModel) },
         content = { paddingValues ->
             Column {
-                GameBody(paddingValues,gameViewModel)
+                GameBody(paddingValues, gameViewModel)
             }
         },
         bottomBar = {
-            BottomAppBar(
-                modifier = Modifier
-                    .height(50.dp)
-                    .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)),
-                cutoutShape = CircleShape,
-                backgroundColor = PrimaryColor,
-                elevation = 22.dp
-            ) {
-                BottomNav(navController = navController)
+            if (RoomInfo.authority) {
+                BottomAppBar(
+                    modifier = Modifier
+                        .height(50.dp)
+                        .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)),
+                    cutoutShape = CircleShape,
+                    backgroundColor = PrimaryColor,
+                    elevation = 22.dp
+                ) {
+                    BottomNav(navController = navController)
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.Center,
@@ -62,11 +94,47 @@ fun GameScreen(
             FloatingActionButton(
                 shape = CircleShape,
                 onClick = {
-                    //뽑기
+                    if (RoomInfo.authority && drawState) {
+                        gameViewModel.sendAttractionPersonMessage("ENTER", "")
+                    }
+                    if (drawPerson && !drawState) {
+                        gameViewModel.sendAttractionDrawMessage()
+                    }
                 },
                 backgroundColor = PrimaryColor2
             ) {
                 Icon(imageVector = Icons.Filled.Casino, contentDescription = "Add icon")
+            }
+        }
+    )
+}
+
+@Composable
+fun EnterFoodGameDialog(onChangeState: () -> (Unit)) {
+
+    AlertDialog(
+        onDismissRequest = { },
+        title = {
+            Text(
+                text = "메뉴 선정",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
+        text = {
+            Text(
+                text = "음식 메뉴를 뽑는 게임이 시작하여 화면이 이동합니다..",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onChangeState()
+                }
+            ) {
+                Text(text = "확인", color = Color.Black)
             }
         }
     )
