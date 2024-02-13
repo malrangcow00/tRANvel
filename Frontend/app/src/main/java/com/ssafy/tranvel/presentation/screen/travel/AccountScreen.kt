@@ -13,13 +13,13 @@ fun AccountScreen(
     onBackPressed: () -> (Unit)
 ) {
     Scaffold(
-        topBar = { GameHeader("비용 추가", false) },
+        topBar = { GameHeader("비용 추가", false, gameViewModel) },
         content = { paddingValues ->
             Column {
                 AccountBody(
                     paddingValues,
                     gameViewModel
-                ){
+                ) {
                     onBackPressed()
                 }
             }

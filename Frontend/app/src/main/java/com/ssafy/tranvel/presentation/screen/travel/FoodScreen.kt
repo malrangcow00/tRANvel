@@ -41,13 +41,13 @@ fun FoodScreen(
     onBackPressed: () -> (Unit),
 ) {
     var visibility: Boolean by remember { mutableStateOf(true) }
-    if (RoomInfo.authority) {
-        gameViewModel.sendFoodGameMessage("ENTER","")
-    } else {
-        gameViewModel.setNavigateFoodState()
+    if (RoomInfo.authority && visibility) {
+        Log.d("TAG", "FoodScreen: 들어옴???????????????????????")
+        gameViewModel.sendFoodGameMessage("ENTER", "")
     }
+    gameViewModel.setNavigateFoodState()
     Scaffold(
-        topBar = { GameHeader("오늘의 메뉴는?", false) },
+        topBar = { GameHeader("오늘의 메뉴는?", false, gameViewModel) },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -63,7 +63,7 @@ fun FoodScreen(
                         visibility = !visibility
                     }
                 } else {
-                    FoodRouletteBody(gameViewModel){
+                    FoodRouletteBody(gameViewModel) {
                         onBackPressed()
                     }
                 }

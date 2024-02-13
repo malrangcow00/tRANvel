@@ -63,6 +63,9 @@ class GameViewModel @Inject constructor(
     private val _networkResult = MutableStateFlow(false)
     val networkResult = _networkResult.asStateFlow()
 
+    private val _gameState = MutableStateFlow(false)
+    val gameState = _gameState.asStateFlow()
+
     private val _bitmap: MutableStateFlow<Bitmap?> = MutableStateFlow(null)
     val bitmap: StateFlow<Bitmap?> = _bitmap
 
@@ -80,13 +83,14 @@ class GameViewModel @Inject constructor(
     private val _attractionState = MutableStateFlow(true)
     val attractionState = _attractionState.asStateFlow()
 
-    private val _foodGameData = MutableStateFlow(FoodGameDto("", "", listOf(), listOf(), listOf()))
+    private val _foodGameData = MutableStateFlow(FoodGameDto("", "", listOf(), listOf()))
     val foodGameData = _foodGameData.asStateFlow()
 
     private val _latLng = MutableStateFlow(LatLng(37.532600, 127.024612))
     val latLng = _latLng.asStateFlow()
 
-    private val _attractionInfo = MutableStateFlow(AttractionInfo("", "", "", "37.390791", "127.096306", "", "", ""))
+    private val _attractionInfo =
+        MutableStateFlow(AttractionInfo("", "", "", "37.390791", "127.096306", "", "", ""))
     val attractionInfo = _attractionInfo.asStateFlow()
 
     private val _random = MutableStateFlow(RandomDto("", 0f, 0L))
@@ -95,8 +99,20 @@ class GameViewModel @Inject constructor(
     private val _foodScreen = MutableStateFlow(false)
     val foodScreen = _foodScreen.asStateFlow()
 
-    private val _cameraState = MutableStateFlow(CameraPositionState())
-    val cameraState = _cameraState.asStateFlow()
+    private val _enterPerson = MutableStateFlow(false)
+    val enterPerson = _enterPerson.asStateFlow()
+
+    private val _enterPersonName = MutableStateFlow("")
+    val enterPersonName = _enterPersonName.asStateFlow()
+
+    fun setEnterPerson() {
+        _enterPerson.value = false
+    }
+
+    fun setGameState() {
+        _gameState.value = false
+    }
+
     fun setAttractionLangLng(latLng: LatLng) {
         _latLng.value = latLng
     }
@@ -209,6 +225,13 @@ class GameViewModel @Inject constructor(
         stompClient.topic("/topic/tranvel/rooms/$roomId")
             .doOnError { Log.i("message Recieve1", "에러남") }
             .subscribe { topicMessage ->
+                val a = Gson().fromJson(topicMessage.payload, STOMPDto::class.java)
+                if (a.type == "ENTER") {
+                    _enterPersonName.value = a.message
+                    _enterPerson.value = true
+                } else {
+                    _gameState.value = true
+                }
                 Log.i("message Recieve2", topicMessage.payload)
             }
 
@@ -227,7 +250,8 @@ class GameViewModel @Inject constructor(
             .doOnError { Log.i("message Recieve1", "에러남") }
             .subscribe { topicMessage ->
                 setDrawPerson()
-                _attractionInfo.value = Gson().fromJson(topicMessage.payload, AttractionInfo::class.java)
+                _attractionInfo.value =
+                    Gson().fromJson(topicMessage.payload, AttractionInfo::class.java)
                 _drawState.value = true
                 _attractionState.value = true
                 Log.i("message Recieve2", topicMessage.payload)
@@ -320,7 +344,7 @@ class GameViewModel @Inject constructor(
         data.put("roomId", RoomInfo.roomID)
         data.put("sender_id", User.id)
         data.put("message", message)
-        stompClient.send("/app/tranvel/getplayer", data.toString())
+        stompClient.send("/app/tranvel/foodgame", data.toString())
             .doOnError { Log.i("message Recieve5", "에러남") }
             .subscribe()
     }
@@ -357,8 +381,4 @@ class GameViewModel @Inject constructor(
             .doOnError { Log.i("message Recieve5", "에러남") }
             .subscribe()
     }
-}
-
-interface ButtonClick {
-    fun onClick()
 }
