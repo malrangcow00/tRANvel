@@ -30,6 +30,7 @@ public class ImageUploadService {
     @Value("${cloud.aws.s3.bucketName}")
     private String bucketName;
 
+    private final UserRepository userRepository;
     private final RoomHistoryRepository roomHistoryRepository;
     private final FoodGameHistoryRepository foodGameHistoryRepository;
     private final AdjustmentGameHistoryRepository adjustmentGameHistoryRepository;
@@ -41,7 +42,10 @@ public class ImageUploadService {
 
     public String uploadProfileImage(MultipartFile image) throws IOException {
 
+        User user = userRepository.findByEmail(SecurityUtility.getCurrentUserId()).get();
+
         String fileName = SecurityUtility.getCurrentUserId() + ".jpg";
+
 
         String dir = "/profile";
         InputStream inputStream = image.getInputStream();
@@ -51,6 +55,9 @@ public class ImageUploadService {
 
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName + dir, fileName, inputStream, metadata);
         amazonS3.putObject(putObjectRequest);
+
+        user.setProfileImage(dir + "/" + fileName);
+        userRepository.save(user);
         return dir + "/" + fileName;
 
         }

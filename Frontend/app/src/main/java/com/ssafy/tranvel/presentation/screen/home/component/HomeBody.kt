@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.ssafy.tranvel.presentation.screen.history.DetailHistoryRecordViewModel
 import com.ssafy.tranvel.presentation.screen.history.DetailHistoryViewModel
+import com.ssafy.tranvel.data.model.dto.Room
 import com.ssafy.tranvel.presentation.screen.history.HistoryViewModel
 import com.ssafy.tranvel.presentation.screen.travel.TravelViewModel
 

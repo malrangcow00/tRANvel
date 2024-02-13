@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.tranvel.data.model.dto.HistoryDto
+import com.ssafy.tranvel.data.model.dto.Room
 import com.ssafy.tranvel.presentation.screen.history.DetailHistoryRecordViewModel
 import com.ssafy.tranvel.presentation.screen.history.DetailHistoryViewModel
 import com.ssafy.tranvel.presentation.screen.history.HistoryViewModel

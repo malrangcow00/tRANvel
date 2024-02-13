@@ -2,11 +2,12 @@ package com.ssafy.tranvel.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @Builder
-public class RoomInsideDto<T> {
+public class RoomInsideResponseDto<T> {
+
+    private Long roomId;
 
     private String roomCode;
 

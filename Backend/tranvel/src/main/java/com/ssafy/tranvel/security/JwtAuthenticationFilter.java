@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         }
     }
     private boolean isAllowedPath(String requestUri) {
-        List<String> allowedPaths = Arrays.asList("/signup", "/email-auth", "/email-auth/verification", "/user/duplication", "/user/signin", "/swagger-ui/", "/v3/", "/api/");
+        List<String> allowedPaths = Arrays.asList("/signup", "/email-auth", "/email-auth/verification", "/user/duplication", "/user/signin", "/swagger-ui/", "/v3/", "/api/", "/server");
         return allowedPaths.stream().anyMatch(path -> requestUri.startsWith(path));
     }
     private String resolveToken(HttpServletRequest request, String headerName) {

@@ -57,6 +57,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    viewBinding {
+        enable = true
+    }
 }
 
 fun getApiKey(propertyKey: String): String = gradleLocalProperties(rootDir).getProperty(propertyKey)
@@ -77,11 +80,11 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
     //STOMP
-    implementation ("com.github.NaikSoftware:StompProtocolAndroid:1.6.6")
+    implementation("com.github.NaikSoftware:StompProtocolAndroid:1.6.6")
 
     //rx
-    implementation ("io.reactivex.rxjava2:rxjava:2.2.5")
-    implementation ("io.reactivex.rxjava2:rxandroid:2.1.0")
+    implementation("io.reactivex.rxjava2:rxjava:2.2.5")
+    implementation("io.reactivex.rxjava2:rxandroid:2.1.0")
 
     //compose
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
@@ -97,7 +100,7 @@ dependencies {
 
     //glide
     ksp("com.github.bumptech.glide:glide:4.14.2")
-    implementation ("com.github.bumptech.glide:compose:1.0.0-beta01")
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
 
     //hilt
     implementation("com.google.dagger:hilt-android:2.48")
@@ -116,6 +119,11 @@ dependencies {
     //viewmodel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
 
+    //roulette
+    implementation("com.github.JhDroid:android-roulette-wheel-view:1.0.3")
+
+    //viewBinding
+    implementation("androidx.compose.ui:ui-viewbinding")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

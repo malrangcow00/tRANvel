@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a5feaa16-5040-496c-878f-1d71eb31e3cc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/tranvel/src/main/java/com/ssafy/tranvel/entity/RoomHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/tranvel/src/main/java/com/ssafy/tranvel/entity/RoomHistory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/tranvel/src/main/java/com/ssafy/tranvel/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/tranvel/src/main/java/com/ssafy/tranvel/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/tranvel/src/main/java/com/ssafy/tranvel/repository/InquiryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/tranvel/src/main/java/com/ssafy/tranvel/repository/InquiryRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,9 +46,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2bvPcm0yYLIPHBwJQmZrj74V731" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -62,8 +58,9 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
     "android.gradle.sync.needed": "true",
-    "git-widget-placeholder": "feat/roomHistory",
+    "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -99,6 +96,7 @@
       <option name="presentableId" value="Default" />
       <updated>1707092662347</updated>
       <workItem from="1707092664086" duration="8103000" />
+      <workItem from="1707567296877" duration="322000" />
     </task>
     <servers />
   </component>

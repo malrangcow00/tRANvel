@@ -18,9 +18,9 @@ public class AdjustmentGameHistoryDto {
 
     private List<Long> selectedUsers; // JoinUser의 userId를 받음
 
-    private MultipartFile image;
-
     private String category;
 
     private String detail;
+
+    private String location;
 }

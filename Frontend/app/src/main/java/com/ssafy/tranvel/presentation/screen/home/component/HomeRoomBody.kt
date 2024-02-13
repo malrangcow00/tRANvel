@@ -1,6 +1,7 @@
 package com.ssafy.tranvel.presentation.screen.home.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,7 +31,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ssafy.tranvel.R
+import com.ssafy.tranvel.data.model.dto.Room
 import com.ssafy.tranvel.presentation.screen.login.LoadingDialog
+import com.ssafy.tranvel.presentation.screen.travel.RoomInfo
 import com.ssafy.tranvel.presentation.screen.travel.TravelViewModel
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 import com.ssafy.tranvel.presentation.ui.theme.TextColor
@@ -42,28 +45,44 @@ fun HomeRoomBody(
     onEnterButtonClicked: () -> Unit,
 ) {
     val uiState: Boolean by travelViewModel.roomBodyState.collectAsState()
-    val loadingState: Boolean by travelViewModel.currentState.collectAsState()
+    val currentState: Boolean by travelViewModel.currentState.collectAsState()
+
+    var inputCode: String by remember {
+        mutableStateOf("")
+    }
 
     var dialogState: Boolean by remember {
         mutableStateOf(false)
+    }
+
+    var enterDialogState: Boolean by remember {
+        mutableStateOf(false)
+    }
+
+    if (enterDialogState) {
+        EnterRoomDialog(
+            onChangeState = { enterDialogState = false },
+            onCreateRoom = { pass ->
+                travelViewModel.enterRoom(inputCode, pass)
+            }
+        )
     }
 
     if (dialogState) {
         CreateRoomDialog(
             onChangeState = { dialogState = false },
             onCreateRoom = {
-                onEnterButtonClicked()
-//                travelViewModel.createRoom(it)
+                travelViewModel.createRoom(it)
             }
         )
     }
 
-    if (loadingState) {
+    if (currentState) {
         LoadingDialog {
         }
     }
 
-    if (uiState) {
+    if (uiState && RoomInfo.roomCode != "") {
         onEnterButtonClicked()
         travelViewModel.changeRoomBodyState()
     }
@@ -77,10 +96,9 @@ fun HomeRoomBody(
             modifier = Modifier
                 .fillMaxWidth(0.4f),
             shape = RoundedCornerShape(5.dp),
-            value = "",
-//            value = homeViewModel.enterCode.value,
+            value = inputCode,
             onValueChange = {
-//                homeViewModel.enterCode.value = it
+                inputCode = it
             },
             singleLine = true,
             leadingIcon = {
@@ -111,8 +129,7 @@ fun HomeRoomBody(
                 .width(90.dp)
                 .height(50.dp),
             onClick = {
-                onEnterButtonClicked()
-//                travelViewModel.runStomp(5)
+                enterDialogState = true
             }
         ) {
             Text(text = "입장", color = Color.Black, textAlign = TextAlign.Center, fontFamily = bmjua)
@@ -157,7 +174,8 @@ fun CreateRoomDialog(onChangeState: () -> (Unit), onCreateRoom: (String) -> (Uni
                 value = inputText,
                 onValueChange = {
                     inputText = it
-                }
+                },
+                label = { Text(text = "비밀번호를 입력해주세요.") }
             )
         },
 
@@ -169,10 +187,50 @@ fun CreateRoomDialog(onChangeState: () -> (Unit), onCreateRoom: (String) -> (Uni
         confirmButton = {
             TextButton(
                 onClick = {
-//                    onChangeState()
+                    onChangeState()
                     onCreateRoom(inputText)
                 }) {
                 Text(text = "생성", color = Color.Black)
+            }
+        }
+    )
+}
+
+@Composable
+fun EnterRoomDialog(onChangeState: () -> (Unit), onCreateRoom: (String) -> (Unit)) {
+    var inputPassword: String by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = { onChangeState() },
+        title = {
+            Text(
+                text = "방 생성",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
+        text = {
+            TextField(
+                value = inputPassword,
+                onValueChange = {
+                    inputPassword = it
+                },
+                label = { Text(text = "비밀번호") },
+                placeholder = { Text(text = "방 비밀번호를 입력하세요.") }
+            )
+        },
+        dismissButton = {
+            TextButton(onClick = { onChangeState() }) {
+                Text(text = "취소", color = Color.Black)
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onChangeState()
+                    onCreateRoom(inputPassword)
+                }) {
+                Text(text = "입장", color = Color.Black)
             }
         }
     )

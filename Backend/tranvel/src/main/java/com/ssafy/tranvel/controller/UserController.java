@@ -71,7 +71,7 @@ public class UserController {
     }
 
     // 프로필 이미지 등록
-    @PostMapping(value = "/profileImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
+    @PostMapping(value = "/profileImage", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ResponseDto> saveProfileImage(@RequestPart(value = "image",required = true) MultipartFile image) throws IOException {
 
         imageUploadService.uploadProfileImage(image);
@@ -106,8 +106,15 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
             User user = userOptional.get();
+            UserProfileDto userProfileDto = UserProfileDto.builder()
+                    .id(user.getId())
+                    .email(userId)
+                    .nickName(user.getNickName())
+                    .profileImage(user.getProfileImage())
+                    .balance(user.getBalance())
+                    .build();
             // 필요한 사용자 정보만 ResponseDto에 포함하여 반환
-            response = new ResponseDto(true, "사용자 정보 조회 성공", user);
+            response = new ResponseDto(true, "사용자 정보 조회 성공", userProfileDto);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             response = new ResponseDto(false, "오류 발생: " + e.getMessage(), null);
