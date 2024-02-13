@@ -1,28 +1,31 @@
 spring:
   profiles:
-    active: local
     group:
-      local: secret
-      set1: blue, secret
-      set2: green, secret
-
-
----
-spring:
-  config:
-    activate:
-      on-profile: blue
-
-
-server:
-  port: 8080
-
----
-spring:
-  config:
-    activate:
-      on-profile: green
-
-server:
-  port: 8081
+      set1: set1
+      set2: set2
+##    include: secret
+##    active: set1
+#
+#---
+##spring:
+##  config:
+##    activate:
+##      on-profile: blue
+##
+##  profiles:
+##    include: secret
+##
+##
+##server:
+##  port: 8081
+#
+#---
+##spring:
+##  config:
+##    activate:
+##      on-profile: green
+##  profiles:
+##    include: secret
+##server:
+##  port: 8082
 
