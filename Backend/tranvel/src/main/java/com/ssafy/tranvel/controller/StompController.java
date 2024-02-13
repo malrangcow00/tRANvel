@@ -5,6 +5,7 @@ import com.ssafy.tranvel.entity.AttractionList;
 import com.ssafy.tranvel.repository.UserRepository;
 import com.ssafy.tranvel.service.AttractionService;
 import com.ssafy.tranvel.service.FoodGameService;
+import com.ssafy.tranvel.service.RoomHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -18,6 +19,7 @@ public class StompController {
 
     private final UserRepository userRepository;
     private final AttractionService attractionService;
+    private final RoomHistoryService roomHistoryService;
     private final FoodGameService foodGameService;
     private final SimpMessageSendingOperations sendingOperations;
 
@@ -28,6 +30,7 @@ public class StompController {
         if (StompDto.MessageType.ENTER.equals(message.getType())) {
             message.setMessage(userRepository.findById(Long.parseLong(message.getSender_id())).get().getNickName() + "님이 입장하였습니다.");
         } else if (StompDto.MessageType.CLOSE.equals(message.getType())) {
+            roomHistoryService.finishRoomHistory(Long.parseLong(message.getRoomId()));
             message.setMessage("여행이 종료되었습니다.");
         }
         sendingOperations.convertAndSend("/topic/tranvel/rooms/" + message.getRoomId(), message);
