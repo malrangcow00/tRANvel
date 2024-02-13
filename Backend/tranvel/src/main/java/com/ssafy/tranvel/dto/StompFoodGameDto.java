@@ -15,8 +15,26 @@ public class StompFoodGameDto {
 
     private String roomId;
 
-    private List<List<String>> selectedUserInfos;
+    private List<selectedUserInfo> selectedUserInfos;
 
-    private List<List<String>> unSelectedUserInfos;
+    private List<unSelectedUserInfo> unSelectedUserInfos;
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class selectedUserInfo {
+        private String nickname;
+        private String profileImage;
+        private String submittedFood;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class unSelectedUserInfo {
+        private String nickname;
+        private String profileImage;
+    }
 }
