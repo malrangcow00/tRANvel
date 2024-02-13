@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Getter
 @Entity
@@ -34,7 +35,7 @@ public class Announcement {
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
-        this.dateTime = LocalDateTime.now().toString();
+        this.dateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul")).toString();
 
     }
 }

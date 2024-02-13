@@ -40,7 +40,7 @@ public class AnnounceController {
     }
 
     @PostMapping()
-    public ResponseEntity<ResponseDto> postAnnouncement(@RequestBody @Validated AnnouncementDto announcementDto){
+    public ResponseEntity<ResponseDto> postAnnouncement(AnnouncementDto announcementDto){
         Announcement announcement = announcementService.createAnnouncement(announcementDto);
         response = new ResponseDto(true, "공지사항이 등록되었습니다.", announcement.getId());
         return ResponseEntity.status(HttpStatus.OK).body(response);

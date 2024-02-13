@@ -22,17 +22,17 @@ public class UserDto {
     @NotEmpty
     private String password;
 
-    private String profileImage;
+//    private String profileImage;
 
-    private int balance;
+//    private int balance;
 
     public static UserDto fromEntity(User user) {
         UserDto dto = new UserDto();
         dto.setEmail(user.getEmail());
         dto.setNickName(user.getNickName());
         dto.setPassword(user.getPassword());
-        dto.setProfileImage(user.getProfileImage());
-        dto.setBalance(user.getBalance());
+//        dto.setProfileImage(user.getProfileImage());
+//        dto.setBalance(user.getBalance());
         return dto;
     }
 }

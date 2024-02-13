@@ -18,7 +18,8 @@ fun NavGraphBuilder.gameNavGraph(navController: NavController) {
     navigation(startDestination = Screen.Draw.route!!, route = "game") {
         composable(route = Screen.Draw.route) {
             GameScreen(
-                navController
+                navController,
+                hiltViewModel(it)
             )
         }
 
@@ -26,14 +27,16 @@ fun NavGraphBuilder.gameNavGraph(navController: NavController) {
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(Screen.Draw.route)
             }
-            FoodScreen(navController)
+            FoodScreen(
+                onBackPressed = { navController.popBackStack() }
+            )
         }
 
         composable(route = Screen.Account.route!!) {
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(Screen.Draw.route)
             }
-            AccountScreen(){
+            AccountScreen() {
                 navController.popBackStack()
             }
         }

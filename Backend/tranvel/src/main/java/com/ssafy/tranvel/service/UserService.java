@@ -68,7 +68,7 @@ public class UserService {
                 .nickName(userDto.getNickName())
                 // 암호화 필요
                 .password(userDto.getPassword())
-                .profileImage((userDto.getProfileImage() == null) ? userDto.getProfileImage() : null)
+//                .profileImage((userDto.getProfileImage() == null) ? userDto.getProfileImage() : null)
                 .balance(0)
                 .build();
 

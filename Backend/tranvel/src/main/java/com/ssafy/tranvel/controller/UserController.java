@@ -61,9 +61,8 @@ public class UserController {
 
     // 닉네임 유효성 검사
     @PostMapping("/duplication")
-    public ResponseEntity<ResponseDto> nickNameCheck(@RequestBody @Validated
-                                                     NickNameCheckDto nickNameCheckDto) {
-        if (!userService.nickNameDuplicationCheck(nickNameCheckDto.getNickName(), nickNameCheckDto.getEmail())) {
+    public ResponseEntity<ResponseDto> nickNameCheck(String email, String nickName) {
+        if (!userService.nickNameDuplicationCheck(nickName, email)) {
             response = new ResponseDto(false, "이미 존재하는 닉네임 입니다.", null);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
@@ -72,10 +71,10 @@ public class UserController {
     }
 
     // 프로필 이미지 등록
-    @PostMapping(value = "/profileImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
-    public ResponseEntity<ResponseDto> saveImage(@RequestPart ImagePostDto imagePostDto, @RequestPart(value = "image",required = true) MultipartFile image) throws IOException {
+    @PostMapping(value = "/profileImage", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<ResponseDto> saveProfileImage(@RequestPart(value = "image",required = true) MultipartFile image) throws IOException {
 
-        imageUploadService.uploadImage(imagePostDto, image, "profile");
+        imageUploadService.uploadProfileImage(image);
         response = new ResponseDto(true, "프로필 사진 s3 저장", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -107,8 +106,15 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
             User user = userOptional.get();
+            UserProfileDto userProfileDto = UserProfileDto.builder()
+                    .id(user.getId())
+                    .email(userId)
+                    .nickName(user.getNickName())
+                    .profileImage(user.getProfileImage())
+                    .balance(user.getBalance())
+                    .build();
             // 필요한 사용자 정보만 ResponseDto에 포함하여 반환
-            response = new ResponseDto(true, "사용자 정보 조회 성공", user);
+            response = new ResponseDto(true, "사용자 정보 조회 성공", userProfileDto);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             response = new ResponseDto(false, "오류 발생: " + e.getMessage(), null);
@@ -118,26 +124,24 @@ public class UserController {
 
     // 회원 문의글 작성
     @PostMapping("/auth/inquiry")
-    public ResponseEntity<ResponseDto> postInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
-        InquiryDto info = inquiryDto;
-        info.setUserEmail(SecurityUtility.getCurrentUserId());
-        Inquiry inquiry = inquiryService.createInquiry(info);
+    public ResponseEntity<ResponseDto> postInquiry(String title, String content) {
+        Inquiry inquiry = inquiryService.createInquiry(title, content);
         response = new ResponseDto(true, "문의 작성 완료", inquiry);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 회원 문의글 전체 조회
-    @PostMapping("/auth/inquiry/list")
-    public ResponseEntity<ResponseDto> getAllInquiries(@RequestBody @Validated InquiryDto inquiryDto) {
-        List<Inquiry> inquiries = inquiryService.getAllInquiries(inquiryDto);
+    @GetMapping("/auth/inquiry/list")
+    public ResponseEntity<ResponseDto> getAllInquiries() {
+        List<Inquiry> inquiries = inquiryService.getAllInquiries();
         response = new ResponseDto(true, "전체 문의 글 조회", inquiries);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 회원 문의글 상세 조회
     @PostMapping("/auth/inquiry/detail")
-    public ResponseEntity<ResponseDto> getInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
-        Inquiry inquiry = inquiryService.getInquiry(inquiryDto);
+    public ResponseEntity<ResponseDto> getInquiry(Long inquiryId) {
+        Inquiry inquiry = inquiryService.getInquiry(inquiryId);
         response = new ResponseDto(true, "상세 문의 글 조회", inquiry);
         return  ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -152,8 +156,8 @@ public class UserController {
 
     // 회원 문의글 삭제
     @DeleteMapping("/auth/inquiry/detail")
-    public ResponseEntity<ResponseDto> deleteInquiry(@RequestBody @Validated InquiryDto inquiryDto) {
-        inquiryService.deleteInquiry(inquiryDto);
+    public ResponseEntity<ResponseDto> deleteInquiry(Long inquiryId) {
+        inquiryService.deleteInquiry(inquiryId);
         response = new ResponseDto(true, "문의 글이 삭제되었습니다.", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

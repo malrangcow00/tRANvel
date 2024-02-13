@@ -49,20 +49,20 @@ public class RoomHistory {
     @Column(name = "NowPlaying")
     private boolean nowPlaying;
 
-    @OneToMany(mappedBy = "roomHistory")
+    @OneToMany(mappedBy = "roomHistory", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<AdjustmentGameHistory> adjustmentGameHistories;
 
-    @OneToMany(mappedBy = "roomHistory")
+    @OneToMany(mappedBy = "roomHistory", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<AttractionGameHistory> attractionGameHistories;
 
-    @OneToMany(mappedBy = "roomHistory")
+    @OneToMany(mappedBy = "roomHistory", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<FoodGameHistory> foodGameHistories;
 
 
-    @OneToMany(mappedBy = "roomHistory")
+    @OneToMany(mappedBy = "roomHistory", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<RoomImage> images;
 

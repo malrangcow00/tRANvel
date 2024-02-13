@@ -8,10 +8,10 @@ import lombok.Setter;
 @Getter @Setter
 public class RoomHistoryDto {
 
-    @Nullable
-    private Long userId;
+//    @Nullable
+//    private Long userId;
 
-    private String userEmail;
+//    private String userEmail;
 
     private String roomCode;
 

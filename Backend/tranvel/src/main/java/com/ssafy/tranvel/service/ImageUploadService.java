@@ -30,6 +30,7 @@ public class ImageUploadService {
     @Value("${cloud.aws.s3.bucketName}")
     private String bucketName;
 
+    private final UserRepository userRepository;
     private final RoomHistoryRepository roomHistoryRepository;
     private final FoodGameHistoryRepository foodGameHistoryRepository;
     private final AdjustmentGameHistoryRepository adjustmentGameHistoryRepository;
@@ -39,58 +40,80 @@ public class ImageUploadService {
     private final AdjustmentImageRepository adjustmentImageRepository;
     private  final AttractionImageRepository attractionImageRepository;
 
+    public String uploadProfileImage(MultipartFile image) throws IOException {
+
+        User user = userRepository.findByEmail(SecurityUtility.getCurrentUserId()).get();
+
+        String fileName = SecurityUtility.getCurrentUserId() + ".jpg";
+
+
+        String dir = "/profile";
+        InputStream inputStream = image.getInputStream();
+
+        ObjectMetadata metadata =  new ObjectMetadata();
+        metadata.setContentLength(image.getSize());
+
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName + dir, fileName, inputStream, metadata);
+        amazonS3.putObject(putObjectRequest);
+
+        user.setProfileImage(dir + "/" + fileName);
+        userRepository.save(user);
+        return dir + "/" + fileName;
+
+        }
+
 
     public String uploadImage(ImagePostDto imagePostDto, MultipartFile image, String category) throws IOException {
 //        String fileName = image.getOriginalFilename();
         // MultipartFile image, String category, Long roomId, Long contentId
+        String originalFileName = image.getOriginalFilename();
+
         String fileName;
 
         String dir;
-        if (category.equals("profile")) {
 
-            fileName = SecurityUtility.getCurrentUserId();
+//        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
 
-            dir = "/" + category;
-        } else {
-            switch (category) {
-                case "food" :
-                    FoodImage foodImage = FoodImage.builder()
-                            .foodGameHistory(foodGameHistoryRepository.findById(imagePostDto.getContentId()).get())
-                            .build();
-                    ;
-                    fileName = foodImageRepository.save(foodImage).getId().toString();
-                    dir = "/" + imagePostDto.getRoomId() + "/" + category;
-                    break;
-                case "adjustment" :
-                    AdjustmentImage adjustmentImage = AdjustmentImage.builder()
-                            .adjustmentGameHistory(adjustmentGameHistoryRepository.findById(imagePostDto.getContentId()).get())
-                            .build();
+        switch (category) {
+            case "food" :
+                FoodImage foodImage = FoodImage.builder()
+                        .foodGameHistory(foodGameHistoryRepository.findById(imagePostDto.getContentId()).get())
+                        .build();
+                ;
+                fileName = foodImageRepository.save(foodImage).getId().toString() + ".jpg";
+                dir = "/" + imagePostDto.getRoomId() + "/" + category;
+                break;
+            case "adjustment" :
+                AdjustmentImage adjustmentImage = AdjustmentImage.builder()
+                        .adjustmentGameHistory(adjustmentGameHistoryRepository.findById(imagePostDto.getContentId()).get())
+                        .build();
 
-                    fileName = adjustmentImageRepository.save(adjustmentImage).getId().toString();
-                    dir = "/" + imagePostDto.getRoomId() + "/" + category;
-                    break;
-                case "attraction":
-                    AttractionImage attractionImage = AttractionImage.builder()
-                            .attractionGameHistory(attractionGameRepository.findById(imagePostDto.getContentId()).get())
-                            .build();
+                fileName = adjustmentImageRepository.save(adjustmentImage).getId().toString() + ".jpg";
+                dir = "/" + imagePostDto.getRoomId() + "/" + category;
+                break;
+            case "attraction":
+                AttractionImage attractionImage = AttractionImage.builder()
+                        .attractionGameHistory(attractionGameRepository.findById(imagePostDto.getContentId()).get())
+                        .build();
 
-                    fileName = attractionImageRepository.save(attractionImage).getId().toString();
-                    dir = "/" + imagePostDto.getRoomId() + "/" + category;
-                    break;
-                default:
-                    RoomImage roomImage = RoomImage.builder()
-                            .roomHistory(roomHistoryRepository.findById(imagePostDto.getRoomId()).get())
-                            .build();
+                fileName = attractionImageRepository.save(attractionImage).getId().toString() + ".jpg";
+                dir = "/" + imagePostDto.getRoomId() + "/" + category;
+                break;
+            default:
+                RoomImage roomImage = RoomImage.builder()
+                        .roomHistory(roomHistoryRepository.findById(imagePostDto.getRoomId()).get())
+                        .build();
 
-                    fileName = roomImageRepository.save(roomImage).getId().toString();
-                    dir = "/" + imagePostDto.getRoomId();
-            }
+                fileName = roomImageRepository.save(roomImage).getId().toString() + ".jpg";
+                dir = "/" + imagePostDto.getRoomId();
+        }
             // 기록 별 해당 기록 id 로 저장
 //            fileName = imagePostDto.getContentId().toString();
 
-        }
+
 
         InputStream inputStream = image.getInputStream();
+
 
         ObjectMetadata metadata =  new ObjectMetadata();
         metadata.setContentLength(image.getSize());

@@ -6,5 +6,9 @@ import com.ssafy.tranvel.data.utils.DataState
 import kotlinx.coroutines.flow.Flow
 
 interface TravelDataSource {
-    suspend fun createRoom(room:Room): Flow<DataState<DataResponse<Room>>>
+    suspend fun createRoom(roomPassword: String): Flow<DataState<DataResponse<Room<Boolean>>>>
+    suspend fun enterRoom(
+        roomCode: String,
+        roomPassword: String
+    ): Flow<DataState<DataResponse<Room<Boolean>>>>
 }

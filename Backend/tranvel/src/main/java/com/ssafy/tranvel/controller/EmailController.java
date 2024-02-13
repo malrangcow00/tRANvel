@@ -37,12 +37,16 @@ public class EmailController {
     private ResponseDto response;
 
     @PostMapping("/email-auth")
-    public ResponseEntity<ResponseDto> sendEmail(@RequestBody @Validated EmailDto emailDto) throws MessagingException, UnsupportedEncodingException {
-        if (emailAuthService.emailDuplication(emailDto)) {
+    public ResponseEntity<ResponseDto> sendEmail(String email) throws MessagingException, UnsupportedEncodingException {
+        if (email == null || email.trim().isEmpty()) {
+            response = new ResponseDto(false, "이메일 주소를 입력해 주세요.", null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+        if (emailAuthService.emailDuplication(email)) {
             response = new ResponseDto(false, "이미 회원가입 된 이메일입니다.", null);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
-        emailAuthService.createEmailForm(emailDto.getEmail());
+        emailAuthService.createEmailForm(email);
         response = new ResponseDto(true, "인증 코드를 전송하였습니다.", null);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

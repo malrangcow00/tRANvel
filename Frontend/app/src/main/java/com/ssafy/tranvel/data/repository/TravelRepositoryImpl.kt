@@ -10,9 +10,16 @@ import javax.inject.Inject
 
 class TravelRepositoryImpl @Inject constructor(
     private val travelDataSource: TravelDataSource
-): TravelRepository {
-    override suspend fun createRoom(room: Room): Flow<DataState<DataResponse<Room>>> {
-        return travelDataSource.createRoom(room)
+) : TravelRepository {
+    override suspend fun createRoom(roomPassword: String): Flow<DataState<DataResponse<Room<Boolean>>>> {
+        return travelDataSource.createRoom(roomPassword)
+    }
+
+    override suspend fun enterRoom(
+        roomCode: String,
+        roomPassword: String
+    ): Flow<DataState<DataResponse<Room<Boolean>>>> {
+        return travelDataSource.enterRoom(roomCode, roomPassword)
     }
 
 }

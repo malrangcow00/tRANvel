@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter @Setter
 public class InquiryDto {
 //    @NotNull
-    private String userEmail;
+//    private String userEmail;
 
 //    private Long userId;
 
