@@ -1,9 +1,9 @@
 spring:
   profiles:
-    group:
-      set1: set1
-      set2: set2
-##    include: secret
+#    group:
+#      set1: set1
+#      set2: set2
+    include: secret
 ##    active: set1
 #
 #---
