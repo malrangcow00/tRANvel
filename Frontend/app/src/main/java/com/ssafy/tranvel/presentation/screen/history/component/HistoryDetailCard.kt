@@ -12,14 +12,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
@@ -28,8 +26,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,25 +43,43 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
-import androidx.navigation.NavController
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.tranvel.BuildConfig
 import com.ssafy.tranvel.data.model.dto.DetailHistoryDto
 import com.ssafy.tranvel.data.model.dto.DetailHistoryRecordDto
-import com.ssafy.tranvel.data.model.dto.HistoryDto
-import com.ssafy.tranvel.presentation.screen.announcement.AnnouncementDetailScreen
 import com.ssafy.tranvel.presentation.screen.components.EmptyIndicator
 import com.ssafy.tranvel.presentation.screen.components.ResultLoadingIndicator
 import com.ssafy.tranvel.presentation.screen.history.DetailHistoryRecordViewModel
 import com.ssafy.tranvel.presentation.screen.history.DetailHistoryViewModel
-import com.ssafy.tranvel.presentation.screen.history.navigation.navigateHistory
 import com.ssafy.tranvel.presentation.screen.home.component.moneyFormatter
 import com.ssafy.tranvel.presentation.ui.theme.bmjua
 import kotlinx.coroutines.flow.Flow
 
 private const val TAG = "HistoryDetailCard_싸피"
+
+//무지개색 색상 hex code list
+var rainbows = listOf<Long>(
+    0xFFFF0000,
+    0xFFFF7F00,
+    0xFFFFFF00,
+    0xFF00FF00,
+    0xFF0000FF,
+    0xFF4B0082,
+    0xFF9400D3
+)
+
+//무지개색 파스텔톤 색상 hex code list
+var pastelRainbows = listOf<Long>(
+    0xFFEF9595,
+    0xFFEFB495,
+    0xFFEBEF95,
+    0xFFC3EDC0,
+    0xFF7BD3EA,
+    0xFF8294C4,
+    0xFFBA90C6
+)
 
 @Composable
 fun HistoryDetailCard(
@@ -86,45 +100,12 @@ fun HistoryDetailCard(
         detailHistoryRecordViewModel.cnt = pagingItems!!.itemCount
     }
 
-    Log.d(
-        TAG,
-        "HistoryDetailCard: 여기서 detailHistoryRecordViewModel.cnt : ${detailHistoryRecordViewModel.cnt}"
-    )
-    Log.d(TAG, "HistoryDetailCard: 여기서 pagingItems.itemCount : ${pagingItems?.itemCount}")
-
-    //무지개색 색상 hex code list
-    var colors = listOf<Long>(
-        0xFFFF0000,
-        0xFFFF7F00,
-        0xFFFFFF00,
-        0xFF00FF00,
-        0xFF0000FF,
-        0xFF4B0082,
-        0xFF9400D3
-    )
-//    var showDialog = remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
-
-//    if (showDialog.value) {
-//        HistoryDetailDialog(
-//            roomId = roomId,
-//            dto = dto!!,
-//            onDismiss = { showDialog.value = false },
-//            showDialog = showDialog.value,
-//            detailHistoryRecordViewModel,
-//            isLoading =  isLoading,
-//            pagedData = pagedData,
-//            pagingItems
-//        )
-//    }
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
             .fillMaxWidth()
-//            .clickable(
-//                onClick = { showDialog.value = true }
-//            ),
     ) {
         Row(
             modifier = Modifier
@@ -144,7 +125,7 @@ fun HistoryDetailCard(
                         .size(30.dp)
                         .aspectRatio(1f)
                         .background(
-                            color = Color(colors[(detailHistoryViewModel.cnt - 1 - index) % 7]),
+                            color = Color(rainbows[(detailHistoryViewModel.cnt - 1 - index) % 7]),
                             shape = CircleShape
                         )
                         .border(BorderStroke(1.dp, color = Color.LightGray), CircleShape),
@@ -190,7 +171,6 @@ fun HistoryDetailCard(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-//                        .border(BorderStroke(1.dp, color = Color.LightGray))
                         .clip(RoundedCornerShape(5.dp))
                         .padding(10.dp)
                         .clickable {
@@ -332,6 +312,39 @@ fun HistoryRecordCard(
                     .fillMaxSize(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth(0.15f)
+                ) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .size(30.dp)
+                            .aspectRatio(1f)
+                            .background(
+                                color = Color(pastelRainbows[(index) % 7]),
+                                shape = CircleShape
+                            )
+                            .border(BorderStroke(1.dp, color = Color.Black), CircleShape),
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Canvas(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .fillMaxSize()
+                    ) {
+                        val canvasWidth = size.width
+                        drawLine(
+                            color = Color.Black,
+                            start = Offset(canvasWidth / 2, -20.dp.toPx()),
+                            end = Offset(canvasWidth / 2, 150.dp.toPx()),
+                            strokeWidth = 2.dp.toPx(),
+                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 40f), 10f)
+                        )
+                    }
+                }
                 Text(
                     text = dto.detail.orEmpty()
                 )

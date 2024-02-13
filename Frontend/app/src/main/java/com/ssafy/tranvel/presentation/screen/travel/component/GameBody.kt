@@ -37,6 +37,7 @@ fun GameBody(
                 .fillMaxHeight(0.3f)
         )
         Log.d("TAG", "GameBody: ${RoomInfo.roomCode},  ${RoomInfo.roomPassword}")
-//        HomeHistoryBody(historyViewModel = , navigateToHistory = )
+
+
     }
 }
