@@ -1,13 +1,28 @@
 spring:
-
   profiles:
-    include:
-      - secret
+    active: local
+    group:
+      local: secret
+      set1: blue, secret
+      set2: green, secret
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+
+---
+spring:
+  config:
+    activate:
+      on-profile: blue
+
+
+server:
+  port: 8080
+
+---
+spring:
+  config:
+    activate:
+      on-profile: green
+
+server:
+  port: 8081
+
