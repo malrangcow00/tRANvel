@@ -132,11 +132,4 @@ public class StompController {
         // 선택 인원은 각각 [닉네임, 프로필이미지, 제출 음식], 미선택 인원은 각각 [닉네임, 프로필이미지]로 반환.
         sendingOperations.convertAndSend("/topic/tranvel/foodgameready/" + message.getRoomId(), response);
     }
-
-//    // 방장이 StompDto.message에 선정된 음식 담아 쏘면 그 음식을 저장하고 발송함
-//    @MessageMapping("/tranvel/selectedfood")
-//    public void foodSelected(StompDto message) {
-//        foodGameService.foodSelected(message);
-//        sendingOperations.convertAndSend("/topic/tranvel/selectedfood/" + message.getRoomId(), message);
-//    }
 }
