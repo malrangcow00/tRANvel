@@ -1,5 +1,11 @@
 package com.ssafy.tranvel.presentation.screen.travel.component
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,19 +22,17 @@ import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.AirplaneTicket
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person2
 import androidx.compose.material.icons.filled.RestaurantMenu
 import androidx.compose.material.icons.filled.ShoppingBasket
 import androidx.compose.material.icons.filled.Train
@@ -42,6 +46,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -51,31 +57,85 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ssafy.tranvel.presentation.screen.travel.TravelViewModel
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
+import com.ssafy.tranvel.BuildConfig
+import com.ssafy.tranvel.R
+import com.ssafy.tranvel.data.model.dto.UserInfo
+import com.ssafy.tranvel.presentation.screen.travel.GameViewModel
+import com.ssafy.tranvel.presentation.screen.travel.RoomInfo
+import com.ssafy.tranvel.presentation.screen.utils.ConverterURIToBitmap
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor2
 import com.ssafy.tranvel.presentation.ui.theme.TextColor
+import java.io.ByteArrayOutputStream
+import java.io.File
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
 fun AccountBody(
     paddingValues: PaddingValues,
+    gameViewModel: GameViewModel,
+    context: Context = LocalContext.current,
     onBackPressed: () -> (Unit)
 ) {
     var selectedCategory: Int by remember { mutableIntStateOf(6) }
     val selectedCategoryColor: Color by remember {
         mutableStateOf(PrimaryColor)
     }
+    var selectedUser by remember {
+        mutableStateOf(mutableMapOf<Long, UserInfo>())
+    }
     var inputText: String by remember {
         mutableStateOf("")
     }
+    var inputContent: String by remember {
+        mutableStateOf("")
+    }
+    val userList by gameViewModel.userList.collectAsState()
+    val loadingState by gameViewModel.accountUiState.collectAsState()
+    val result by gameViewModel.networkResult.collectAsState()
+
+    if (result) {
+        onBackPressed()
+        gameViewModel.setNetworkResult()
+    }
+
+    if (loadingState) {
+        //다이얼로그 발생
+    }
+
+    LaunchedEffect(true) {
+        gameViewModel.getUserList(RoomInfo.roomID)
+    }
+
+    var filePath: String by remember {
+        mutableStateOf("")
+    }
+    val bitmap: Bitmap? by gameViewModel.bitmap.collectAsState(initial = null)
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            if (uri != null) {
+                filePath = uri.path.toString()
+                gameViewModel.setBitmap(
+                    ConverterURIToBitmap().setImgUri(
+                        imgUri = uri,
+                        context = context
+                    )
+                )
+            }
+        }
 
     Column(
         modifier = Modifier
@@ -121,19 +181,23 @@ fun AccountBody(
                 )
             }
         }
-        val imageList = List(20) {
 
-        }
         LazyRow(
             modifier = Modifier
                 .padding(top = 10.dp)
                 .fillMaxWidth()
         ) {
-            items(imageList.size) { item ->
+            itemsIndexed(userList) { index, item ->
                 Card(
                     modifier = Modifier
                         .padding(end = 3.dp),
-                    onClick = {},
+                    onClick = {
+                        if (selectedUser.containsKey(item.joinUserId)) {
+                            selectedUser.remove(item.joinUserId)
+                        } else {
+                            selectedUser[item.joinUserId] = item
+                        }
+                    },
                     colors = CardDefaults.cardColors(containerColor = Color.White),
                     shape = RoundedCornerShape(10)
                 ) {
@@ -141,24 +205,26 @@ fun AccountBody(
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Box {
-                            Image(
-                                imageVector = Icons.Default.Person2,
+                            GlideImage(
+                                model = "${BuildConfig.S3_BASE_URL}/${item.profileImage}",
                                 contentDescription = "프로필이미지",
                                 modifier = Modifier
                                     .size(50.dp)
-                                    .align(Alignment.Center)
+                                    .align(Alignment.Center),
+                                failure = placeholder(painterResource(id = R.drawable.emptyimage))
                             )
-                            Icon(
-                                imageVector = Icons.Default.CheckCircle,
-                                contentDescription = "checking",
-                                modifier = Modifier
-                                    .size(10.dp)
-                                    .align(Alignment.TopEnd),
-                                tint = Color.Green
-                            )
+                            if (!selectedUser.containsKey(item.joinUserId)) {
+                                Icon(
+                                    imageVector = Icons.Default.CheckCircle,
+                                    contentDescription = "체크함",
+                                    tint = Color.Green
+                                )
+                            } else {
+                                Log.d("TAG", "AccountBody: $item")
+                            }
                         }
                         Text(
-                            text = "$item",
+                            text = item.nickName,
                             modifier = Modifier
                                 .padding(top = 5.dp)
                         )
@@ -183,7 +249,9 @@ fun AccountBody(
             },
             placeholder = { Text(text = "사용한 금액을 작성하세요.", color = TextColor) },
             singleLine = true,
-            textStyle = if (inputText!="") TextStyle(textAlign = TextAlign.End) else TextStyle(textAlign = TextAlign.Start),
+            textStyle = if (inputText != "") TextStyle(textAlign = TextAlign.End) else TextStyle(
+                textAlign = TextAlign.Start
+            ),
             trailingIcon = { if (inputText != "") Text(text = "원", color = TextColor) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             colors = TextFieldDefaults.colors(
@@ -253,8 +321,10 @@ fun AccountBody(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 10.dp),
-            value = "",
-            onValueChange = {},
+            value = inputContent,
+            onValueChange = {
+                inputContent = it
+            },
             placeholder = { Text(text = "자세한 사항을 입력하세요.") },
             trailingIcon = {
                 Icon(
@@ -286,22 +356,69 @@ fun AccountBody(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Image(
-                    imageVector = Icons.Default.AddAPhoto,
-                    contentDescription = "사진 추가",
-                    modifier = Modifier
-                        .size(100.dp)
-                        .background(color = Color.LightGray)
-                        .padding(5.dp),
-                )
+                if (bitmap == null) {
+                    Image(
+                        imageVector = Icons.Default.AddAPhoto,
+                        contentDescription = "사진 추가",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .background(color = Color.LightGray)
+                            .padding(5.dp)
+                            .clickable {
+                                launcher.launch("image/*")
+                            },
+                    )
+                } else {
+                    Image(
+                        bitmap = bitmap!!.asImageBitmap(),
+                        contentScale = ContentScale.FillBounds,
+                        contentDescription = "some useful description",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .padding(5.dp)
+                            .clickable {
+                                launcher.launch("image/*")
+                            }
+                            .align(Alignment.CenterHorizontally)
+                    )
+                }
             }
         }
-        Row{
-            Button(onClick = { onBackPressed() }) {
-                Text(text = "작성")
-            }
-            Button(onClick = { onBackPressed() }) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .padding(end = 10.dp),
+                onClick = { onBackPressed() }
+            ) {
                 Text(text = "취소")
+            }
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .padding(end = 10.dp),
+                onClick = {
+                    var tempFile:File? = null
+                    if (bitmap != null) {
+                        val resizedBitmap = Bitmap.createScaledBitmap(bitmap!!, bitmap!!.width / 2, bitmap!!.height / 2, true)
+                        val byteArrayOutputStream = ByteArrayOutputStream()
+                        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
+                        tempFile = File.createTempFile("resized_image", ".jpg", context.cacheDir)
+                    }
+
+                    gameViewModel.setAdjustmentGameHistory(
+                        selectedUser.keys.toList(),
+                        inputText.toInt(),
+                        categoryList[selectedCategory].title,
+                        inputContent,
+                        tempFile
+                    )
+                }
+            ) {
+                Text(text = "작성")
             }
         }
     }

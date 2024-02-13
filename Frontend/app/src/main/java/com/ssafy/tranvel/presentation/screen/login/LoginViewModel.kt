@@ -7,11 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.tranvel.data.model.request.UserRequest
 import com.ssafy.tranvel.data.utils.DataState
+import com.ssafy.tranvel.domain.repository.RegisterRepository
 import com.ssafy.tranvel.domain.usecase.register.GetUserUseCase
 import com.ssafy.tranvel.domain.usecase.token.SetTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -19,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
-    private val setTokenUseCase: SetTokenUseCase
+    private val setTokenUseCase: SetTokenUseCase,
+    private val registerRepository: RegisterRepository
 ) : ViewModel() {
 
     val id: MutableState<String> = mutableStateOf("")
@@ -63,6 +66,34 @@ class LoginViewModel @Inject constructor(
         setTokenUseCase.execute(token, key)
     }
 
+    private fun getUser(accessToken: String) {
+        viewModelScope.launch {
+            registerRepository.getUser(accessToken).collect {
+                when (it) {
+                    is DataState.Success -> {
+                        _uiState.emit("SUCCESS")
+                        _currentState.emit(false)
+                        User.id = it.data.data.id
+                        User.email = it.data.data.email
+                        User.balance = it.data.data.balance
+                        User.profileImage = it.data.data.profileImage
+                        User.nickName = it.data.data.nickName
+                    }
+
+                    is DataState.Error -> {
+                        _uiState.emit("ERROR")
+                        _currentState.emit(false)
+                    }
+
+                    is DataState.Loading -> {
+                        _uiState.emit("LOADING")
+                        _currentState.emit(true)
+                    }
+                }
+            }
+        }
+    }
+
     fun loginUser() {
         viewModelScope.launch {
             _currentState.emit(true)
@@ -75,8 +106,8 @@ class LoginViewModel @Inject constructor(
                 when (it) {
                     is DataState.Success -> {
                         if (it.data.result) {
-                            _uiState.emit("SUCCESS")
-                            setToken(it.data.data.accessToken,"access_token", )
+                            setToken(it.data.data.accessToken, "access_token")
+                            getUser(it.data.data.accessToken)
                         } else {
                             _uiState.emit("ERROR")
                         }
