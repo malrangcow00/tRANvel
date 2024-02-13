@@ -89,25 +89,25 @@ public class FoodGameService {
 
         // 선택 인원은 각각 [닉네임, 프로필이미지, 제출 음식]로 반환.
         // 미선택 인원은 각각 [닉네임, 프로필이미지]로 반환.
-        List<List<String>> responseSelectedUserInfos = new ArrayList<>();
-        List<List<String>> responseUnSelectedUserInfos = new ArrayList<>();
+        List<StompFoodGameDto.selectedUserInfo> responseSelectedUserInfos = new ArrayList<>();
+        List<StompFoodGameDto.unSelectedUserInfo> responseUnSelectedUserInfos = new ArrayList<>();
 
         for (FoodGameHistory.submitUserInfo selectedUserInfo : selectedUserInfos) {
-            List<String> responseSelectedUserInfo = new ArrayList<>();
+            StompFoodGameDto.selectedUserInfo responseSelectedUserInfo = new StompFoodGameDto.selectedUserInfo();
 
             User user = userRepository.findById(selectedUserInfo.getUserId()).get();
-            responseSelectedUserInfo.add(user.getNickName()); // nickname
-            responseSelectedUserInfo.add(user.getProfileImage()); // profileImage
-            responseSelectedUserInfo.add(selectedUserInfo.getSubmittedFood()); // 제출음식
+            responseSelectedUserInfo.setNickname(user.getNickName()); // nickname
+            responseSelectedUserInfo.setProfileImage(user.getProfileImage()); // profileImage
+            responseSelectedUserInfo.setSubmittedFood(selectedUserInfo.getSubmittedFood()); // 제출음식
 
             responseSelectedUserInfos.add(responseSelectedUserInfo);
         }
         for (Long unSelectedUserId : unSelectedUserIds) {
-            List<String> responseUnSelectedUserInfo = new ArrayList<>();
+            StompFoodGameDto.unSelectedUserInfo responseUnSelectedUserInfo = new StompFoodGameDto.unSelectedUserInfo();
 
             User user = userRepository.findById(unSelectedUserId).get();
-            responseUnSelectedUserInfo.add(user.getNickName()); // nickname
-            responseUnSelectedUserInfo.add(user.getProfileImage()); // profileImage
+            responseUnSelectedUserInfo.setNickname(user.getNickName()); // nickname
+            responseUnSelectedUserInfo.setProfileImage(user.getProfileImage()); // profileImage
 
             responseUnSelectedUserInfos.add(responseUnSelectedUserInfo);
         }
