@@ -131,31 +131,17 @@ fun DetailHistoryContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (isLoading) {
-//                    if (pagingItems != null && detailHistoryRecordViewModel.cnt == 0) {
-//                        Log.d(TAG, "DetailHistoryContent: detailHistoryRecordViewModel.cnt1 : ${detailHistoryRecordViewModel.cnt}")
-//                        Log.d(TAG, "DetailHistoryContent: pagingItems1 : ${pagingItems?.itemCount}")
-//                        detailHistoryRecordViewModel.cnt = pagingItems!!.itemCount
-//                    }
                     items(1) {
                         ResultLoadingIndicator()
                     }
                 } else if (pagedData != null && pagingItems != null) {
-//                    Log.d(TAG, "DetailHistoryContent: pagingItems2 : ${pagingItems?.itemCount}")
-//                    Log.d(TAG, "DetailHistoryContent: pagingData2 : ${pagedData}")
-//                    if (detailHistoryRecordViewModel.cnt == 0 && pagingItems!!.itemCount != 0) {
-//                        detailHistoryRecordViewModel.cnt = pagingItems!!.itemCount
-//                    }
-//                    Log.d(
-//                        TAG,
-//                        "DetailHistoryContent: detailHistoryRecordViewModel.cnt3 : ${detailHistoryRecordViewModel.cnt}"
-//                    )
                     items(count = detailHistoryRecordViewModel.cnt) { index ->
                         Log.d(TAG, "DetailHistoryContent: index : ${index} dto.roomId : ${roomId}")
-                        HistoryRecordCard(
-                            index = index,
-                            dateTime = dto?.dateTime,
-                            dto = pagingItems!![index]
-                        )
+//                        HistoryRecordCard(
+//                            index = index,
+//                            dateTime = dto?.dateTime,
+//                            dto = pagingItems!![index]
+//                        )
                     }
                 } else {
                     items(1) {
@@ -202,58 +188,58 @@ private fun <T> rememberFlowWithLifecycle(
     )
 }
 
-@Composable
-fun HistoryRecordCard(
-    index: Int,
-    dateTime: String?,
-    dto: DetailHistoryRecordDto?
-) {
-    var date1: String = if (dateTime == null) "" else {
-        dateTime.substring(5, 7).toInt()
-            .toString() + "월 " + dateTime.substring(8, 10).toInt()
-            .toString() + "일"
-    }
-
-    var date2: String = if (dto?.dateTime == null) "" else {
-        dto.dateTime.substring(5, 7).toInt()
-            .toString() + "월 " + dto.dateTime.substring(8, 10).toInt()
-            .toString() + "일"
-    }
-
-    if (dto != null && date1.equals(date2)) {
-        Log.d(TAG, "HistoryRecordCard: date1 값은 : ${date1}")
-        Card(
-            colors = CardDefaults.cardColors(containerColor = Color.White),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp),
-            shape = RoundedCornerShape(10.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .padding(10.dp)
-                    .fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                Text(
-                    text = matchCategory(dto.historyCategory)
-                )
-                Text(
-                    text = dto.detail.orEmpty()
-                )
-                Text(
-                    text = if (matchCategory(dto.historyCategory).equals("정산")) moneyFormatter(dto.moneyResult!!.toInt()) else ""
-                )
-            }
-        }
-    }
-}
-
-fun matchCategory(gameType: String): String {
-    if (gameType.equals("adjustment")) {
-        return "정산"
-    } else if (gameType.equals("food")) {
-        return "음식"
-    } else return "장소"
-}
+//@Composable
+//fun HistoryRecordCard(
+//    index: Int,
+//    dateTime: String?,
+//    dto: DetailHistoryRecordDto?
+//) {
+//    var date1: String = if (dateTime == null) "" else {
+//        dateTime.substring(5, 7).toInt()
+//            .toString() + "월 " + dateTime.substring(8, 10).toInt()
+//            .toString() + "일"
+//    }
+//
+//    var date2: String = if (dto?.dateTime == null) "" else {
+//        dto.dateTime.substring(5, 7).toInt()
+//            .toString() + "월 " + dto.dateTime.substring(8, 10).toInt()
+//            .toString() + "일"
+//    }
+//
+//    if (dto != null && date1.equals(date2)) {
+//        Log.d(TAG, "HistoryRecordCard: date1 값은 : ${date1}")
+//        Card(
+//            colors = CardDefaults.cardColors(containerColor = Color.White),
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(100.dp),
+//            shape = RoundedCornerShape(10.dp)
+//        ) {
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically,
+//                modifier = Modifier
+//                    .padding(10.dp)
+//                    .fillMaxSize(),
+//                horizontalArrangement = Arrangement.SpaceAround
+//            ) {
+//                Text(
+//                    text = matchCategory(dto.historyCategory)
+//                )
+//                Text(
+//                    text = dto.detail.orEmpty()
+//                )
+//                Text(
+//                    text = if (matchCategory(dto.historyCategory).equals("정산")) moneyFormatter(dto.moneyResult!!.toInt()) else ""
+//                )
+//            }
+//        }
+//    }
+//}
+//
+//fun matchCategory(gameType: String): String {
+//    if (gameType.equals("adjustment")) {
+//        return "정산"
+//    } else if (gameType.equals("food")) {
+//        return "음식"
+//    } else return "장소"
+//}

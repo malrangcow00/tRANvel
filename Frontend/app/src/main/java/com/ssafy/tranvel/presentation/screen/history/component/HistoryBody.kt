@@ -83,8 +83,7 @@ private fun Content(
     pagedData?.let {
         pagingItems = rememberFlowWithLifecycle(it).collectAsLazyPagingItems()
     }
-
-
+    
     Box(
         modifier = Modifier.padding(paddingValues)
     ) {
