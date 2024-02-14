@@ -23,9 +23,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "API_KEY", getApiKey("API_KEY"))
-        buildConfigField("String", "WEBSOCKET_URL", getApiKey("WEBSOCKET_URL"))
-        resValue("string", "NAVER_API_KEY", getApiKey("NAVER_API_KEY"))
+        buildConfigField("String", "API_KEY",getApiKey("API_KEY"))
+        buildConfigField("String", "WEBSOCKET_URL",getApiKey("WEBSOCKET_URL"))
+        resValue("string","NAVER_API_KEY",getApiKey("NAVER_API_KEY"))
+        buildConfigField("String", "S3_ADDRESS",getApiKey("S3_ADDRESS"))
+        buildConfigField("String", "S3_BASE_URL", getApiKey("S3_BASE_URL"))
     }
 
     buildTypes {

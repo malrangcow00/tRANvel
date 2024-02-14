@@ -12,13 +12,14 @@ class GetHistoryUseCase @Inject constructor(
     private val historyRepository : HistoryRepository
 ){
     data class Params(
-        val pagingConfig : PagingConfig
+        val pagingConfig : PagingConfig,
+        val userId : Long
     )
 
     operator fun invoke(param: Params) : Flow<PagingData<HistoryDto>>{
         return Pager(
             config = param.pagingConfig,
-            pagingSourceFactory = { HistoryPagingSource(historyRepository) }
+            pagingSourceFactory = { HistoryPagingSource(historyRepository,param.userId) }
         ).flow
     }
 }

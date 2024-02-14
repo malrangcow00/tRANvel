@@ -204,7 +204,7 @@ fun EnterRoomDialog(onChangeState: () -> (Unit), onCreateRoom: (String) -> (Unit
         onDismissRequest = { onChangeState() },
         title = {
             Text(
-                text = "방 생성",
+                text = "방 입장",
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )

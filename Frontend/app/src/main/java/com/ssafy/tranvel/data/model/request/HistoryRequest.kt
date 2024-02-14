@@ -5,5 +5,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class HistoryRequest (
-    val userId : Long = 11,
+    val userId : Long,
 ):Parcelable

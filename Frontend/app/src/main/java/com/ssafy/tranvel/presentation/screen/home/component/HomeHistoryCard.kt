@@ -17,55 +17,78 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.ssafy.tranvel.data.model.dto.DetailHistoryDto
 import com.ssafy.tranvel.data.model.dto.HistoryDto
-import com.ssafy.tranvel.presentation.screen.history.HistoryScreen
+import com.ssafy.tranvel.presentation.screen.history.DetailHistoryViewModel
 import com.ssafy.tranvel.presentation.screen.history.HistoryViewModel
+import com.ssafy.tranvel.presentation.screen.history.component.HistoryDetailCard
+import com.ssafy.tranvel.presentation.screen.history.component.HistoryImageContent
 import com.ssafy.tranvel.presentation.screen.history.navigation.navigateHistory
 import com.ssafy.tranvel.presentation.ui.theme.bmjua
+import kotlinx.coroutines.flow.Flow
 import java.text.DecimalFormat
 
 private const val TAG = "HomeHistoryCard_싸피"
 
 @Composable
 fun HomeHistoryCard(
+    index : Int,
     viewModel: HistoryViewModel,
-    dto: HistoryDto?,
+    historyDto: HistoryDto?,
     navController: NavController
 ) {
-    val profit = if (dto?.balanceResult == null) 0 else moneyFormatter(dto.balanceResult)
-    val endDateString =
-        if (dto?.endDate == null) "" else (" ~ " + (dto?.endDate.orEmpty()).substring(5, 10))
+    var colors = listOf<Long>(
+        0xFFFF0000,
+        0xFFFF7F00,
+        0xFFFFFF00,
+        0xFF00FF00,
+        0xFF0000FF,
+        0xFF4B0082,
+        0xFF9400D3
+    )
+
+    val profit = if (historyDto?.balanceResult == null) 0 else moneyFormatter(historyDto.balanceResult)
+    val endDateString = if (historyDto?.endDate == null) "" else " ~ " + (historyDto?.endDate.orEmpty()).substring(5, 10)
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
             .fillMaxWidth()
             .height(150.dp)
-            .clickable(
-                onClick = {
-//                    HistoryScreen(viewModel = viewModel)
-//                    Log.d(TAG, "HomeHistoryCard viewModel dto 값 : ${viewModel.currentDto}")
-                    navController.navigateHistory(dto)
-                }
-            ),
+            .clickable {
+                Log.d(TAG, "HomeHistoryCard: historyDto => ${historyDto}")
+                Log.d(TAG, "HomeHistoryCard: 대체 어디가 문제야")
+                navController.navigateHistory(historyDto)
+            },
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -76,9 +99,9 @@ fun HomeHistoryCard(
         ) {
             Text(
                 modifier = Modifier
-                    .weight(0.5f)
+                    .weight(0.4f)
                     .padding(10.dp),
-                text = (dto?.startDate.orEmpty()).substring(5, 10) + endDateString,
+                text = (historyDto?.startDate.orEmpty()).substring(5, 10) + endDateString,
                 style = TextStyle(
                     fontFamily = bmjua,
                     fontWeight = FontWeight.Bold,
@@ -89,14 +112,14 @@ fun HomeHistoryCard(
             )
             Column(
                 modifier = Modifier
-                    .weight(0.5f)
+                    .weight(0.4f)
             ) {
                 Box(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .fillMaxSize(0.5f)
                         .aspectRatio(1f)
-                        .background(color = Color.Yellow, shape = CircleShape)
+                        .background(color = Color(colors[index % 7]), shape = CircleShape)
                         .border(BorderStroke(1.dp, color = Color.Black), CircleShape)
                 )
                 Canvas(
@@ -115,47 +138,61 @@ fun HomeHistoryCard(
                 }
                 Spacer(modifier = Modifier.height(30.dp))
             }
-            LazyRow(
-                verticalAlignment = Alignment.CenterVertically,
-                contentPadding = PaddingValues(0.dp),
-                horizontalArrangement = Arrangement.spacedBy(-3.dp)
+            Column(
+                modifier = Modifier.weight(1.2f)
             ) {
-                imageCard()
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1.2f)
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(10.dp),
+                        text = if (historyDto?.roomName == null) "방 이름 없음" else historyDto.roomName,
+                        style = TextStyle(
+                            fontFamily = bmjua,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp,
+                            letterSpacing = 0.5.sp,
+                            color = Color.Black
+                        ),
+                    )
+                    Text(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(10.dp),
+                        text = profit.toString(),
+                        style = TextStyle(
+                            textAlign = TextAlign.End,
+                            fontFamily = bmjua,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp,
+                            letterSpacing = 0.5.sp,
+                            color = Color.Black
+                        ),
+                    )
+                }
+
+                LazyRow(
+                    modifier = Modifier.weight(0.8f),
+                    horizontalArrangement = Arrangement.spacedBy((-10).dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    val itemCount = if (historyDto?.images == null) 0 else historyDto.images.size
+                    items(itemCount) { item ->
+                        HistoryImageContent(
+                            item, historyDto,
+                            modifier = Modifier
+                                .width(30.dp)
+                                .height(40.dp)
+                        )
+                    }
+                }
             }
-            Text(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(10.dp),
-                text = dto?.roomName.orEmpty(),
-                style = TextStyle(
-                    fontFamily = bmjua,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp,
-                    letterSpacing = 0.5.sp,
-                    color = Color.Black
-                ),
-            )
-            Text(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(10.dp),
-                text = profit.toString(),
-                style = TextStyle(
-                    fontFamily = bmjua,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp,
-                    letterSpacing = 0.5.sp,
-                    color = Color.Black
-                ),
-            )
         }
     }
-}
-
-fun imageCard(
-
-) {
-
 }
 
 fun moneyFormatter(money: Int): String {
@@ -164,17 +201,14 @@ fun moneyFormatter(money: Int): String {
     return output.toString() + "원"
 }
 
-@Preview
 @Composable
-fun previewAnnouncementCard(
-    dto: HistoryDto = HistoryDto(
-        roomid = -1,
-        roomName = "",
-        startDate = "",
-        endDate = null,
-        balanceResult = 0,
-        images = null,
-    ),
-) {
-
+private fun <T> rememberFlowWithLifecycle(
+    flow: Flow<T>,
+    lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
+    minActiveState: Lifecycle.State = Lifecycle.State.STARTED
+): Flow<T> = remember(flow, lifecycle) {
+    flow.flowWithLifecycle(
+        lifecycle = lifecycle,
+        minActiveState = minActiveState
+    )
 }
