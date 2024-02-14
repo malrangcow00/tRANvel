@@ -40,7 +40,7 @@ import com.ssafy.tranvel.presentation.screen.utils.ConverterURIToBitmap
 @Composable
 fun UserInfoModifyProfileImage(
     context: Context = LocalContext.current,
-    viewModel: UserInfoModifyViewModel = hiltViewModel()
+    viewModel: UserInfoModifyViewModel
 ) {
     val bitmap: Bitmap? by viewModel.bitmap.collectAsState(initial = null)
     val launcher =

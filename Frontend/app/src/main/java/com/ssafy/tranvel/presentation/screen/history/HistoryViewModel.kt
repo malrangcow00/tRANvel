@@ -42,7 +42,7 @@ class HistoryViewModel @Inject constructor(
 
             val params = GetHistoryUseCase.Params(config,userId)
             val pagedFlow = getHistoryUseCase(params).cachedIn(scope = viewModelScope)
-            delay(5000)
+            delay(3000)
             setState { currentState.copy(isLoading = false, pagedData = pagedFlow) }
         }
     }

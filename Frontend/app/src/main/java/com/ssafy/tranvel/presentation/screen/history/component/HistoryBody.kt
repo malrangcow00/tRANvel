@@ -26,6 +26,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.tranvel.data.model.dto.DetailHistoryDto
 import com.ssafy.tranvel.data.model.dto.DetailHistoryRecordDto
 import com.ssafy.tranvel.data.model.dto.HistoryDto
+import com.ssafy.tranvel.domain.viewstate.history.DetailHistoryViewState
 import com.ssafy.tranvel.presentation.screen.components.EmptyIndicator
 import com.ssafy.tranvel.presentation.screen.components.ResultLoadingIndicator
 import com.ssafy.tranvel.presentation.screen.history.DetailHistoryRecordViewModel
@@ -38,16 +39,16 @@ private const val TAG = "HistoryBody_싸피"
 @Composable
 fun HistoryBody(
     paddingValues: PaddingValues,
-    dto: HistoryDto?,
+    roomId: Long,
     detailHistoryViewModel: DetailHistoryViewModel,
     detailHistoryRecordViewModel: DetailHistoryRecordViewModel
 ) {
-    LaunchedEffect(dto) {
+    LaunchedEffect(roomId) {
         detailHistoryViewModel.cnt = 0
-        if (dto != null) detailHistoryViewModel.getDetailHistory(dto.roomid!!)
+        detailHistoryViewModel.getDetailHistory(roomId)
 
         detailHistoryRecordViewModel.cnt = 0
-        if (dto != null) detailHistoryRecordViewModel.getDetailHistoryRecord(dto.roomid!!)
+        detailHistoryRecordViewModel.getDetailHistoryRecord(roomId)
         Log.d(TAG, "HistoryBody: 여기서 detailHistoryRecordViewModel.cnt : ${detailHistoryRecordViewModel.cnt}")
     }
 
@@ -57,8 +58,9 @@ fun HistoryBody(
     Log.d(TAG, "HistoryBody: recordViewState.pagedData size : ${recordViewState.pagedData}")
 
     Content(
-        dto,
+        roomId,
         paddingValues,
+        viewState,
         viewState.isLoading,
         viewState.pagedData,
         detailHistoryViewModel,
@@ -70,8 +72,9 @@ fun HistoryBody(
 
 @Composable
 private fun Content(
-    dto: HistoryDto?,
+    roomId : Long,
     paddingValues: PaddingValues,
+    viewState: DetailHistoryViewState,
     isLoading: Boolean = false,
     pagedData: Flow<PagingData<DetailHistoryDto>>? = null,
     detailHistoryViewModel: DetailHistoryViewModel,
@@ -106,7 +109,7 @@ private fun Content(
                 Log.d(TAG, "Cnt: ${detailHistoryViewModel.cnt}")
                 items(count = detailHistoryViewModel.cnt) { index ->
                     HistoryDetailCard(
-                        roomId = dto?.roomid!!,
+                        roomId = roomId,
                         index = index,
                         dto = pagingItems!![index],
                         detailHistoryViewModel = detailHistoryViewModel,
@@ -120,7 +123,7 @@ private fun Content(
                     Spacer(modifier = Modifier.height(40.dp))
                     Text(
                         modifier = Modifier.align(Alignment.TopCenter),
-                        text = "현재 기록된 \n 상세 기록이 없어요ㅠㅠ",
+                        text = "현재 기록된 \n\n 상세 기록이 없어요ㅠㅠ",
                         fontFamily = bmjua,
                         fontSize = 30.sp,
                         textAlign = TextAlign.Center

@@ -1,5 +1,8 @@
 package com.ssafy.tranvel.presentation.screen.mainMenuDrawer
 
+import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,17 +26,25 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.ssafy.tranvel.BuildConfig
 import com.ssafy.tranvel.R
+import com.ssafy.tranvel.presentation.screen.login.User
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 
 @Composable
@@ -76,21 +87,19 @@ private fun DrawerHeader(
             contentDescription = "setting",
             contentScale = ContentScale.FillBounds,
         )
-        Image(
+        ProfileImage(
+            (BuildConfig.S3_ADDRESS) + User.profileImage,
             modifier = Modifier
                 .align(Alignment.Center)
-                .fillMaxSize(0.45f)
                 .clip(CircleShape)
-                .border(1.dp, Color(0xFFFFFFFF), CircleShape),
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = "default profile image",
-            contentScale = ContentScale.FillBounds,
+                .fillMaxSize(0.35f)
+                .border(1.dp, color = PrimaryColor, CircleShape),
         )
         Text(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(30.dp),
-            text = "사용자 이름",
+            text = User.nickName,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold
         )
@@ -98,9 +107,12 @@ private fun DrawerHeader(
 }
 
 @Composable
-private fun DrawerSpacer(){
+private fun DrawerSpacer() {
     Box(
-        modifier = Modifier.background(PrimaryColor).fillMaxWidth().fillMaxHeight(0.1f)
+        modifier = Modifier
+            .background(PrimaryColor)
+            .fillMaxWidth()
+            .fillMaxHeight(0.1f)
     )
 }
 
@@ -184,4 +196,44 @@ private fun DrawerMenus(
             )
         }
     }
+}
+
+@SuppressLint("UnrememberedMutableState")
+@Composable
+fun ProfileImage(
+    imgUrl: String,
+    modifier: Modifier
+) {
+    val bitmap: MutableState<Bitmap?> = mutableStateOf(null)
+
+    val imageModifier = modifier
+
+    Glide.with(LocalContext.current)
+        .asBitmap()
+        .load(imgUrl)
+        .into(object : CustomTarget<Bitmap>() {
+            override fun onResourceReady(
+                resource: Bitmap,
+                transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+            ) {
+                bitmap.value = resource
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+
+            }
+        })
+    bitmap.value?.asImageBitmap()?.let {
+        Image(
+            bitmap = it,
+            contentScale = ContentScale.FillBounds,
+            contentDescription = null,
+            modifier = imageModifier
+        )
+    } ?: Image(
+        painter = painterResource(id = R.drawable.emptyimage),
+        contentScale = ContentScale.FillBounds,
+        contentDescription = null,
+        modifier = imageModifier
+    )
 }

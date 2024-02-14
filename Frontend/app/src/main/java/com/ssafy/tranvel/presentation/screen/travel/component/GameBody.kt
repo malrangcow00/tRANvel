@@ -11,11 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
@@ -24,7 +22,7 @@ import com.naver.maps.map.compose.ExperimentalNaverMapApi
 import com.naver.maps.map.compose.Marker
 import com.naver.maps.map.compose.MarkerState
 import com.naver.maps.map.compose.NaverMap
-import com.naver.maps.map.compose.rememberCameraPositionState
+import com.ssafy.tranvel.presentation.screen.history.component.HistoryBody
 import com.ssafy.tranvel.presentation.screen.travel.GameViewModel
 import com.ssafy.tranvel.presentation.screen.travel.RoomInfo
 
@@ -91,6 +89,12 @@ fun GameBody(
         }
         Log.d("TAG", "GameBody: ${RoomInfo.roomCode},  ${RoomInfo.roomPassword}")
 
+        HistoryBody(
+            paddingValues = innerPadding,
+            roomId = RoomInfo.roomID,
+            detailHistoryViewModel = hiltViewModel(),
+            detailHistoryRecordViewModel = hiltViewModel()
+        )
 
     }
 }

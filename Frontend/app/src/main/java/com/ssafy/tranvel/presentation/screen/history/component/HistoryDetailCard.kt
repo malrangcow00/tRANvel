@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -56,6 +58,7 @@ import com.ssafy.tranvel.presentation.screen.history.DetailHistoryViewModel
 import com.ssafy.tranvel.presentation.screen.home.component.moneyFormatter
 import com.ssafy.tranvel.presentation.ui.theme.bmjua
 import kotlinx.coroutines.flow.Flow
+import my.nanihadesuka.compose.LazyColumnScrollbar
 
 private const val TAG = "HistoryDetailCard_싸피"
 
@@ -66,19 +69,20 @@ var rainbows = listOf<Long>(
     0xFFFFFF00,
     0xFF00FF00,
     0xFF0000FF,
-    0xFF4B0082,
+    0xFF233067,
     0xFF9400D3
 )
 
 //무지개색 파스텔톤 색상 hex code list
 var pastelRainbows = listOf<Long>(
-    0xFFEF9595,
-    0xFFEFB495,
-    0xFFEBEF95,
-    0xFFC3EDC0,
-    0xFF7BD3EA,
-    0xFF8294C4,
-    0xFFBA90C6
+    0xFFFFADAD,
+    0xFFFFD6A5,
+    0xFFFDFFB6,
+    0xFFCAFFBF,
+    0xFF9BF6FF,
+    0xFFA0C4FF,
+    0xFFBDB2FF,
+    0xFFFFC6FF,
 )
 
 @Composable
@@ -101,6 +105,7 @@ fun HistoryDetailCard(
     }
 
     var expanded by remember { mutableStateOf(false) }
+    var lazyListState = rememberLazyListState()
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -208,38 +213,41 @@ fun HistoryDetailCard(
                     )
                 }
                 if (expanded) {
-                    Box(modifier = Modifier.height(200.dp)) {
-                        LazyColumn(
-                            modifier = Modifier.padding(10.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            if (isLoading) {
-                                items(1) {
-                                    ResultLoadingIndicator()
-                                }
-                            } else if (pagedData != null && pagingItems != null) {
-                                items(count = detailHistoryRecordViewModel.cnt) { index ->
-                                    Log.d(
-                                        TAG,
-                                        "DetailHistoryContent: index : ${index} dto.roomId : ${roomId}"
-                                    )
-                                    HistoryRecordCard(
-                                        index = index,
-                                        dateTime = dto?.dateTime,
-                                        dto = pagingItems!![index]
-                                    )
-                                }
-                            } else {
-                                items(1) {
-                                    Spacer(modifier = Modifier.height(40.dp))
-                                    Text(
-                                        modifier = Modifier.align(Alignment.TopCenter),
-                                        text = "현재 기록된 \n 상세 기록이 없어요ㅠㅠ",
-                                        fontFamily = bmjua,
-                                        fontSize = 30.sp,
-                                        textAlign = TextAlign.Center
-                                    )
-                                    EmptyIndicator()
+                    Box(modifier = Modifier.height(250.dp)) {
+                        LazyColumnScrollbar(lazyListState) {
+                            LazyColumn(
+                                state = lazyListState,
+                                modifier = Modifier.padding(10.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                if (isLoading) {
+                                    items(1) {
+                                        ResultLoadingIndicator()
+                                    }
+                                } else if (pagedData != null && pagingItems != null) {
+                                    items(count = detailHistoryRecordViewModel.cnt) { index ->
+                                        Log.d(
+                                            TAG,
+                                            "DetailHistoryContent: index : ${index} dto.roomId : ${roomId}"
+                                        )
+                                        HistoryRecordCard(
+                                            index = index,
+                                            dateTime = dto?.dateTime,
+                                            dto = pagingItems!![index]
+                                        )
+                                    }
+                                } else {
+                                    items(1) {
+                                        Spacer(modifier = Modifier.height(40.dp))
+                                        Text(
+                                            modifier = Modifier.align(Alignment.TopCenter),
+                                            text = "현재 기록된 \n 상세 기록이 없어요ㅠㅠ",
+                                            fontFamily = bmjua,
+                                            fontSize = 30.sp,
+                                            textAlign = TextAlign.Center
+                                        )
+                                        EmptyIndicator()
+                                    }
                                 }
                             }
                         }
@@ -313,8 +321,9 @@ fun HistoryRecordCard(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+//                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
+                        .weight(0.3f)
                         .fillMaxWidth(0.15f)
                 ) {
                     Spacer(modifier = Modifier.height(10.dp))
@@ -324,7 +333,7 @@ fun HistoryRecordCard(
                             .size(30.dp)
                             .aspectRatio(1f)
                             .background(
-                                color = Color(pastelRainbows[(index) % 7]),
+                                color = Color(pastelRainbows[(index) % 8]),
                                 shape = CircleShape
                             )
                             .border(BorderStroke(1.dp, color = Color.Black), CircleShape),
@@ -345,15 +354,24 @@ fun HistoryRecordCard(
                         )
                     }
                 }
-                Text(
-                    text = dto.detail.orEmpty()
-                )
-                Text(
-                    text = matchCategory(dto.historyCategory)
-                )
-                Text(
-                    text = if (matchCategory(dto.historyCategory).equals("정산")) moneyFormatter(dto.moneyResult!!.toInt()) else ""
-                )
+                Box(
+                    modifier = Modifier.fillMaxHeight().padding(top = 20.dp, start = 10.dp, end = 10.dp).weight(0.6f)
+                ) {
+                    Text(
+                        modifier = Modifier.align(Alignment.TopStart),
+                        text = matchCategory(dto.historyCategory)
+                    )
+                    Text(
+                        modifier = Modifier.align(Alignment.TopEnd),
+                        text = if (matchCategory(dto.historyCategory).equals("정산")) moneyFormatter(
+                            dto.moneyResult!!.toInt()
+                        ) else ""
+                    )
+                    Text(
+                        modifier = Modifier.align(Alignment.CenterEnd),
+                        text = dto.detail.orEmpty()
+                    )
+                }
             }
         }
     }

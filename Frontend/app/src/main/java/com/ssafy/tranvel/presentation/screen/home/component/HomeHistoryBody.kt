@@ -113,14 +113,14 @@ private fun Content(
             contentPadding = PaddingValues(vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            if (isLoading) {
+            if (isLoading || pagingItems!!.itemCount==0) {
                 if (pagingItems != null && historyViewModel.cnt == 0) {
                     historyViewModel.cnt = pagingItems!!.itemCount
                 }
                 items(1) {
                     LoadingIndicator()
                 }
-            } else if (pagedData != null && pagingItems != null && pagingItems!!.itemCount > 0) {
+            } else if (pagedData != null && pagingItems != null) {
                 if (historyViewModel.cnt == 0 && pagingItems!!.itemCount != 0) {
                     historyViewModel.cnt = pagingItems!!.itemCount
                 }
