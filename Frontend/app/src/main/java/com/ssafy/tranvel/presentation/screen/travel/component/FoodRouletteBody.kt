@@ -241,7 +241,8 @@ fun EnterFoodGameDialog(nickName: String, food: String, onChangeState: () -> (Un
             TextButton(
                 onClick = {
                     onChangeState()
-                }) {
+                }
+            ) {
                 Text(text = "확인", color = Color.Black)
             }
         }
