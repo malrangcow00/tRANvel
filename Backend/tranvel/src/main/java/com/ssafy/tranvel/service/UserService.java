@@ -1,23 +1,29 @@
 package com.ssafy.tranvel.service;
 
-import com.ssafy.tranvel.dto.TokenDto;
-import com.ssafy.tranvel.dto.UserDto;
+import com.ssafy.tranvel.dto.*;
 import com.ssafy.tranvel.entity.User;
 //import com.ssafy.tranvel.utility.SecurityUtility;
 import com.ssafy.tranvel.repository.NickNameDao;
 import com.ssafy.tranvel.repository.UserRepository;
 
 import com.ssafy.tranvel.utility.JwtProvider;
+import com.ssafy.tranvel.utility.SecurityUtility;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @Getter
@@ -31,6 +37,7 @@ public class UserService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtProvider jwtProvider;
     private final PasswordEncoder PasswordEncoder;
+    private  final ImageUploadService imageUploadService;
 
     public void createNickNameInRedis(String nickName, String email) {
         nickNameDao.nickNameStash(nickName, email);
@@ -92,5 +99,76 @@ public class UserService {
         TokenDto tokenDto = jwtProvider.generateTokens(authentication);
 
         return tokenDto;
+    }
+
+
+    public UserProfileDto getProfile() {
+        String userId = SecurityUtility.getCurrentUserId();
+        Optional<User> userOptional = userRepository.findByEmail(userId);
+        if (!userOptional.isPresent()) {
+            return null;
+        }
+        User user = userOptional.get();
+        UserProfileDto userProfileDto = UserProfileDto.builder()
+                .id(user.getId())
+                .email(userId)
+                .nickName(user.getNickName())
+                .profileImage(user.getProfileImage())
+                .balance(user.getBalance())
+                .build();
+
+        return userProfileDto;
+    }
+
+
+
+
+    public boolean updateProfile(UserUpdateDto userUpdateDto, MultipartFile image) throws IOException {
+        String userId = SecurityUtility.getCurrentUserId(); // 이메일
+        User user = userRepository.findByEmail(userId).get();
+        String profileImage = null;
+        if (userUpdateDto.getPassword1() != null && userUpdateDto.getPassword2() != null) {
+            if (userUpdateDto.getPassword1().equals(userUpdateDto.getPassword2())) {
+                if (image != null) {
+                    profileImage = imageUploadService.uploadProfileImage(image);
+                }
+                System.out.println(userUpdateDto.getPassword1());
+                User updateUser = User.builder()
+                        .id(user.getId())
+                        .email(userId)
+                        .password(user.getPassword())
+                        .nickName(userUpdateDto.getNickName() == null?user.getNickName():userUpdateDto.getNickName())
+                        .profileImage(profileImage == null?user.getProfileImage():profileImage)
+                        .balance(user.getBalance())
+                        .inquiryList(user.getInquiryList())
+                        .roles(user.getRoles())
+                        .roomHistories(user.getRoomHistories())
+                        .build();
+                userRepository.save(updateUser);
+            } else {
+                return false;
+            }
+            return true;
+        } else {
+            if (image != null) {
+                profileImage = imageUploadService.uploadProfileImage(image);
+            }
+            System.out.println(userUpdateDto.getPassword1());
+            User updateUser = User.builder()
+                    .id(user.getId())
+                    .email(userId)
+                    .password(userUpdateDto.getPassword1())
+                    .nickName(userUpdateDto.getNickName() == null?user.getNickName():userUpdateDto.getNickName())
+                    .profileImage(profileImage == null?user.getProfileImage():profileImage)
+                    .balance(user.getBalance())
+                    .inquiryList(user.getInquiryList())
+                    .roles(user.getRoles())
+                    .roomHistories(user.getRoomHistories())
+                    .build();
+            userRepository.save(updateUser);
+            return true;
+        }
+
+
     }
 }

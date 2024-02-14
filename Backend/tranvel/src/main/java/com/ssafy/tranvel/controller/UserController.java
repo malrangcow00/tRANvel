@@ -88,28 +88,33 @@ public class UserController {
     public ResponseEntity<ResponseDto> getProfile() {
         try {
             // 현재 인증된 사용자의 ID(이메일) 조회
-            String userId = SecurityUtility.getCurrentUserId();
-            Optional<User> userOptional = userRepository.findByEmail(userId);
-            if (!userOptional.isPresent()) {
+
+            UserProfileDto userProfileDto = userService.getProfile();
+
+            if (userProfileDto == null) {
                 response = new ResponseDto(false, "사용자를 찾을 수 없습니다.", null);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
             }
-            User user = userOptional.get();
-            UserProfileDto userProfileDto = UserProfileDto.builder()
-                    .id(user.getId())
-                    .email(userId)
-                    .nickName(user.getNickName())
-                    .profileImage(user.getProfileImage())
-                    .balance(user.getBalance())
-                    .build();
-            // 필요한 사용자 정보만 ResponseDto에 포함하여 반환
             response = new ResponseDto(true, "사용자 정보 조회 성공", userProfileDto);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             response = new ResponseDto(false, "오류 발생: " + e.getMessage(), null);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
+
+    @PutMapping(value ="/auth/profile", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<ResponseDto> updateProfile(@RequestPart UserUpdateDto userUpdateDto, @RequestPart(value = "image",required = false) MultipartFile image) throws IOException {
+
+        boolean check = userService.updateProfile(userUpdateDto, image);
+            if (!check) {
+                response = new ResponseDto(false, "비밀번호 확인 불일치", null);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }
+            response = new ResponseDto(true, "사용자 정보 수정 성공", null);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+
 
     // 회원 문의글 작성
     @PostMapping("/auth/inquiry")
