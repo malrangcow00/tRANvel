@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -38,14 +39,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
 import com.jhdroid.view.RotateListener
+import com.ssafy.tranvel.BuildConfig
 import com.ssafy.tranvel.R
 import com.ssafy.tranvel.databinding.FoodRouletteLayoutBinding
 import com.ssafy.tranvel.presentation.screen.travel.GameViewModel
 import com.ssafy.tranvel.presentation.screen.travel.RoomInfo
+import com.ssafy.tranvel.presentation.ui.theme.TextColor
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
 fun FoodRouletteBody(
     gameViewModel: GameViewModel,
@@ -89,18 +94,10 @@ fun FoodRouletteBody(
     }
 
     if (uiState) {
-        EnterFoodGameDialog(rouletteResultName, rouletteResultFood){
+        EnterFoodGameDialog(rouletteResultName, rouletteResultFood) {
             gameViewModel.setFoodScreenState()
             onNextPressed()
         }
-    }
-
-    var listener: ButtonClick? = null
-
-    if (rouletteRandom.randFloat != 0f && !rouletteState) {
-        rouletteState = true
-        Log.d("TAG", "FoodRouletteBody: ${rouletteRandom.randFloat}")
-        listener?.onClick()
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -118,7 +115,8 @@ fun FoodRouletteBody(
                         rouletteSize = rouletteList.size
                         setRouletteDataList(rouletteList)
                     }
-                    if (rouletteRandom.randFloat != 0f) {
+                    if (rouletteRandom.randFloat != 0f && !rouletteState) {
+                        rouletteState = true
                         roulette.rotateRoulette(
                             rouletteRandom.randFloat,
                             rouletteRandom.randLong,
@@ -144,7 +142,7 @@ fun FoodRouletteBody(
                         .padding(top = 10.dp)
                         .fillMaxWidth()
                 ) {
-                    items(selectedImageList.size) { item ->
+                    itemsIndexed(selectedImageList) { index, item ->
                         Card(
                             modifier = Modifier
                                 .padding(end = 3.dp),
@@ -155,25 +153,15 @@ fun FoodRouletteBody(
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
-                                Box {
-                                    Image(
-                                        imageVector = Icons.Default.Person2,
-                                        contentDescription = "프로필이미지",
-                                        modifier = Modifier
-                                            .size(50.dp)
-                                            .align(Alignment.Center)
-                                    )
-                                    androidx.compose.material.Icon(
-                                        imageVector = Icons.Default.CheckCircle,
-                                        contentDescription = "checking",
-                                        modifier = Modifier
-                                            .size(10.dp)
-                                            .align(Alignment.TopEnd),
-                                        tint = Color.Green
-                                    )
-                                }
+                                GlideImage(
+                                    model = "${BuildConfig.S3_BASE_URL}${item.profileImage}",
+                                    contentDescription = "프로필이미지",
+                                    modifier = Modifier
+                                        .size(50.dp),
+                                    failure = placeholder(painterResource(id = R.drawable.emptyimage))
+                                )
                                 Text(
-                                    text = "$item",
+                                    text = item.nickname,
                                     modifier = Modifier
                                         .padding(top = 5.dp)
                                 )
@@ -188,7 +176,7 @@ fun FoodRouletteBody(
                         .padding(top = 10.dp)
                         .fillMaxWidth()
                 ) {
-                    items(unSelectedImageList.size) { item ->
+                    itemsIndexed(unSelectedImageList) { index, item ->
                         Card(
                             modifier = Modifier
                                 .padding(end = 3.dp),
@@ -199,15 +187,18 @@ fun FoodRouletteBody(
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
-                                Box {
-                                    Image(
-                                        imageVector = Icons.Default.Person2,
-                                        contentDescription = "프로필이미지",
-                                        modifier = Modifier
-                                            .size(50.dp)
-                                            .align(Alignment.Center)
-                                    )
-                                }
+                                GlideImage(
+                                    model = "${BuildConfig.S3_BASE_URL}${item.profileImage}",
+                                    contentDescription = "프로필이미지",
+                                    modifier = Modifier
+                                        .size(50.dp),
+                                    failure = placeholder(painterResource(id = R.drawable.emptyimage))
+                                )
+                                Text(
+                                    text = item.nickname,
+                                    modifier = Modifier
+                                        .padding(top = 5.dp)
+                                )
                             }
                         }
                     }
@@ -220,17 +211,12 @@ fun FoodRouletteBody(
                         gameViewModel.sendFoodGameStartMessage("ENTER", "")
                     },
                 ) {
-                    Text(text = "뽑기")
+                    Text(text = "뽑기", color = TextColor)
                 }
             }
         }
     }
 }
-
-interface ButtonClick {
-    fun onClick()
-}
-
 
 @Composable
 fun EnterFoodGameDialog(nickName: String, food: String, onChangeState: () -> (Unit)) {
