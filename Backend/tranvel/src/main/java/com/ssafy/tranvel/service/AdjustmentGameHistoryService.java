@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -148,6 +149,8 @@ public class AdjustmentGameHistoryService {
                     .build();
             info.add(adjustmentResponseDto);
         }
+
+        Collections.sort(info, (o1, o2) -> o2.getDateTime().compareTo(o1.getDateTime()));
         System.out.println("AdjustmentGameHistoryService.getAllAdjustmentHistories Ready");
         return info;
     }

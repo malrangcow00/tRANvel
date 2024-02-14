@@ -127,6 +127,7 @@ public class RoomHistoryService {
             System.out.println("i");
             roomResponse.add(roomMainResponseDto);
         }
+        Collections.sort(roomResponse, (o1, o2) -> o2.getStartDate().compareTo(o1.getStartDate()));
         return roomResponse;
     }
 
