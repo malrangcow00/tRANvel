@@ -2,4 +2,9 @@
 <resources>
 
     <style name="Theme.TRANvel" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.APP.Starting" parent="Theme.TRANvel" >
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="postSplashScreenTheme">@style/Theme.TRANvel</item>
+    </style>
 </resources>
