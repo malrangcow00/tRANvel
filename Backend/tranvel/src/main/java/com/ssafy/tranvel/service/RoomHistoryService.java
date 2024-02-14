@@ -127,6 +127,7 @@ public class RoomHistoryService {
             System.out.println("i");
             roomResponse.add(roomMainResponseDto);
         }
+        Collections.sort(roomResponse, (o1, o2) -> o2.getStartDate().compareTo(o1.getStartDate()));
         return roomResponse;
     }
 
@@ -225,6 +226,8 @@ public class RoomHistoryService {
                         .dateTime(attractionGameHistory.getDateTime())
                         .detail(attractionGameHistory.getAttractionList().getCity())
                         .images(attractionImageList)
+                        .latitude(attractionGameHistory.getAttractionList().getLatitude())
+                        .longitude(attractionGameHistory.getAttractionList().getLongitude())
 //                        .moneyResult(attractionGameHistory.getMoneyResult())
                         .build();
 //                String date = roomDetailDto.getDateTime().substring(0, 10);

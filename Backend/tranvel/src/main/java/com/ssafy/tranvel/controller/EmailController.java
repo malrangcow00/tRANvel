@@ -38,6 +38,10 @@ public class EmailController {
 
     @PostMapping("/email-auth")
     public ResponseEntity<ResponseDto> sendEmail(String email) throws MessagingException, UnsupportedEncodingException {
+        if (email == null || email.trim().isEmpty()) {
+            response = new ResponseDto(false, "이메일 주소를 입력해 주세요.", null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
         if (emailAuthService.emailDuplication(email)) {
             response = new ResponseDto(false, "이미 회원가입 된 이메일입니다.", null);
             return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -71,7 +75,6 @@ public class EmailController {
 //        response = new ResponseDto(true, "프로필 사진 s3 저장", profileimage);
 //        return ResponseEntity.status(HttpStatus.OK).body(response);
 //    }
-
 
     @PostMapping("/signup")
     public ResponseEntity<ResponseDto> signUp(@RequestBody @Validated UserDto userDto) {

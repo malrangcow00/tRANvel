@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -175,6 +176,8 @@ public class FoodGameService {
                     .build();
             info.add(foodResponseDto);
         }
+        Collections.sort(info, (o1, o2) -> o2.getDateTime().compareTo(o1.getDateTime()));
+
         return info;
     }
 

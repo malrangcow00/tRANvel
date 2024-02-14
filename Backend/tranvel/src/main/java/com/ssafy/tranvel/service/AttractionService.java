@@ -22,10 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -227,7 +224,7 @@ public class AttractionService {
                     .build();
             info.add(attractionResponseDto);
         }
-
+        Collections.sort(info, (o1, o2) -> o2.getDateTime().compareTo(o1.getDateTime()));
 
         return info;
     }
