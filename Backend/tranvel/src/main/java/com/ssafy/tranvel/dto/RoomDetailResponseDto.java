@@ -20,6 +20,10 @@ public class RoomDetailResponseDto {
 
     private String detail; // city, food
 
+    private String latitude;
+
+    private String longitude;
+
     private int moneyResult;
 
 

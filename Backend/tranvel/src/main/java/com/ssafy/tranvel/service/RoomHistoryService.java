@@ -225,6 +225,8 @@ public class RoomHistoryService {
                         .dateTime(attractionGameHistory.getDateTime())
                         .detail(attractionGameHistory.getAttractionList().getCity())
                         .images(attractionImageList)
+                        .latitude(attractionGameHistory.getAttractionList().getLatitude())
+                        .longitude(attractionGameHistory.getAttractionList().getLongitude())
 //                        .moneyResult(attractionGameHistory.getMoneyResult())
                         .build();
 //                String date = roomDetailDto.getDateTime().substring(0, 10);
