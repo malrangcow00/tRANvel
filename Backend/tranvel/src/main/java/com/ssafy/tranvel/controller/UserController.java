@@ -54,11 +54,6 @@ public class UserController {
 
     private ResponseDto response;
 
-//    @Bean
-//    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-//        return new JwtAuthenticationFilter(jwtProvider);
-//    }
-
     // 닉네임 유효성 검사
     @PostMapping("/duplication")
     public ResponseEntity<ResponseDto> nickNameCheck(String email, String nickName) {
@@ -87,12 +82,6 @@ public class UserController {
         ResponseDto response = new ResponseDto(true, "로그인 성공", tokenDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
-    // JWT 테스트 (임시)
-//    @PostMapping("/test")
-//    public String test() {
-//        return "인증 성공";
-//    }
 
     // 사용자 프로필 조회
     @GetMapping("/auth/profile")

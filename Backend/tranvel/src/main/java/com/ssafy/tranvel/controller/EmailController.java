@@ -76,7 +76,6 @@ public class EmailController {
 //        return ResponseEntity.status(HttpStatus.OK).body(response);
 //    }
 
-
     @PostMapping("/signup")
     public ResponseEntity<ResponseDto> signUp(@RequestBody @Validated UserDto userDto) {
 

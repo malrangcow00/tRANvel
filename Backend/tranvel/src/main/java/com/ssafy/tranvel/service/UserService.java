@@ -15,6 +15,7 @@ import lombok.Setter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class UserService {
     private final NickNameDao nickNameDao;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtProvider jwtProvider;
+    private final PasswordEncoder PasswordEncoder;
 
     public void createNickNameInRedis(String nickName, String email) {
         nickNameDao.nickNameStash(nickName, email);
@@ -67,7 +69,8 @@ public class UserService {
                 .email(userDto.getEmail())
                 .nickName(userDto.getNickName())
                 // 암호화 필요
-                .password(userDto.getPassword())
+//                .password(userDto.getPassword())
+                .password(PasswordEncoder.encode(userDto.getPassword()))
 //                .profileImage((userDto.getProfileImage() == null) ? userDto.getProfileImage() : null)
                 .balance(0)
                 .build();
