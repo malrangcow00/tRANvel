@@ -11,6 +11,8 @@ data class DetailHistoryRecordResult(
     val dateTime : String?,
     val images : List<String>?,
     val detail : String?,
+    val latitude: Double?,
+    val longitude: Double?,
     val moneyResult : Long?
 ) : Parcelable {
     companion object{

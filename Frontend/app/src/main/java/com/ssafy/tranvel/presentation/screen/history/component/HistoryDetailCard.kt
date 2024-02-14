@@ -100,10 +100,19 @@ fun HistoryDetailCard(
         pagingItems = rememberFlowWithLifecycle(it).collectAsLazyPagingItems()
     }
 
+    var attractionItems: List<DetailHistoryRecordDto>?= null
+
+
+    var attractionList = mutableListOf<DetailHistoryRecordDto>()
+
     if (pagingItems != null && pagingItems!!.itemCount != 0 && detailHistoryRecordViewModel.cnt == 0) {
         detailHistoryRecordViewModel.cnt = pagingItems!!.itemCount
+
+
     }
 
+    Log.d(TAG, "HistoryDetailCard: attractionlist : ${attractionList}")
+    
     var expanded by remember { mutableStateOf(false) }
     var lazyListState = rememberLazyListState()
 
@@ -226,11 +235,16 @@ fun HistoryDetailCard(
                                     }
                                 } else if (pagedData != null && pagingItems != null) {
                                     items(count = detailHistoryRecordViewModel.cnt) { index ->
+                                        Log.d(TAG, "HistoryDetailCard: lazyListState.firstVisibleItemIndex : ${lazyListState.firstVisibleItemIndex}")
+                                        if(pagingItems!![lazyListState.firstVisibleItemIndex]?.latitude !=null && pagingItems!![lazyListState.firstVisibleItemIndex]?.longitude !=null){
+                                            Log.d(TAG, "HistoryDetailCard: 현재 맨 위의 값 위도 경도 : ${pagingItems!![lazyListState.firstVisibleItemIndex]?.latitude} && ${pagingItems!![lazyListState.firstVisibleItemIndex]?.longitude}")
+                                        }
                                         Log.d(
                                             TAG,
                                             "DetailHistoryContent: index : ${index} dto.roomId : ${roomId}"
                                         )
                                         HistoryRecordCard(
+                                            
                                             index = index,
                                             dateTime = dto?.dateTime,
                                             dto = pagingItems!![index]
@@ -355,7 +369,10 @@ fun HistoryRecordCard(
                     }
                 }
                 Box(
-                    modifier = Modifier.fillMaxHeight().padding(top = 20.dp, start = 10.dp, end = 10.dp).weight(0.6f)
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(top = 20.dp, start = 10.dp, end = 10.dp)
+                        .weight(0.6f)
                 ) {
                     Text(
                         modifier = Modifier.align(Alignment.TopStart),

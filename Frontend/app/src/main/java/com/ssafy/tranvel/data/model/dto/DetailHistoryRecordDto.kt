@@ -10,6 +10,8 @@ data class DetailHistoryRecordDto(
     val dateTime: String?,
     val images: List<String>?,
     val detail: String?, //여기서는 detail이 장소
+    val latitude: Double?,
+    val longitude: Double?,
     val moneyResult: Long?
 ) : Parcelable {
     companion object {
@@ -19,6 +21,8 @@ data class DetailHistoryRecordDto(
             dateTime = null,
             images = null,
             detail = null,
+            latitude = null,
+            longitude = null,
             moneyResult = 0
         )
     }

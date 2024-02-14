@@ -14,13 +14,24 @@ fun HistoryResult.toHistoryDto() = HistoryDto(
 fun List<HistoryResult>.toHistoryDtoList() = map { it.toHistoryDto() }
 
 fun DetailHistoryResult.toDetailHistoryDto() = DetailHistoryDto(
-    id, miniGameCode, targetUser, dateTime, price, moneyResult, selectedUsers, images, category, detail, location
+    id,
+    miniGameCode,
+    targetUser,
+    dateTime,
+    price,
+    moneyResult,
+    selectedUsers,
+    images,
+    category,
+    detail,
+    location
 )
 
 fun List<DetailHistoryResult>.toDetailHistoryDtoList() = map { it.toDetailHistoryDto() }
 
 fun DetailHistoryRecordResult.toDetailHistoryRecordDto() = DetailHistoryRecordDto(
-    contentId, historyCategory, dateTime, images, detail, moneyResult
+    contentId, historyCategory, dateTime, images, detail, latitude, longitude, moneyResult
 )
 
-fun List<DetailHistoryRecordResult>.toDetailHistoryRecordDto() = map { it.toDetailHistoryRecordDto() }
+fun List<DetailHistoryRecordResult>.toDetailHistoryRecordDto() =
+    map { it.toDetailHistoryRecordDto() }
