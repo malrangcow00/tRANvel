@@ -145,8 +145,10 @@ fun HistoryDetailCard(
                     text = if (dto?.dateTime == null) "날짜 없음" else {
                         dto.dateTime.substring(5, 7).toInt()
                             .toString() + "월 " + dto.dateTime.substring(8, 10).toInt()
-                            .toString() + "일" + "\n" + dto.dateTime.substring(11, 13)
-                            .toInt() + "시 " + dto.dateTime.substring(14, 16).toInt() + "분"
+                            .toString() + "일" + "\n" + dto.dateTime.substring(
+                            11,
+                            13
+                        ) + "시 " + dto.dateTime.substring(14, 16) + "분"
                     },
                     fontSize = 12.sp
                 )
@@ -205,7 +207,7 @@ fun HistoryDetailCard(
                         detailHistoryViewModel.adjustmentList.forEach {
                             Log.d(TAG, "HistoryDetailCard: ${it.price}")
                             if (dto.contentId == it.id) {
-                                Log.d(TAG, "HistoryDetailCard: 동일 ${it.price}")
+                                Log.d(TAG, "HistoryDetailCard: 비용 ${it.price}")
                                 (if (dto == null) "정산 정보\n없음" else it.price?.let { it1 ->
                                     moneyFormatter(
                                         it1.toInt()
@@ -222,10 +224,13 @@ fun HistoryDetailCard(
                             }
                         }
                     } else if (matchCategory(dto?.historyCategory).equals("여행지")) {
+                        Log.d(TAG, "HistoryDetailCard: 값 뭐니 : ${detailHistoryViewModel.attractionList}")
+                        Log.d(TAG, "HistoryDetailCard: 사이즈 몇이니 : ${detailHistoryViewModel.attractionList.size}")
                         detailHistoryViewModel.attractionList.forEach {
-                            Log.d(TAG, "HistoryDetailCard: ${it.attractionList.attrName}")
+                            Log.d(TAG, "HistoryDetailCard: attr ${it.attractionList.attrName}")
+                            Log.d(TAG, "HistoryDetailCard: attr ${it.attractionList}")
                             if (dto.contentId == it.id) {
-                                Log.d(TAG, "HistoryDetailCard: 동일 ${it.attractionList.attrName}")
+                                Log.d(TAG, "HistoryDetailCard: 여행지 ${it.attractionList.attrName}")
                                 Text(
                                     modifier = Modifier
                                         .align(Alignment.CenterEnd)
@@ -239,7 +244,7 @@ fun HistoryDetailCard(
                         detailHistoryViewModel.foodList.forEach {
                             Log.d(TAG, "HistoryDetailCard: ${it.foodName}")
                             if (dto.contentId == it.id) {
-                                Log.d(TAG, "HistoryDetailCard: 동일 ${it.foodName}")
+                                Log.d(TAG, "HistoryDetailCard: 음식 ${it.foodName}")
                                 Text(
                                     modifier = Modifier
                                         .align(Alignment.CenterEnd)
@@ -283,99 +288,6 @@ private fun <T> rememberFlowWithLifecycle(
         lifecycle = lifecycle,
         minActiveState = minActiveState
     )
-}
-
-@Composable
-fun HistoryRecordCard(
-    index: Int,
-    dateTime: String?,
-    dto: DetailHistoryRecordDto?
-) {
-    var date1: String = if (dateTime == null) "" else {
-        dateTime.substring(5, 7).toInt()
-            .toString() + "월 " + dateTime.substring(8, 10).toInt()
-            .toString() + "일"
-    }
-
-    var date2: String = if (dto?.dateTime == null) "" else {
-        dto.dateTime.substring(5, 7).toInt()
-            .toString() + "월 " + dto.dateTime.substring(8, 10).toInt()
-            .toString() + "일"
-    }
-
-    if (dto != null && date1.equals(date2)) {
-        Log.d(TAG, "HistoryRecordCard: date1 값은 : ${date1}")
-        Card(
-            colors = CardDefaults.cardColors(containerColor = Color.White),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp),
-            shape = RoundedCornerShape(10.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .padding(10.dp)
-                    .fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                Column(
-                    modifier = Modifier
-                        .weight(0.3f)
-                        .fillMaxWidth(0.15f)
-                ) {
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .size(30.dp)
-                            .aspectRatio(1f)
-                            .background(
-                                color = Color(pastelRainbows[(index) % 8]),
-                                shape = CircleShape
-                            )
-                            .border(BorderStroke(1.dp, color = Color.Black), CircleShape),
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Canvas(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .fillMaxSize()
-                    ) {
-                        val canvasWidth = size.width
-                        drawLine(
-                            color = Color.Black,
-                            start = Offset(canvasWidth / 2, -20.dp.toPx()),
-                            end = Offset(canvasWidth / 2, 150.dp.toPx()),
-                            strokeWidth = 2.dp.toPx(),
-                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 40f), 10f)
-                        )
-                    }
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(top = 20.dp, start = 10.dp, end = 10.dp)
-                        .weight(0.6f)
-                ) {
-                    Text(
-                        modifier = Modifier.align(Alignment.TopStart),
-                        text = matchCategory(dto.historyCategory)
-                    )
-                    Text(
-                        modifier = Modifier.align(Alignment.TopEnd),
-                        text = if (matchCategory(dto.historyCategory).equals("정산")) moneyFormatter(
-                            dto.moneyResult!!.toInt()
-                        ) else ""
-                    )
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterEnd),
-                        text = dto.detail.orEmpty()
-                    )
-                }
-            }
-        }
-    }
 }
 
 fun matchCategory(gameType: String): String {
