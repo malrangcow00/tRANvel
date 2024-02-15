@@ -13,7 +13,6 @@ data class AttractionHistoryResult(
     val images : List<String>?,
     val attractionList :AttractionDetail,
 ) : Parcelable {
-    companion object{
         fun create(jsonString: String) : AttractionHistoryResult?{
             return try {
                 Gson().fromJson(jsonString, AttractionHistoryResult::class.java)
@@ -21,5 +20,5 @@ data class AttractionHistoryResult(
                 return null
             }
         }
-    }
+
 }

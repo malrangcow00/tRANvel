@@ -92,6 +92,9 @@ class DetailHistoryViewModel @Inject constructor(
                         _currentAttractionState.emit(true)
                         Log.d(TAG, "getAttractionHistory: ${it.data}")
                         attractionList = it.data.data
+                        (it.data.data).forEach{
+                            Log.d(TAG, "getAttractionHistory: 가져오는 값 :${it.attractionList} ")
+                        }
                     }
 
                     is DataState.Error -> {
