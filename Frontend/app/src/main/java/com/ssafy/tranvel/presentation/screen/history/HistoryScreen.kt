@@ -14,8 +14,7 @@ private const val TAG = "HistoryScreen_싸피"
 @Composable
 fun HistoryScreen(
     historyDto: HistoryDto?,
-    detailHistoryViewModel: DetailHistoryViewModel,
-    detailHistoryRecordViewModel: DetailHistoryRecordViewModel
+    detailHistoryViewModel: DetailHistoryViewModel
 ) {
     Scaffold(
         topBar = { HistoryHeader(historyDto) }
@@ -29,7 +28,7 @@ fun HistoryScreen(
             Log.d(TAG, "HistoryScreen: attractionlist : ${detailHistoryViewModel.attractionList}")
             Log.d(TAG, "HistoryScreen: foodlist : ${detailHistoryViewModel.foodList}")
             HistoryBody(
-                it, historyDto.roomid, detailHistoryViewModel, detailHistoryRecordViewModel
+                it, historyDto.roomid, detailHistoryViewModel
             )
         }
     }

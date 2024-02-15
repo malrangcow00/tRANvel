@@ -16,19 +16,25 @@ import javax.inject.Inject
 
 class HistoryRemoteDataSourceImpl @Inject constructor(
     private val historyService: HistoryService
-) : BaseDataSource(), HistoryRemoteDataSource{
-    override suspend fun getAllHistories(userId : Long): Response<HistoryResponse> = historyService.getAllHistories(HistoryRequest(userId))
+) : BaseDataSource(), HistoryRemoteDataSource {
+    override suspend fun getAllHistories(userId: Long): Response<HistoryResponse> =
+        historyService.getAllHistories(HistoryRequest(userId))
 
-    override suspend fun getAdjustmentHistory(roomId : Long): Flow<DataState<AdjustmentHistoryResponse>> = getResult {
-        historyService.getAdjustmentHistory(roomId)
-    }
+    override suspend fun getAdjustmentHistory(roomId: Long): Flow<DataState<AdjustmentHistoryResponse>> =
+        getResult {
+            historyService.getAdjustmentHistory(roomId)
+        }
 
-    override suspend fun getAttractionHistory(roomId : Long): Flow<DataState<AttractionHistoryResponse>> = getResult {
-        historyService.getAttractiongameHistory(roomId)
-    }
+    override suspend fun getAttractionHistory(roomId: Long): Flow<DataState<AttractionHistoryResponse>> =
+        getResult {
+            historyService.getAttractiongameHistory(roomId)
+        }
 
-    override suspend fun getFoodHistory(roomId : Long): Flow<DataState<FoodHistoryResponse>> = getResult {
-        historyService.getFoodgameHistory(roomId)
-    }
-    override suspend fun getDetailHistoryRecord(roomId: Long): Response<DetailHistoryRecordResponse> = historyService.getDetailHistoryRecords(roomId)
+    override suspend fun getFoodHistory(roomId: Long): Flow<DataState<FoodHistoryResponse>> =
+        getResult {
+            historyService.getFoodgameHistory(roomId)
+        }
+
+    override suspend fun getDetailHistoryRecord(roomId: Long): Response<DetailHistoryRecordResponse> =
+        historyService.getDetailHistoryRecords(roomId)
 }

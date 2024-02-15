@@ -46,6 +46,7 @@ import com.naver.maps.map.compose.NaverMap
 import com.ssafy.tranvel.presentation.screen.history.component.HistoryBody
 import com.ssafy.tranvel.BuildConfig
 import com.ssafy.tranvel.R
+import com.ssafy.tranvel.presentation.screen.history.DetailHistoryRecordViewModel
 import com.ssafy.tranvel.presentation.screen.travel.GameViewModel
 import com.ssafy.tranvel.presentation.screen.travel.LoadingIndicator
 import com.ssafy.tranvel.presentation.screen.travel.RoomInfo
@@ -56,6 +57,7 @@ import com.ssafy.tranvel.presentation.screen.travel.RoomInfo
 fun GameBody(
     innerPadding: PaddingValues,
     gameViewModel: GameViewModel,
+    historyRecordViewModel : DetailHistoryRecordViewModel,
     context: Context = LocalContext.current
 ) {
     val attractionDestination by gameViewModel.latLng.collectAsState()
@@ -113,7 +115,7 @@ fun GameBody(
         NaverMap(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.4f),
+                .fillMaxHeight(),
             onMapLongClick = { pointF, latLng ->
                 gameViewModel.setAttractionLangLng(latLng)
             },
@@ -134,12 +136,7 @@ fun GameBody(
         }
         Log.d("TAG", "GameBody: ${RoomInfo.roomCode},  ${RoomInfo.roomPassword}")
 
-        HistoryBody(
-            paddingValues = innerPadding,
-            roomId = RoomInfo.roomID,
-            detailHistoryViewModel = hiltViewModel(),
-            detailHistoryRecordViewModel = hiltViewModel()
-        )
+
 
     }
 }

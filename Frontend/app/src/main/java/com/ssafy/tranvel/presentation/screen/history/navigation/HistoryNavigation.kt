@@ -25,6 +25,6 @@ fun NavGraphBuilder.historyScreen(navController: NavController) {
 
     composable(historyRoute) {
         Log.d(TAG, "historyScreen: 너가 문제냐")
-        HistoryScreen(historyObject, hiltViewModel(), hiltViewModel())
+        HistoryScreen(historyObject, hiltViewModel())
     }
 }

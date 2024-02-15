@@ -35,6 +35,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ssafy.tranvel.R
+import com.ssafy.tranvel.presentation.screen.history.DetailHistoryRecordViewModel
 import com.ssafy.tranvel.presentation.screen.home.navigation.homeRoute
 import com.ssafy.tranvel.presentation.screen.travel.component.BottomNav
 import com.ssafy.tranvel.presentation.screen.travel.component.GameBody
@@ -47,7 +48,8 @@ import com.ssafy.tranvel.presentation.ui.theme.transparent
 @Composable
 fun GameScreen(
     navController: NavController,
-    gameViewModel: GameViewModel
+    gameViewModel: GameViewModel,
+    historyRecordViewModel : DetailHistoryRecordViewModel
 ) {
     // 방장이 아니라면 음식 화면으로 이동
     val navigateFoodScreen by gameViewModel.navigateFoodScreen.collectAsState()
@@ -73,7 +75,7 @@ fun GameScreen(
         topBar = { GameHeader("즐거운 여행 중", true, gameViewModel) },
         content = { paddingValues ->
             Column {
-                GameBody(paddingValues, gameViewModel)
+                GameBody(paddingValues, gameViewModel,historyRecordViewModel)
             }
         },
         bottomBar = {

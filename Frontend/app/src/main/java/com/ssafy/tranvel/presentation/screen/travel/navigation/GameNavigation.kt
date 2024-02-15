@@ -17,7 +17,8 @@ fun NavGraphBuilder.gameNavGraph(navController: NavController) {
         composable(route = Screen.Draw.route) {
             GameScreen(
                 navController,
-                hiltViewModel(it)
+                hiltViewModel(it),
+                hiltViewModel()
             )
         }
 
