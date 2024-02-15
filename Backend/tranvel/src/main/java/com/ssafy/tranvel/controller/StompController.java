@@ -30,7 +30,8 @@ public class StompController {
         if (StompDto.MessageType.ENTER.equals(message.getType())) {
             message.setMessage(userRepository.findById(Long.parseLong(message.getSender_id())).get().getNickName() + "님이 입장하였습니다.");
         } else if (StompDto.MessageType.CLOSE.equals(message.getType())) {
-            roomHistoryService.finishRoomHistory(Long.parseLong(message.getRoomId()));
+            // 방 이름 수정(message)하면서 방 종료(roomId)
+            roomHistoryService.finishRoomHistory(Long.parseLong(message.getRoomId()), message.getMessage());
             message.setMessage("여행이 종료되었습니다.");
         }
         sendingOperations.convertAndSend("/topic/tranvel/rooms/" + message.getRoomId(), message);
