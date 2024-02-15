@@ -42,18 +42,6 @@ fun NavGraphBuilder.registerGraph(navController: NavController) {
             NickNameSettingScreen(
                 viewModel = hiltViewModel(parentEntry)
             ) {
-                navController.navigate("profile_image_setting_screen") {
-                }
-            }
-        }
-
-        composable(route = "profile_image_setting_screen") {
-            val parentEntry = remember(it) {
-                navController.getBackStackEntry("email_auth_screen")
-            }
-            ProfileImageSettingScreen(
-                viewModel = hiltViewModel(parentEntry)
-            ) {
                 navController.navigate("login_screen") {
                     navController.navigateHome()
                 }

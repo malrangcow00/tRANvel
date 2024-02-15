@@ -59,9 +59,15 @@ fun GameBody(
     val enterPerson by gameViewModel.enterPerson.collectAsState()
     val enterPersonName by gameViewModel.enterPersonName.collectAsState()
     val dialogState by gameViewModel.drawDialogState.collectAsState()
+    val drawState by gameViewModel.drawState.collectAsState()
+    val drawUser by gameViewModel.userData.collectAsState()
 
     if (dialogState) {
         LoadingIndicator()
+    }
+
+    if(!drawState){
+        Toast.makeText(context, "${drawUser.message}님의 차례입니다.", Toast.LENGTH_SHORT).show()
     }
 
     if (enterPerson) {

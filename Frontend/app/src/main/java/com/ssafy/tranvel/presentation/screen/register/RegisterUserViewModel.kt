@@ -15,6 +15,7 @@ import com.ssafy.tranvel.domain.usecase.register.SendEmailAuthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
@@ -43,6 +44,8 @@ class RegisterUserViewModel @Inject constructor(
     val authButtonState: StateFlow<Boolean> = _authButtonState
     private val _resetButtonState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val resetButtonState: StateFlow<Boolean> = _resetButtonState
+    private val _registerState = MutableStateFlow(false)
+    val registerState = _registerState.asStateFlow()
     fun setBitmap(bitmap: Bitmap) {
         _bitmap.value = bitmap
     }
@@ -79,6 +82,7 @@ class RegisterUserViewModel @Inject constructor(
             registerUserUseCase.execute(
                 UserRequest(
                     id.value,
+                    nickname.value,
                     password.value,
                 )
             ).collect {
@@ -91,8 +95,8 @@ class RegisterUserViewModel @Inject constructor(
         Log.d("MYTAG", "duplicateNickName: ${id.value} ${nickname.value}")
         viewModelScope.launch {
             _currentState.emit(true)
-            duplicateNickNameUseCase.execute(nickname.value, id.value).collect {
-                checkState(it)
+            duplicateNickNameUseCase.execute(id.value, nickname.value).collect {
+                _registerState.emit(checkState(it))
             }
         }
     }
@@ -120,7 +124,7 @@ class RegisterUserViewModel @Inject constructor(
         when (data) {
             is DataState.Success -> {
                 Log.d("MYTAG", "checkState: ${data.data}")
-                _currentState.emit(false)
+                _currentState.emit(true)
                 return true
             }
 

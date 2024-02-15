@@ -6,5 +6,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class UserRequest(
     val email: String,
+    val nickName: String? = null,
     val password: String,
 ) : Parcelable

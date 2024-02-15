@@ -21,15 +21,23 @@ class SplashScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
-        splashScreen.setKeepOnScreenCondition { !viewModel.isReady.value }
+        splashScreen.setKeepOnScreenCondition { true }
 
         lifecycleScope.launch {
             viewModel.isReady.collect{
-                if (it) {
-                    val intent = Intent(this@SplashScreen, MainActivity::class.java)
-                    Log.d("TAG", "Splash onCreate:${User.id} ")
-                    startActivity(intent)
-                    finish()
+                when(it){
+                    "SUCCESS" ->  {
+                        val intent = Intent(this@SplashScreen, MainActivity::class.java)
+                        Log.d("TAG", "Splash onCreate:${User.id} ")
+                        startActivity(intent)
+                        finish()
+                    }
+                    "FAILED" -> {
+                        val intent = Intent(this@SplashScreen, MainActivity::class.java)
+                        Log.d("TAG", "Splash onCreate:${User.id} ")
+                        startActivity(intent)
+                        finish()
+                    }
                 }
             }
         }

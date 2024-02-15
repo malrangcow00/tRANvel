@@ -95,6 +95,10 @@ class GameViewModel @Inject constructor(
     private val _foodGameData = MutableStateFlow(FoodGameDto("", "", listOf(), listOf()))
     val foodGameData = _foodGameData.asStateFlow()
 
+    private val _userData = MutableStateFlow(STOMPDto("", "", "", ""))
+    val userData = _userData.asStateFlow()
+
+
     private val _latLng = MutableStateFlow(LatLng(37.532600, 127.024612))
     val latLng = _latLng.asStateFlow()
 
@@ -261,7 +265,7 @@ class GameViewModel @Inject constructor(
             .subscribe { topicMessage ->
                 //로딩 화면 상태 true
                 _drawDialogState.value = true
-                if (drawPerson.value){
+                if (drawPerson.value) {
                     Log.i("message Recieve65", topicMessage.payload)
                     sendAttractionDrawMessage()
                 }
@@ -270,9 +274,9 @@ class GameViewModel @Inject constructor(
         stompClient.topic("/topic/tranvel/getplayer/$roomId")
             .doOnError { Log.i("message Recieve1", "에러남") }
             .subscribe { topicMessage ->
-                val a = Gson().fromJson(topicMessage.payload, STOMPDto::class.java)
+                _userData.value = Gson().fromJson(topicMessage.payload, STOMPDto::class.java)
                 _drawState.value = false
-                if (a.message == User.nickName) {
+                if (_userData.value.message == User.nickName) {
                     _drawPerson.value = true
                 }
                 Log.i("message Recieve2", topicMessage.payload)
@@ -334,7 +338,7 @@ class GameViewModel @Inject constructor(
                 when (lifecycleEvent.type) {
                     LifecycleEvent.Type.OPENED -> {
                         Log.i("OPEND", "!!")
-                        sendRoomMessage("ENTER")
+                        sendRoomMessage("ENTER", "")
                     }
 
                     LifecycleEvent.Type.CLOSED -> {
@@ -421,12 +425,12 @@ class GameViewModel @Inject constructor(
             .subscribe()
     }
 
-    fun sendRoomMessage(type: String) {
+    fun sendRoomMessage(type: String, message: String) {
         val data = JSONObject()
         data.put("type", type)
         data.put("roomId", RoomInfo.roomID)
         data.put("sender_id", User.id)
-        data.put("message", "")
+        data.put("message", message)
         stompClient.send("/app/tranvel/rooms", data.toString())
             .doOnError { Log.i("message Recieve5", "에러남") }
             .subscribe()

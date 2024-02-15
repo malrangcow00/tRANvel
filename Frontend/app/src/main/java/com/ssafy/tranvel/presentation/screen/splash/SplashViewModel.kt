@@ -21,7 +21,7 @@ class SplashViewModel @Inject constructor(
     private val tokenRepository: TokenRepository,
     private val registerRepository: RegisterRepository
 ) : ViewModel() {
-    private val _isReady = MutableStateFlow(false)
+    private val _isReady = MutableStateFlow("")
     val isReady = _isReady.asStateFlow()
 
     init {
@@ -30,6 +30,8 @@ class SplashViewModel @Inject constructor(
             Log.d("TAG", "getUser: ${token}")
             if (token != null) {
                 getUser(token)
+            } else{
+                _isReady.emit("FAILED")
             }
         }
     }
@@ -44,17 +46,19 @@ class SplashViewModel @Inject constructor(
                         User.balance = it.data.data.balance
                         User.profileImage = it.data.data.profileImage
                         User.nickName = it.data.data.nickName
+                        _isReady.emit("SUCCESS")
+                    }else{
+                        _isReady.emit("FAILED")
                     }
-                    _isReady.emit(true)
                 }
 
                 is DataState.Error -> {
                     Log.d("TAG", "getUser: ${it.apiError}")
-                    _isReady.emit(true)
+                    _isReady.emit("FAILED")
                 }
 
                 is DataState.Loading -> {
-                    _isReady.emit(false)
+                    _isReady.emit("LOADING")
                 }
             }
         }

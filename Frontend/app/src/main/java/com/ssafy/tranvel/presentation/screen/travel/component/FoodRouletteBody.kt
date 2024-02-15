@@ -88,7 +88,7 @@ fun FoodRouletteBody(
             rouletteResultName = result
             rouletteResultFood = a[0].submittedFood
             if (RoomInfo.authority) {
-                gameViewModel.sendFoodGameMessage("CLOSE", result)
+                gameViewModel.sendFoodGameMessage("CLOSE", rouletteResultFood)
             }
         }
     }
@@ -125,6 +125,8 @@ fun FoodRouletteBody(
                     }
                 }
             )
+        } else {
+
         }
         Image(
             modifier = Modifier

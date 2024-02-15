@@ -11,6 +11,6 @@ class DuplicateNickNameUseCase @Inject constructor(
     private val registerRepository: RegisterRepository
 ) {
     suspend fun execute(nickname: String, email: String): Flow<DataState<EmailInfoResponse>> {
-        return registerRepository.duplicateNickName(NicknameRequest(nickname,email))
+        return registerRepository.duplicateNickName(nickname,email)
     }
 }
