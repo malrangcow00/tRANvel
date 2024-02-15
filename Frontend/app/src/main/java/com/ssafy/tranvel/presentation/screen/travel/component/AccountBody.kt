@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
@@ -68,6 +69,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
@@ -80,6 +86,7 @@ import com.ssafy.tranvel.presentation.screen.utils.ConverterURIToBitmap
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor2
 import com.ssafy.tranvel.presentation.ui.theme.TextColor
+import com.ssafy.tranvel.presentation.ui.theme.transparent
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -126,7 +133,7 @@ fun AccountBody(
     }
 
     if (loadingState) {
-        //다이얼로그 발생
+        LoadingIndicator()
     }
 
     LaunchedEffect(true) {
@@ -401,7 +408,9 @@ fun AccountBody(
             }
         }
         Row(
-            modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(
@@ -437,6 +446,23 @@ fun AccountBody(
             }
         }
     }
+}
+
+@Composable
+fun LoadingIndicator(
+    modifier: Modifier = Modifier
+) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.cost_animated))
+    val progress by animateLottieCompositionAsState(
+        composition, true, iterations = LottieConstants.IterateForever, restartOnPlay = false
+    )
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = transparent)
+    )
 }
 
 private fun bitmapToFile(context: Context, bitmap: Bitmap, saveName: String): File {
