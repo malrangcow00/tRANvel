@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.presentation.screen.history
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
@@ -33,27 +34,32 @@ class DetailHistoryViewModel @Inject constructor(
     private val getFoodHistoryUseCase: GetFoodHistoryUseCase,
     private val historyRepository : HistoryRepository
 ) : ViewModel() {
-    private val config = PagingConfig(pageSize = 10)
     var adjustmentCnt = 0
     var attractionCnt = 0
     var foodCnt = 0
 
-    var adjustmentList : List<AdjustmentHistoryResult> = mutableListOf<AdjustmentHistoryResult>()
-    var attractionList : List<AttractionHistoryResult> = mutableListOf<AttractionHistoryResult>()
-    var foodList : List<FoodHistoryResult> = mutableListOf<FoodHistoryResult>()
+    var adjustmentList : List<AdjustmentHistoryResult> = mutableListOf()
+    var attractionList : List<AttractionHistoryResult> = mutableListOf()
+    var foodList : List<FoodHistoryResult> = mutableListOf()
+
+    private val _currentState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val currentState: StateFlow<Boolean> = _currentState
 
     private val _uiAdjustmentState: MutableStateFlow<String> = MutableStateFlow("")
     val uiAdjustmentState: StateFlow<String> = _uiAdjustmentState
     private val _currentAdjustmentState: MutableStateFlow<Boolean> = MutableStateFlow(false)
 //        val currentAdjustmentState: StateFlow<Boolean> = _currentAdjustmentState
 
+
     fun getAdjustmentHistory(roomId : Long) {
         viewModelScope.launch {
-            historyRepository.getAdjustmentHistory(roomId).collect{
+            _currentAdjustmentState.emit(true)
+            getAdjustmentHistoryUseCase.execute(roomId).collect{
                 when (it) {
                     is DataState.Success -> {
                         _uiAdjustmentState.emit("SUCCESS")
-                        _currentAdjustmentState.emit(false)
+                        _currentAdjustmentState.emit(true)
+                        Log.d(TAG, "getAdjustmentHistory: ${it.data}")
                         adjustmentList = it.data.data
                     }
 
@@ -78,11 +84,13 @@ class DetailHistoryViewModel @Inject constructor(
 
     fun getAttractionHistory(roomId : Long) {
         viewModelScope.launch {
-            historyRepository.getAttractionHistory(roomId).collect{
+            _currentAttractionState.emit(true)
+            getAttractionHistoryUseCase.execute(roomId).collect{
                 when (it) {
                     is DataState.Success -> {
                         _uiAttractionState.emit("SUCCESS")
-                        _currentAttractionState.emit(false)
+                        _currentAttractionState.emit(true)
+                        Log.d(TAG, "getAttractionHistory: ${it.data}")
                         attractionList = it.data.data
                     }
 
@@ -107,11 +115,13 @@ class DetailHistoryViewModel @Inject constructor(
 
     fun getFoodHistory(roomId : Long) {
         viewModelScope.launch {
-            historyRepository.getFoodHistory(roomId).collect{
+            _currentFoodState.emit(true)
+            getFoodHistoryUseCase.execute(roomId).collect{
                 when (it) {
                     is DataState.Success -> {
                         _uiFoodState.emit("SUCCESS")
-                        _currentFoodState.emit(false)
+                        _currentFoodState.emit(true)
+                        Log.d(TAG, "getFoodHistory: ${it.data}")
                         foodList = it.data.data
                     }
 
@@ -125,6 +135,27 @@ class DetailHistoryViewModel @Inject constructor(
                         _currentFoodState.emit(true)
                     }
                 }
+            }
+        }
+    }
+
+    private suspend fun <T> checkState(data: DataState<T>): Boolean {
+        when (data) {
+            is DataState.Success -> {
+                Log.d("MYTAG", "checkState: ${data.data}")
+                _currentState.emit(true)
+                return true
+            }
+
+            is DataState.Loading -> {
+                _currentState.emit(true)
+                return false
+            }
+
+            is DataState.Error -> {
+                Log.d("MYTAG", "checkState: ${data.apiError.toString()}")
+                _currentState.emit(false)
+                return false
             }
         }
     }

@@ -12,7 +12,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 
-@Stable
 @Module
 @InstallIn(SingletonComponent::class)
 class HistoryModule {

@@ -5,7 +5,6 @@ import com.ssafy.tranvel.data.model.dto.User
 import com.ssafy.tranvel.data.model.request.EmailAuthRequest
 import com.ssafy.tranvel.data.model.request.EmailInfoRequest
 import com.ssafy.tranvel.data.model.request.UserRequest
-import com.ssafy.tranvel.data.model.request.NicknameRequest
 import com.ssafy.tranvel.data.model.response.DataResponse
 import com.ssafy.tranvel.data.model.response.EmailAuthResponse
 import com.ssafy.tranvel.data.model.response.EmailInfoResponse

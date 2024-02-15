@@ -9,7 +9,7 @@ data class AdjustmentHistoryDto(
     val miniGameCode: String?,
     val targetUser: String?,
     val dateTime: String?,
-    val price: Long,
+    val price: Long?,
     val moneyResult: Long,
     val selectedUsers: List<Long>?,
     val images: List<String>?,

@@ -28,6 +28,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -93,7 +94,15 @@ fun HistoryDetailCard(
     detailHistoryViewModel: DetailHistoryViewModel,
     detailHistoryRecordViewModel: DetailHistoryRecordViewModel,
 ) {
-
+//    LaunchedEffect(roomId){
+//        detailHistoryViewModel.getAttractionHistory(roomId)
+//        detailHistoryViewModel.getAdjustmentHistory(roomId)
+//        detailHistoryViewModel.getFoodHistory(roomId)
+//        Log.d(TAG, "HistoryDetailCard: ${dto?.contentId}")
+//        Log.d(TAG, "HistoryDetailCard: ${detailHistoryViewModel.attractionList}")
+//        Log.d(TAG, "HistoryDetailCard: ${detailHistoryViewModel.adjustmentList}")
+//        Log.d(TAG, "HistoryDetailCard: ${detailHistoryViewModel.foodList}")
+//    }
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
@@ -193,41 +202,52 @@ fun HistoryDetailCard(
                         textAlign = TextAlign.Center,
                     )
                     if (matchCategory(dto?.historyCategory).equals("정산")) {
-                        Text(
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .fillMaxWidth(0.3f),
-                            textAlign = TextAlign.Center,
-                            text = if (dto == null) "정산 정보\n없음" else moneyFormatter(dto.moneyResult!!.toInt())
-                        )
-                    }
-                    else if(matchCategory(dto?.historyCategory).equals("여행지")){
-                        detailHistoryViewModel.attractionList.forEach{
+                        detailHistoryViewModel.adjustmentList.forEach {
+                            Log.d(TAG, "HistoryDetailCard: ${it.price}")
+                            if (dto.contentId == it.id) {
+                                Log.d(TAG, "HistoryDetailCard: 동일 ${it.price}")
+                                (if (dto == null) "정산 정보\n없음" else it.price?.let { it1 ->
+                                    moneyFormatter(
+                                        it1.toInt()
+                                    )
+                                })?.let { it2 ->
+                                    Text(
+                                        modifier = Modifier
+                                            .align(Alignment.CenterEnd)
+                                            .fillMaxWidth(0.3f),
+                                        textAlign = TextAlign.Center,
+                                        text = it2
+                                    )
+                                }
+                            }
+                        }
+                    } else if (matchCategory(dto?.historyCategory).equals("여행지")) {
+                        detailHistoryViewModel.attractionList.forEach {
                             Log.d(TAG, "HistoryDetailCard: ${it.attractionList.attrName}")
-                            if(dto.contentId == it.id){
+                            if (dto.contentId == it.id) {
                                 Log.d(TAG, "HistoryDetailCard: 동일 ${it.attractionList.attrName}")
                                 Text(
                                     modifier = Modifier
                                         .align(Alignment.CenterEnd)
                                         .fillMaxWidth(0.3f),
                                     textAlign = TextAlign.Center,
-                                    text = it.attractionList.attrName!!
+                                    text = if (it.attractionList.attrName == null) "여행지\n이름 없음" else it.attractionList.attrName
                                 )
                             }
                         }
-                    }
-                    else if(matchCategory(dto?.historyCategory).equals("음식")){
-                        detailHistoryViewModel.foodList.forEach{
+                    } else if (matchCategory(dto?.historyCategory).equals("음식")) {
+                        detailHistoryViewModel.foodList.forEach {
                             Log.d(TAG, "HistoryDetailCard: ${it.foodName}")
-                            if(dto.contentId == it.id){
+                            if (dto.contentId == it.id) {
                                 Log.d(TAG, "HistoryDetailCard: 동일 ${it.foodName}")
                                 Text(
                                     modifier = Modifier
                                         .align(Alignment.CenterEnd)
                                         .fillMaxWidth(0.3f),
                                     textAlign = TextAlign.Center,
-                                    text = it.foodName!!
+                                    text = if (it.foodName == null) "음식 이름 없음" else it.foodName
                                 )
+
                             }
                         }
                     }

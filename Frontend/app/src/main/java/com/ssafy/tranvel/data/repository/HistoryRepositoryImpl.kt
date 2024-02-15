@@ -9,6 +9,7 @@ import com.ssafy.tranvel.data.remote.datasource.history.HistoryRemoteDataSource
 import com.ssafy.tranvel.data.utils.DataState
 import com.ssafy.tranvel.domain.repository.HistoryRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 import javax.inject.Inject
@@ -21,18 +22,18 @@ class HistoryRepositoryImpl @Inject constructor(
 
     override suspend fun getAdjustmentHistory(roomId: Long): Flow<DataState<AdjustmentHistoryResponse>> =
         flow{
-            historyRemoteDataSource.getAdjustmentHistory(roomId)
+            emitAll(historyRemoteDataSource.getAdjustmentHistory(roomId))
         }
 
     override suspend fun getAttractionHistory(roomId: Long): Flow<DataState<AttractionHistoryResponse>> =
         flow{
-            historyRemoteDataSource.getAttractionHistory(roomId)
+            emitAll(historyRemoteDataSource.getAttractionHistory(roomId))
         }
 
 
     override suspend fun getFoodHistory(roomId: Long): Flow<DataState<FoodHistoryResponse>> =
         flow{
-            historyRemoteDataSource.getFoodHistory(roomId)
+            emitAll(historyRemoteDataSource.getFoodHistory(roomId))
         }
 
     override suspend fun getDetailHistoryRecord(roomId: Long): Response<DetailHistoryRecordResponse> =

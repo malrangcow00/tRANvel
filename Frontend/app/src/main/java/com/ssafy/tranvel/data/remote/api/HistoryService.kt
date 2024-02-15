@@ -8,6 +8,8 @@ import com.ssafy.tranvel.data.model.response.FoodHistoryResponse
 import com.ssafy.tranvel.data.model.response.HistoryResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -15,15 +17,19 @@ interface HistoryService {
     @POST("rooms")
     suspend fun getAllHistories(@Body historyRequest: HistoryRequest): Response<HistoryResponse>
 
+    @FormUrlEncoded
     @POST("rooms/adjustment/getallhistory")
-    suspend fun getAdjustmentHistory(@Query("roomId") roomId : Long) : Response<AdjustmentHistoryResponse>
+    suspend fun getAdjustmentHistory(@Field("roomId") roomId : Long) : Response<AdjustmentHistoryResponse>
 
+    @FormUrlEncoded
     @POST("rooms/attractiongame/getallhistory")
-    suspend fun getAttractiongameHistory(@Query("roomId") roomId : Long) : Response<AttractionHistoryResponse>
+    suspend fun getAttractiongameHistory(@Field("roomId") roomId : Long) : Response<AttractionHistoryResponse>
 
+    @FormUrlEncoded
     @POST("rooms/foodgame/getallhistory")
-    suspend fun getFoodgameHistory(@Query("roomId") roomId : Long) : Response<FoodHistoryResponse>
+    suspend fun getFoodgameHistory(@Field("roomId") roomId : Long) : Response<FoodHistoryResponse>
 
+    @FormUrlEncoded
     @POST("rooms/history")
-    suspend fun getDetailHistoryRecords(@Query("roomId") roomId : Long) : Response<DetailHistoryRecordResponse>
+    suspend fun getDetailHistoryRecords(@Field("roomId") roomId : Long) : Response<DetailHistoryRecordResponse>
 }
