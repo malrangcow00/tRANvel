@@ -126,16 +126,16 @@ fun FoodRouletteBody(
                     }
                 }
             )
+            Image(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .size(50.dp),
+                painter = painterResource(id = R.drawable.down),
+                contentDescription = "pointRoulette",
+            )
         } else {
             Text(text = "2명 이상 입력 하여야 합니다.")
         }
-        Image(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .size(50.dp),
-            painter = painterResource(id = R.drawable.down),
-            contentDescription = "pointRoulette",
-        )
         val selectedImageList = rouletteData.selectedUserInfos
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
             Column {
