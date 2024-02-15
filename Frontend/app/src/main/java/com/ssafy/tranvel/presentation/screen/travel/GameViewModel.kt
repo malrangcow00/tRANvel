@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -239,6 +242,7 @@ class GameViewModel @Inject constructor(
     fun drawAttraction() {
         //로딩 화면 true
         _drawDialogState.value = true
+        _drawState.value = true
         //sendAttractionGame
         sendAttractionMessage("ENTER", "")
         //draw로 여행지 뽑기
@@ -265,6 +269,7 @@ class GameViewModel @Inject constructor(
             .subscribe { topicMessage ->
                 //로딩 화면 상태 true
                 _drawDialogState.value = true
+                _drawState.value = true
                 if (drawPerson.value) {
                     Log.i("message Recieve65", topicMessage.payload)
                     sendAttractionDrawMessage()
@@ -290,7 +295,7 @@ class GameViewModel @Inject constructor(
                 // 결과 다이얼로그 상태 true
                 setDrawPerson()
                 viewModelScope.launch {
-                    delay(2000L)
+                    delay(3000L)
                     _drawDialogState.value = false
                     _attractionInfo.value =
                         Gson().fromJson(topicMessage.payload, AttractionInfo::class.java)

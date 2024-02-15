@@ -46,6 +46,7 @@ import com.jhdroid.view.RotateListener
 import com.ssafy.tranvel.BuildConfig
 import com.ssafy.tranvel.R
 import com.ssafy.tranvel.databinding.FoodRouletteLayoutBinding
+import com.ssafy.tranvel.presentation.screen.login.User
 import com.ssafy.tranvel.presentation.screen.travel.GameViewModel
 import com.ssafy.tranvel.presentation.screen.travel.RoomInfo
 import com.ssafy.tranvel.presentation.ui.theme.TextColor
@@ -126,7 +127,7 @@ fun FoodRouletteBody(
                 }
             )
         } else {
-
+            Text(text = "2명 이상 입력 하여야 합니다.")
         }
         Image(
             modifier = Modifier
@@ -205,15 +206,18 @@ fun FoodRouletteBody(
                         }
                     }
                 }
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 10.dp),
-                    onClick = {
-                        gameViewModel.sendFoodGameStartMessage("ENTER", "")
-                    },
-                ) {
-                    Text(text = "뽑기", color = TextColor)
+                
+                if (RoomInfo.authority) {
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp),
+                        onClick = {
+                            gameViewModel.sendFoodGameStartMessage("ENTER", "")
+                        },
+                    ) {
+                        Text(text = "뽑기", color = TextColor)
+                    }
                 }
             }
         }

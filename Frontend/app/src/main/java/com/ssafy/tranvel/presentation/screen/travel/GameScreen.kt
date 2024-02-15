@@ -54,10 +54,11 @@ fun GameScreen(
     val drawPerson by gameViewModel.drawPerson.collectAsState()
     val drawState by gameViewModel.drawState.collectAsState()
     val uiState by gameViewModel.gameState.collectAsState()
+    val dialogState by gameViewModel.drawDialogState.collectAsState()
 
     if (uiState) {
         gameViewModel.setGameState()
-        navController.navigate(homeRoute){
+        navController.navigate(homeRoute) {
             this.popUpTo("game")
         }
     }
@@ -76,7 +77,7 @@ fun GameScreen(
             }
         },
         bottomBar = {
-            if (RoomInfo.authority) {
+            if (RoomInfo.authority && !dialogState) {
                 BottomAppBar(
                     modifier = Modifier
                         .height(50.dp)
@@ -92,19 +93,21 @@ fun GameScreen(
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
-            FloatingActionButton(
-                shape = CircleShape,
-                onClick = {
-                    if (RoomInfo.authority && drawState) {
-                        gameViewModel.sendAttractionPersonMessage("ENTER", "")
-                    }
-                    if (drawPerson && !drawState) {
-                        gameViewModel.drawAttraction()
-                    }
-                },
-                backgroundColor = PrimaryColor2
-            ) {
-                Icon(imageVector = Icons.Filled.Casino, contentDescription = "Add icon")
+            if (!dialogState) {
+                FloatingActionButton(
+                    shape = CircleShape,
+                    onClick = {
+                        if (RoomInfo.authority && drawState) {
+                            gameViewModel.sendAttractionPersonMessage("ENTER", "")
+                        }
+                        if (drawPerson && !drawState) {
+                            gameViewModel.drawAttraction()
+                        }
+                    },
+                    backgroundColor = PrimaryColor2
+                ) {
+                    Icon(imageVector = Icons.Filled.Casino, contentDescription = "Add icon")
+                }
             }
         }
     )
@@ -121,7 +124,9 @@ fun LoadingIndicator(
     LottieAnimation(
         composition = composition,
         progress = { progress },
-        modifier = modifier.fillMaxSize().background(color = transparent)
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = transparent)
     )
 }
 
