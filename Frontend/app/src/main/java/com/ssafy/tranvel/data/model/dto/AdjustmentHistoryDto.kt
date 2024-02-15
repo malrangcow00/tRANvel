@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class DetailHistoryDto(
+data class AdjustmentHistoryDto(
     val id: Long,
     val miniGameCode: String?,
     val targetUser: String?,
@@ -18,7 +18,7 @@ data class DetailHistoryDto(
     val location: String?
 ) : Parcelable {
     companion object {
-        fun init() = DetailHistoryDto(
+        fun init() = AdjustmentHistoryDto(
             id = -1,
             miniGameCode = null,
             targetUser = null,

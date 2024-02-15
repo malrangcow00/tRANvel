@@ -1,10 +1,14 @@
 package com.ssafy.tranvel.data.model.dto.extension
 
 import com.ssafy.tranvel.data.model.DetailHistoryRecordResult
-import com.ssafy.tranvel.data.model.DetailHistoryResult
+import com.ssafy.tranvel.data.model.AdjustmentHistoryResult
+import com.ssafy.tranvel.data.model.AttractionHistoryResult
+import com.ssafy.tranvel.data.model.FoodHistoryResult
 import com.ssafy.tranvel.data.model.HistoryResult
-import com.ssafy.tranvel.data.model.dto.DetailHistoryDto
+import com.ssafy.tranvel.data.model.dto.AdjustmentHistoryDto
+import com.ssafy.tranvel.data.model.dto.AttractionHistoryDto
 import com.ssafy.tranvel.data.model.dto.DetailHistoryRecordDto
+import com.ssafy.tranvel.data.model.dto.FoodHistoryDto
 import com.ssafy.tranvel.data.model.dto.HistoryDto
 
 fun HistoryResult.toHistoryDto() = HistoryDto(
@@ -13,7 +17,7 @@ fun HistoryResult.toHistoryDto() = HistoryDto(
 
 fun List<HistoryResult>.toHistoryDtoList() = map { it.toHistoryDto() }
 
-fun DetailHistoryResult.toDetailHistoryDto() = DetailHistoryDto(
+fun AdjustmentHistoryResult.toAdjustmentHistoryDto() = AdjustmentHistoryDto(
     id,
     miniGameCode,
     targetUser,
@@ -26,8 +30,17 @@ fun DetailHistoryResult.toDetailHistoryDto() = DetailHistoryDto(
     detail,
     location
 )
+fun List<AdjustmentHistoryResult>.toAdjustmentHistoryDtoList() = map { it.toAdjustmentHistoryDto() }
 
-fun List<DetailHistoryResult>.toDetailHistoryDtoList() = map { it.toDetailHistoryDto() }
+fun AttractionHistoryResult.toAttractionHistoryDto() = AttractionHistoryDto(
+    id, dateTime, nickName, images, attractionList
+)
+fun List<AttractionHistoryResult>.toAttractionHistoryList() = map { it.toAttractionHistoryDto() }
+
+fun FoodHistoryResult.toFoodHistoryDto() = FoodHistoryDto(
+    id, dateTime, selectedUsers, unselectedUsers, foodCandidate, foodName, images
+)
+fun List<FoodHistoryResult>.toFoodHistoryList() = map { it.toFoodHistoryDto() }
 
 fun DetailHistoryRecordResult.toDetailHistoryRecordDto() = DetailHistoryRecordDto(
     contentId, historyCategory, dateTime, images, detail, latitude, longitude, moneyResult

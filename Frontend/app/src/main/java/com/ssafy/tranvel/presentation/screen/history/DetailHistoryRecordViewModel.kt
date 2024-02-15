@@ -32,10 +32,6 @@ class DetailHistoryRecordViewModel @Inject constructor(
         _uiState.value = newState
     }
 
-    init {
-        getDetailHistoryRecord(-1)
-    }
-
     fun getDetailHistoryRecord(roomId : Long) {
         viewModelScope.launch {
             setState { currentState.copy(isLoading = true) }

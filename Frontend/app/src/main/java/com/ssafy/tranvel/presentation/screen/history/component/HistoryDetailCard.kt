@@ -49,7 +49,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ssafy.tranvel.BuildConfig
-import com.ssafy.tranvel.data.model.dto.DetailHistoryDto
+import com.ssafy.tranvel.data.model.dto.AdjustmentHistoryDto
 import com.ssafy.tranvel.data.model.dto.DetailHistoryRecordDto
 import com.ssafy.tranvel.presentation.screen.components.EmptyIndicator
 import com.ssafy.tranvel.presentation.screen.components.ResultLoadingIndicator
@@ -89,32 +89,10 @@ var pastelRainbows = listOf<Long>(
 fun HistoryDetailCard(
     roomId: Long,
     index: Int,
-    dto: DetailHistoryDto?,
+    dto: DetailHistoryRecordDto?,
     detailHistoryViewModel: DetailHistoryViewModel,
     detailHistoryRecordViewModel: DetailHistoryRecordViewModel,
-    isLoading: Boolean,
-    pagedData: Flow<PagingData<DetailHistoryRecordDto>>?
 ) {
-    var pagingItems: LazyPagingItems<DetailHistoryRecordDto>? = null
-    pagedData?.let {
-        pagingItems = rememberFlowWithLifecycle(it).collectAsLazyPagingItems()
-    }
-
-    var attractionItems: List<DetailHistoryRecordDto>?= null
-
-
-    var attractionList = mutableListOf<DetailHistoryRecordDto>()
-
-    if (pagingItems != null && pagingItems!!.itemCount != 0 && detailHistoryRecordViewModel.cnt == 0) {
-        detailHistoryRecordViewModel.cnt = pagingItems!!.itemCount
-
-
-    }
-
-    Log.d(TAG, "HistoryDetailCard: attractionlist : ${attractionList}")
-    
-    var expanded by remember { mutableStateOf(false) }
-    var lazyListState = rememberLazyListState()
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -139,13 +117,13 @@ fun HistoryDetailCard(
                         .size(30.dp)
                         .aspectRatio(1f)
                         .background(
-                            color = Color(rainbows[(detailHistoryViewModel.cnt - 1 - index) % 7]),
+                            color = Color(rainbows[(detailHistoryRecordViewModel.cnt - 1 - index) % 7]),
                             shape = CircleShape
                         )
                         .border(BorderStroke(1.dp, color = Color.LightGray), CircleShape),
                 ) {
                     Text(
-                        text = (detailHistoryViewModel.cnt - index).toString(),
+                        text = (detailHistoryRecordViewModel.cnt - index).toString(),
                         fontSize = 12.sp,
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
@@ -154,11 +132,12 @@ fun HistoryDetailCard(
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    modifier = Modifier.height(20.dp),
+                    modifier = Modifier.height(50.dp),
                     text = if (dto?.dateTime == null) "날짜 없음" else {
                         dto.dateTime.substring(5, 7).toInt()
                             .toString() + "월 " + dto.dateTime.substring(8, 10).toInt()
-                            .toString() + "일"
+                            .toString() + "일" + "\n" + dto.dateTime.substring(11, 13)
+                            .toInt() + "시 " + dto.dateTime.substring(14, 16).toInt() + "분"
                     },
                     fontSize = 12.sp
                 )
@@ -188,7 +167,7 @@ fun HistoryDetailCard(
                         .clip(RoundedCornerShape(5.dp))
                         .padding(10.dp)
                         .clickable {
-                            expanded = !expanded
+//                            expanded = !expanded
                         }
                 ) {
                     LazyRow(
@@ -207,62 +186,33 @@ fun HistoryDetailCard(
                         }
                     }
                     Text(
+                        text = matchCategory(dto?.historyCategory!!),
                         modifier = Modifier
                             .align(Alignment.Center)
                             .fillMaxWidth(0.3f),
                         textAlign = TextAlign.Center,
-                        text = if (dto?.location == null) "장소 정보\n없음" else dto.location
                     )
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .fillMaxWidth(0.3f),
-                        textAlign = TextAlign.Center,
-                        text = if (dto == null) "정산 정보\n없음" else moneyFormatter(dto.price.toInt())
-                    )
-                }
-                if (expanded) {
-                    Box(modifier = Modifier.height(250.dp)) {
-                        LazyColumnScrollbar(lazyListState) {
-                            LazyColumn(
-                                state = lazyListState,
-                                modifier = Modifier.padding(10.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                if (isLoading) {
-                                    items(1) {
-                                        ResultLoadingIndicator()
-                                    }
-                                } else if (pagedData != null && pagingItems != null) {
-                                    items(count = detailHistoryRecordViewModel.cnt) { index ->
-                                        Log.d(TAG, "HistoryDetailCard: lazyListState.firstVisibleItemIndex : ${lazyListState.firstVisibleItemIndex}")
-                                        if(pagingItems!![lazyListState.firstVisibleItemIndex]?.latitude !=null && pagingItems!![lazyListState.firstVisibleItemIndex]?.longitude !=null){
-                                            Log.d(TAG, "HistoryDetailCard: 현재 맨 위의 값 위도 경도 : ${pagingItems!![lazyListState.firstVisibleItemIndex]?.latitude} && ${pagingItems!![lazyListState.firstVisibleItemIndex]?.longitude}")
-                                        }
-                                        Log.d(
-                                            TAG,
-                                            "DetailHistoryContent: index : ${index} dto.roomId : ${roomId}"
-                                        )
-                                        HistoryRecordCard(
-                                            
-                                            index = index,
-                                            dateTime = dto?.dateTime,
-                                            dto = pagingItems!![index]
-                                        )
-                                    }
-                                } else {
-                                    items(1) {
-                                        Spacer(modifier = Modifier.height(40.dp))
-                                        Text(
-                                            modifier = Modifier.align(Alignment.TopCenter),
-                                            text = "현재 기록된 \n 상세 기록이 없어요ㅠㅠ",
-                                            fontFamily = bmjua,
-                                            fontSize = 30.sp,
-                                            textAlign = TextAlign.Center
-                                        )
-                                        EmptyIndicator()
-                                    }
-                                }
+                    if (matchCategory(dto?.historyCategory).equals("정산")) {
+                        Text(
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .fillMaxWidth(0.3f),
+                            textAlign = TextAlign.Center,
+                            text = if (dto == null) "정산 정보\n없음" else moneyFormatter(dto.moneyResult!!.toInt())
+                        )
+                    }
+                    else if(matchCategory(dto?.historyCategory).equals("여행지")){
+                        detailHistoryViewModel.attractionList.forEach{
+                            Log.d(TAG, "HistoryDetailCard: ${it.attractionList.attrName}")
+                            if(dto.contentId == it.id){
+                                Log.d(TAG, "HistoryDetailCard: 동일 ${it.attractionList.attrName}")
+                                Text(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterEnd)
+                                        .fillMaxWidth(0.3f),
+                                    textAlign = TextAlign.Center,
+                                    text = it.attractionList.attrName!!
+                                )
                             }
                         }
                     }
@@ -275,7 +225,7 @@ fun HistoryDetailCard(
 @Composable
 fun DetailHistoryImageContent(
     itemIndex: Int,
-    dto: DetailHistoryDto?,
+    dto: DetailHistoryRecordDto?,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -335,7 +285,6 @@ fun HistoryRecordCard(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 Column(
-//                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .weight(0.3f)
                         .fillMaxWidth(0.15f)
@@ -399,5 +348,5 @@ fun matchCategory(gameType: String): String {
         return "정산"
     } else if (gameType.equals("food")) {
         return "음식"
-    } else return "장소"
+    } else return "여행지"
 }

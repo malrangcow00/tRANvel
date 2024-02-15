@@ -1,7 +1,6 @@
 package com.ssafy.tranvel.data.remote.datasource.travel.impl
 
 import android.util.Log
-import com.ssafy.tranvel.data.model.dto.AdjustmentGameHistory
 import com.ssafy.tranvel.data.model.dto.Room
 import com.ssafy.tranvel.data.model.dto.UserInfo
 import com.ssafy.tranvel.data.model.response.DataResponse

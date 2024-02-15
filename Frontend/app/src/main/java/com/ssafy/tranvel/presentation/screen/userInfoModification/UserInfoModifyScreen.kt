@@ -11,10 +11,12 @@ import com.ssafy.tranvel.presentation.screen.userInfoModification.component.User
 @Composable
 fun UserInfoModifyScreen(
     viewModel : UserInfoModifyViewModel,
+    onCancelButtonClicked : ()->Unit,
+    onSaveButtonClicked : () -> Unit
 ) {
     Column {
         UserInfoModifyTopBar()
         UserInfoModifyProfileImage(LocalContext.current,viewModel)
-        UserInfoModifyMainBlock()
+        UserInfoModifyMainBlock(viewModel,onCancelButtonClicked,onSaveButtonClicked)
     }
 }

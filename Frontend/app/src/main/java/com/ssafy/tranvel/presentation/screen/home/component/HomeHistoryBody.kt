@@ -113,7 +113,7 @@ private fun Content(
             contentPadding = PaddingValues(vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            if (isLoading || pagingItems!!.itemCount==0) {
+            if (isLoading || (pagingItems != null && pagingItems!!.itemCount == 0)) {
                 if (pagingItems != null && historyViewModel.cnt == 0) {
                     historyViewModel.cnt = pagingItems!!.itemCount
                 }
@@ -144,7 +144,7 @@ private fun Content(
                             start = Offset(0.dp.toPx(), 0.dp.toPx()),
                             end = Offset(canvasWidth, 0.dp.toPx()),
                             strokeWidth = 2.dp.toPx(),
-                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f,20f), 10f)
+                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 20f), 10f)
                         )
                     }
                 }

@@ -18,7 +18,7 @@ import com.ssafy.tranvel.presentation.screen.home.navigation.homeScreen
 import com.ssafy.tranvel.presentation.screen.login.LoginScreen
 import com.ssafy.tranvel.presentation.screen.register.navigation.registerGraph
 import com.ssafy.tranvel.presentation.screen.travel.navigation.gameNavGraph
-import com.ssafy.tranvel.presentation.screen.userInfoModification.navigation.userInfoModifyScreen
+import com.ssafy.tranvel.presentation.screen.userInfoModification.UserInfoModifyScreen
 import com.ssafy.tranvel.presentation.screen.userWithdrawal.navigation.userWithdrawalScreen
 
 @Composable
@@ -53,7 +53,6 @@ fun NavGraph() {
                     }
                 )
             }
-
             composable(route = "found_screen") {
                 FoundPasswordScreen() {
                     navController.navigate("login_screen")
@@ -61,7 +60,22 @@ fun NavGraph() {
             }
             registerGraph(navController)
             homeScreen(navController)
-            userInfoModifyScreen(navController)
+            composable(route = "userInfoModify_route") {
+                UserInfoModifyScreen(
+                    viewModel = hiltViewModel(),
+                    onCancelButtonClicked = {
+                        it.viewModelStore.clear()
+                        navController.navigate("home_route") {
+                            popUpTo("userInfoModify_route") { inclusive = true }
+                        }
+                    }, onSaveButtonClicked = {
+                        it.viewModelStore.clear()
+                        navController.navigate("home_route") {
+                            popUpTo("userInfoModify_route") { inclusive = true }
+                        }
+                    }
+                )
+            }
             userWithdrawalScreen(navController)
             historyScreen(navController)
         }

@@ -4,11 +4,8 @@ import android.util.Log
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.ssafy.tranvel.data.model.dto.DetailHistoryDto
 import com.ssafy.tranvel.data.model.dto.HistoryDto
-import com.ssafy.tranvel.presentation.screen.history.DetailHistoryViewModel
 import com.ssafy.tranvel.presentation.screen.history.HistoryScreen
 
 const val historyRoute = "history_route"

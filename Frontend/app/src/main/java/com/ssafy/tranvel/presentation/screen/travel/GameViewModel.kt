@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.compose.CameraPositionState
 import com.ssafy.tranvel.BuildConfig
 import com.ssafy.tranvel.data.model.dto.AdjustmentGameHistory
 import com.ssafy.tranvel.data.model.dto.AttractionInfo
@@ -26,16 +25,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.dto.LifecycleEvent
-import java.io.ByteArrayOutputStream
 import java.io.File
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class GameViewModel @Inject constructor(

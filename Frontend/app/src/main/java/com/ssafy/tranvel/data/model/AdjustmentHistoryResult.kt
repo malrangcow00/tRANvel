@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class DetailHistoryResult(
+data class AdjustmentHistoryResult(
     val id : Long,
     val miniGameCode : String?,
     val targetUser : String?,
@@ -20,9 +20,9 @@ data class DetailHistoryResult(
 
 ) : Parcelable {
     companion object{
-        fun create(jsonString: String) : DetailHistoryResult?{
+        fun create(jsonString: String) : AdjustmentHistoryResult?{
             return try {
-                Gson().fromJson(jsonString, DetailHistoryResult::class.java)
+                Gson().fromJson(jsonString, AdjustmentHistoryResult::class.java)
             } catch (e : Exception){
                 return null
             }

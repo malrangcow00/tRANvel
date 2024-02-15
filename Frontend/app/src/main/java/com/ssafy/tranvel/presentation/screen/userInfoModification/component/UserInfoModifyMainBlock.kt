@@ -22,12 +22,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.ssafy.tranvel.presentation.screen.userInfoModification.UserInfoModifyViewModel
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 import com.ssafy.tranvel.presentation.ui.theme.TextColor
 import com.ssafy.tranvel.presentation.ui.theme.bmjua
 
 @Composable
 fun UserInfoModifyMainBlock(
+    viewModel: UserInfoModifyViewModel,
+    onCancelButtonClicked: () -> Unit,
+    onSaveButtonClicked: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
@@ -42,10 +47,11 @@ fun UserInfoModifyMainBlock(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            UserInfoModifyTextField(info = "닉네임")
+            UserInfoModifyTextField(info = "닉네임", value = viewModel.nickname)
             Spacer(modifier = Modifier.width(10.dp))
             Button(
                 onClick = {
+                    viewModel.duplicateNickName()
                 },
                 modifier = Modifier
                     .wrapContentWidth(),
@@ -66,13 +72,13 @@ fun UserInfoModifyMainBlock(
         Text(
             text = "비밀번호", color = TextColor, fontSize = 18.sp, fontWeight = FontWeight.Bold
         )
-        UserInfoModifyTextField(info = "비밀번호")
+        UserInfoModifyTextField(info = "비밀번호", value = viewModel.password)
         Spacer(modifier = Modifier.height(30.dp))
 
         Text(
             text = "비밀번호 확인", color = TextColor, fontSize = 18.sp, fontWeight = FontWeight.Bold
         )
-        UserInfoModifyTextField(info = "비밀번호 확인")
+        UserInfoModifyTextField(info = "비밀번호 확인", value = viewModel.passwordCheck)
         Spacer(modifier = Modifier.height(30.dp))
 
         Row(
@@ -81,7 +87,7 @@ fun UserInfoModifyMainBlock(
         ) {
             OutlinedButton(
                 onClick = {
-
+                    onCancelButtonClicked()
                 },
                 modifier = Modifier
                     .weight(1f),
@@ -99,7 +105,9 @@ fun UserInfoModifyMainBlock(
             }
             Spacer(modifier = Modifier.width(20.dp))
             Button(
-                onClick = {},
+                onClick = {
+                    onSaveButtonClicked()
+                },
                 modifier = Modifier
                     .weight(1f),
                 shape = RoundedCornerShape(10.dp),

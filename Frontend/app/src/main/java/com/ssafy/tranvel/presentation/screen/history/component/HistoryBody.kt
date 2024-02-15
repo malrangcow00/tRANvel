@@ -23,10 +23,11 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.ssafy.tranvel.data.model.dto.DetailHistoryDto
+import com.ssafy.tranvel.data.model.dto.AdjustmentHistoryDto
+import com.ssafy.tranvel.data.model.dto.AttractionHistoryDto
 import com.ssafy.tranvel.data.model.dto.DetailHistoryRecordDto
-import com.ssafy.tranvel.data.model.dto.HistoryDto
-import com.ssafy.tranvel.domain.viewstate.history.DetailHistoryViewState
+import com.ssafy.tranvel.data.model.dto.FoodHistoryDto
+import com.ssafy.tranvel.domain.viewstate.history.AdjustmentHistoryViewState
 import com.ssafy.tranvel.presentation.screen.components.EmptyIndicator
 import com.ssafy.tranvel.presentation.screen.components.ResultLoadingIndicator
 import com.ssafy.tranvel.presentation.screen.history.DetailHistoryRecordViewModel
@@ -44,49 +45,49 @@ fun HistoryBody(
     detailHistoryRecordViewModel: DetailHistoryRecordViewModel
 ) {
     LaunchedEffect(roomId) {
-        detailHistoryViewModel.cnt = 0
-        detailHistoryViewModel.getDetailHistory(roomId)
+        detailHistoryViewModel.adjustmentCnt = 0
+        detailHistoryViewModel.getAdjustmentHistory(roomId)
+        detailHistoryViewModel.attractionCnt = 0
+        detailHistoryViewModel.getAttractionHistory(roomId)
+        detailHistoryViewModel.foodCnt = 0
+        detailHistoryViewModel.getFoodHistory(roomId)
 
         detailHistoryRecordViewModel.cnt = 0
         detailHistoryRecordViewModel.getDetailHistoryRecord(roomId)
-        Log.d(TAG, "HistoryBody: 여기서 detailHistoryRecordViewModel.cnt : ${detailHistoryRecordViewModel.cnt}")
+        Log.d(
+            TAG,
+            "HistoryBody: 여기서 detailHistoryRecordViewModel.cnt : ${detailHistoryRecordViewModel.cnt}"
+        )
     }
 
-    val viewState = detailHistoryViewModel.uiState.collectAsState().value
     val recordViewState = detailHistoryRecordViewModel.uiState.collectAsState().value
 
     Log.d(TAG, "HistoryBody: recordViewState.pagedData size : ${recordViewState.pagedData}")
 
     Content(
-        roomId,
         paddingValues,
-        viewState,
-        viewState.isLoading,
-        viewState.pagedData,
-        detailHistoryViewModel,
-        detailHistoryRecordViewModel,
+        roomId,
         recordViewState.isLoading,
-        recordViewState.pagedData
+        recordViewState.pagedData,
+        detailHistoryRecordViewModel,
+        detailHistoryViewModel
     )
 }
 
 @Composable
 private fun Content(
-    roomId : Long,
     paddingValues: PaddingValues,
-    viewState: DetailHistoryViewState,
+    roomId: Long,
     isLoading: Boolean = false,
-    pagedData: Flow<PagingData<DetailHistoryDto>>? = null,
-    detailHistoryViewModel: DetailHistoryViewModel,
+    pagedData: Flow<PagingData<DetailHistoryRecordDto>>? = null,
     detailHistoryRecordViewModel: DetailHistoryRecordViewModel,
-    recordIsLoading: Boolean = false,
-    recordPagedData: Flow<PagingData<DetailHistoryRecordDto>>? = null,
+    detailHistoryViewModel: DetailHistoryViewModel
 ) {
-    var pagingItems: LazyPagingItems<DetailHistoryDto>? = null
+    var pagingItems: LazyPagingItems<DetailHistoryRecordDto>? = null
     pagedData?.let {
         pagingItems = rememberFlowWithLifecycle(it).collectAsLazyPagingItems()
     }
-    
+
     Box(
         modifier = Modifier.padding(paddingValues)
     ) {
@@ -96,26 +97,24 @@ private fun Content(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (isLoading) {
-                if (pagingItems != null && detailHistoryViewModel.cnt == 0) {
-                    detailHistoryViewModel.cnt = pagingItems!!.itemCount
+                if (pagingItems != null && detailHistoryRecordViewModel.cnt == 0) {
+                    detailHistoryRecordViewModel.cnt = pagingItems!!.itemCount
                 }
                 items(1) {
                     ResultLoadingIndicator()
                 }
             } else if (pagedData != null && pagingItems != null) {
-                if (detailHistoryViewModel.cnt == 0 && pagingItems!!.itemCount != 0) {
-                    detailHistoryViewModel.cnt = pagingItems!!.itemCount
+                if (detailHistoryRecordViewModel.cnt == 0 && pagingItems!!.itemCount != 0) {
+                    detailHistoryRecordViewModel.cnt = pagingItems!!.itemCount
                 }
-                Log.d(TAG, "Cnt: ${detailHistoryViewModel.cnt}")
-                items(count = detailHistoryViewModel.cnt) { index ->
+                Log.d(TAG, "detailHistoryRecordViewModel.cnt: ${detailHistoryRecordViewModel.cnt}")
+                items(count = detailHistoryRecordViewModel.cnt) { index ->
                     HistoryDetailCard(
                         roomId = roomId,
                         index = index,
                         dto = pagingItems!![index],
-                        detailHistoryViewModel = detailHistoryViewModel,
-                        detailHistoryRecordViewModel = detailHistoryRecordViewModel,
-                        isLoading = recordIsLoading,
-                        pagedData = recordPagedData,
+                        detailHistoryViewModel,
+                        detailHistoryRecordViewModel
                     )
                 }
             } else {
@@ -132,6 +131,7 @@ private fun Content(
                 }
             }
         }
+
     }
 }
 
