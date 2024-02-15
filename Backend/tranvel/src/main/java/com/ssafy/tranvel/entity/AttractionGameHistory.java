@@ -35,7 +35,6 @@ public class AttractionGameHistory {
     private List<AttractionImage> images;
 
     @ManyToOne
-    @JsonBackReference
     private AttractionList attractionList;
 
     @OneToOne

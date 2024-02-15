@@ -46,8 +46,4 @@ public class AttractionList {
     @Column(name = "Image")
     @Nullable
     private String image;
-
-    @OneToMany(mappedBy = "attractionList", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
-    private List<AttractionGameHistory> attractionGameHistories;
 }
