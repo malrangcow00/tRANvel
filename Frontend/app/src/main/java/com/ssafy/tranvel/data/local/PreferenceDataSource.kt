@@ -24,4 +24,8 @@ class PreferenceDataSource @Inject constructor(
         editor.putString(key, data)
         editor.apply()
     }
+
+    fun removePreference(){
+        editor.clear()
+    }
 }

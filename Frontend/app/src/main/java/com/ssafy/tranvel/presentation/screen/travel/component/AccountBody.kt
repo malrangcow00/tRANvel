@@ -3,6 +3,7 @@ package com.ssafy.tranvel.presentation.screen.travel.component
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Environment
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -81,6 +82,9 @@ import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor2
 import com.ssafy.tranvel.presentation.ui.theme.TextColor
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
@@ -94,9 +98,14 @@ fun AccountBody(
     val selectedCategoryColor: Color by remember {
         mutableStateOf(PrimaryColor)
     }
-    var selectedUser by remember {
+    val selectedUser by remember {
         mutableStateOf(mutableMapOf<Long, UserInfo>())
     }
+
+    var uiState by remember {
+        mutableStateOf(false)
+    }
+
     var inputText: String by remember {
         mutableStateOf("")
     }
@@ -112,12 +121,17 @@ fun AccountBody(
         gameViewModel.setNetworkResult()
     }
 
+    if (uiState) {
+        uiState = false
+    }
+
     if (loadingState) {
         //다이얼로그 발생
     }
 
     LaunchedEffect(true) {
         gameViewModel.getUserList(RoomInfo.roomID)
+        gameViewModel.setBitmapNull()
     }
 
     var filePath: String by remember {
@@ -182,20 +196,22 @@ fun AccountBody(
             }
         }
 
-        LazyRow(
+        Row(
             modifier = Modifier
                 .padding(top = 10.dp)
                 .fillMaxWidth()
         ) {
-            itemsIndexed(userList) { index, item ->
+            userList.forEach {
                 Card(
                     modifier = Modifier
                         .padding(end = 3.dp),
                     onClick = {
-                        if (selectedUser.containsKey(item.joinUserId)) {
-                            selectedUser.remove(item.joinUserId)
+                        if (selectedUser.containsKey(it.joinUserId)) {
+                            selectedUser.remove(it.joinUserId)
+                            uiState = true
                         } else {
-                            selectedUser[item.joinUserId] = item
+                            selectedUser[it.joinUserId] = it
+                            uiState = true
                         }
                     },
                     colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -206,25 +222,25 @@ fun AccountBody(
                     ) {
                         Box {
                             GlideImage(
-                                model = "${BuildConfig.S3_BASE_URL}/${item.profileImage}",
+                                model = "${BuildConfig.S3_BASE_URL}${it.profileImage}",
                                 contentDescription = "프로필이미지",
                                 modifier = Modifier
                                     .size(50.dp)
                                     .align(Alignment.Center),
                                 failure = placeholder(painterResource(id = R.drawable.emptyimage))
                             )
-                            if (!selectedUser.containsKey(item.joinUserId)) {
+                            if (selectedUser.containsKey(it.joinUserId)) {
                                 Icon(
                                     imageVector = Icons.Default.CheckCircle,
                                     contentDescription = "체크함",
                                     tint = Color.Green
                                 )
                             } else {
-                                Log.d("TAG", "AccountBody: $item")
+                                Log.d("TAG", "AccountBody: $it")
                             }
                         }
                         Text(
-                            text = item.nickName,
+                            text = it.nickName,
                             modifier = Modifier
                                 .padding(top = 5.dp)
                         )
@@ -279,7 +295,7 @@ fun AccountBody(
 
         LazyRow(
             modifier = Modifier
-                .padding(top = 10.dp)
+                .padding(top = 5.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
@@ -385,28 +401,27 @@ fun AccountBody(
             }
         }
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(
                 modifier = Modifier
-                    .fillMaxWidth(0.5f)
+                    .fillMaxWidth()
+                    .weight(1f)
                     .padding(end = 10.dp),
                 onClick = { onBackPressed() }
             ) {
-                Text(text = "취소")
+                Text(text = "취소", color = TextColor)
             }
             Button(
                 modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .padding(end = 10.dp),
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(start = 10.dp),
                 onClick = {
-                    var tempFile:File? = null
+                    var tempFile: File? = null
                     if (bitmap != null) {
-                        val resizedBitmap = Bitmap.createScaledBitmap(bitmap!!, bitmap!!.width / 2, bitmap!!.height / 2, true)
-                        val byteArrayOutputStream = ByteArrayOutputStream()
-                        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
-                        tempFile = File.createTempFile("resized_image", ".jpg", context.cacheDir)
+                        tempFile = bitmapToFile(context, bitmap!!, "${UUID.randomUUID()}")
                     }
 
                     gameViewModel.setAdjustmentGameHistory(
@@ -418,10 +433,32 @@ fun AccountBody(
                     )
                 }
             ) {
-                Text(text = "작성")
+                Text(text = "작성", color = TextColor)
             }
         }
     }
+}
+
+private fun bitmapToFile(context: Context, bitmap: Bitmap, saveName: String): File {
+    val saveDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        .toString() + saveName
+    val file = File(saveDir)
+    if (!file.exists()) file.mkdirs()
+
+    val fileName = "$saveName.jpg"
+    val tempFile = File(saveDir, fileName)
+
+    var out: OutputStream? = null
+    try {
+        if (tempFile.createNewFile()) {
+            out = FileOutputStream(tempFile)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, out)
+        }
+
+    } finally {
+        out?.close()
+    }
+    return tempFile
 }
 
 data class Category(

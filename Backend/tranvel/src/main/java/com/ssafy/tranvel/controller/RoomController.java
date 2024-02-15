@@ -105,8 +105,8 @@ public class RoomController {
 
 
     @PostMapping("/finish")
-    public ResponseEntity<ResponseDto> finishRoomHistory(Long roomId) {
-        roomHistoryService.finishRoomHistory(roomId);
+    public ResponseEntity<ResponseDto> finishRoomHistory(Long roomId, String message) {
+        roomHistoryService.finishRoomHistory(roomId, message); // 종료할 방 번호, 방 이름 설정
 
         response = new ResponseDto(true, "방 게임 기록 종료", null);
         return  ResponseEntity.status(HttpStatus.OK).body(response);

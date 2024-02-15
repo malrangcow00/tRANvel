@@ -1,6 +1,9 @@
 package com.ssafy.tranvel.presentation.screen.travel
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.CircleShape
@@ -23,7 +26,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.ssafy.tranvel.R
 import com.ssafy.tranvel.presentation.screen.home.navigation.homeRoute
 import com.ssafy.tranvel.presentation.screen.travel.component.BottomNav
 import com.ssafy.tranvel.presentation.screen.travel.component.GameBody
@@ -31,6 +42,7 @@ import com.ssafy.tranvel.presentation.screen.travel.component.GameHeader
 import com.ssafy.tranvel.presentation.screen.travel.component.Screen
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor
 import com.ssafy.tranvel.presentation.ui.theme.PrimaryColor2
+import com.ssafy.tranvel.presentation.ui.theme.transparent
 
 @Composable
 fun GameScreen(
@@ -42,10 +54,11 @@ fun GameScreen(
     val drawPerson by gameViewModel.drawPerson.collectAsState()
     val drawState by gameViewModel.drawState.collectAsState()
     val uiState by gameViewModel.gameState.collectAsState()
+    val dialogState by gameViewModel.drawDialogState.collectAsState()
 
     if (uiState) {
         gameViewModel.setGameState()
-        navController.navigate(homeRoute){
+        navController.navigate(homeRoute) {
             this.popUpTo("game")
         }
     }
@@ -64,7 +77,7 @@ fun GameScreen(
             }
         },
         bottomBar = {
-            if (RoomInfo.authority) {
+            if (RoomInfo.authority && !dialogState) {
                 BottomAppBar(
                     modifier = Modifier
                         .height(50.dp)
@@ -80,21 +93,40 @@ fun GameScreen(
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
-            FloatingActionButton(
-                shape = CircleShape,
-                onClick = {
-                    if (RoomInfo.authority && drawState) {
-                        gameViewModel.sendAttractionPersonMessage("ENTER", "")
-                    }
-                    if (drawPerson && !drawState) {
-                        gameViewModel.sendAttractionDrawMessage()
-                    }
-                },
-                backgroundColor = PrimaryColor2
-            ) {
-                Icon(imageVector = Icons.Filled.Casino, contentDescription = "Add icon")
+            if (!dialogState) {
+                FloatingActionButton(
+                    shape = CircleShape,
+                    onClick = {
+                        if (RoomInfo.authority && drawState) {
+                            gameViewModel.sendAttractionPersonMessage("ENTER", "")
+                        }
+                        if (drawPerson && !drawState) {
+                            gameViewModel.drawAttraction()
+                        }
+                    },
+                    backgroundColor = PrimaryColor2
+                ) {
+                    Icon(imageVector = Icons.Filled.Casino, contentDescription = "Add icon")
+                }
             }
         }
+    )
+}
+
+@Composable
+fun LoadingIndicator(
+    modifier: Modifier = Modifier
+) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.attraction_loading_dialog))
+    val progress by animateLottieCompositionAsState(
+        composition, true, iterations = LottieConstants.IterateForever, restartOnPlay = false
+    )
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = transparent)
     )
 }
 

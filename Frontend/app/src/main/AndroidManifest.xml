@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:name=".TranvelApp"
@@ -13,7 +15,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TRANvel"
+        android:theme="@style/Theme.APP.Starting"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <meta-data
@@ -22,7 +24,11 @@
         <activity
             android:name=".presentation.screen.main.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.TRANvel">
+            android:theme="@style/Theme.APP.Starting">
+        </activity>
+        <activity android:name=".presentation.screen.splash.SplashScreen"
+            android:exported="true"
+            android:theme="@style/Theme.APP.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

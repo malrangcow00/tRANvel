@@ -11,6 +11,8 @@ import com.ssafy.tranvel.data.model.response.EmailAuthResponse
 import com.ssafy.tranvel.data.model.response.EmailInfoResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -19,8 +21,9 @@ interface RegisterService {
     @POST("user/signin")
     suspend fun login(@Body userRequest: UserRequest): Response<DataResponse<TokenDto>>
 
+    @FormUrlEncoded
     @POST("email-auth")
-    suspend fun sendEmailAuth(@Body emailInfoRequest: EmailInfoRequest): Response<EmailInfoResponse>
+    suspend fun sendEmailAuth(@Field("email") email: String): Response<EmailInfoResponse>
 
     @POST("email-auth/verification")
     suspend fun sendAuthNum(@Body emailAuthRequest: EmailAuthRequest): Response<EmailAuthResponse>
@@ -31,8 +34,12 @@ interface RegisterService {
     @POST("signup")
     suspend fun registerUser(@Body userRequest: UserRequest): Response<EmailInfoResponse>
 
+    @FormUrlEncoded
     @POST("user/duplication")
-    suspend fun duplicateNickName(@Body nicknameRequest: NicknameRequest): Response<EmailInfoResponse>
+    suspend fun duplicateNickName(
+        @Field("email") email: String,
+        @Field("nickName") nickName: String
+    ): Response<EmailInfoResponse>
 
     @GET("user/auth/profile")
     suspend fun getUser(@Header("Access-token") accessToken: String): Response<DataResponse<User>>

@@ -389,9 +389,11 @@ public class RoomHistoryService {
 
 
     @Transactional
-    public void finishRoomHistory(Long roomId) {
+    public void finishRoomHistory(Long roomId, String message) {
         System.out.println("RoomHistoryService.finishRoomHistory");
-        roomHistoryRepository.findById(roomId).get().finishRoom();
+        RoomHistory roomHistory = roomHistoryRepository.findById(roomId).get();
+        roomHistory.setRoomName(message);
+        roomHistory.finishRoom();
     }
 
 

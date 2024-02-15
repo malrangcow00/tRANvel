@@ -21,6 +21,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,10 +52,15 @@ fun GameHeader(
     }
 
     if (dialogState) {
-        EnterSettingDialog {
-            dialogState = false
-            gameViewModel.sendRoomMessage("CLOSE")
-        }
+        EnterSettingDialog(
+            onChangeState = {
+                dialogState = false
+            },
+            onGameEnd = {
+                dialogState = false
+                gameViewModel.sendRoomMessage("CLOSE", it)
+            }
+        )
     }
 
     Row(
@@ -87,25 +93,56 @@ fun GameHeader(
 }
 
 @Composable
-fun EnterSettingDialog(onChangeState: () -> (Unit)) {
-
+fun EnterSettingDialog(onChangeState: () -> (Unit), onGameEnd: (String) -> (Unit)) {
+    var gameEnd by remember {
+        mutableStateOf(false)
+    }
+    var inputText by remember {
+        mutableStateOf("")
+    }
     Dialog(onDismissRequest = { onChangeState() }) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Row {
-                Text(text = "방 코드: ", style = MaterialTheme.typography.headlineMedium)
-                Text(text = RoomInfo.roomCode, style = MaterialTheme.typography.headlineMedium)
+        if (gameEnd) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "이번 여행의 제목을 써주세요.",
+                    style = MaterialTheme.typography.headlineMedium
+                )
+                TextField(
+                    value = inputText,
+                    onValueChange = {
+                        inputText = it
+                    }
+                )
+                Button(onClick = { onGameEnd(inputText) }) {
+                    Text(text = "저장 하기", color = TextColor)
+                }
             }
-            Row {
-                Text(text = "비밀번호: ", style = MaterialTheme.typography.headlineMedium)
-                Text(text = RoomInfo.roomPassword, style = MaterialTheme.typography.headlineMedium)
-            }
-            Button(onClick = { onChangeState() }) {
-                Text(text = "여행 종료", color = TextColor)
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row {
+                    Text(text = "방 코드: ", style = MaterialTheme.typography.headlineMedium)
+                    Text(text = RoomInfo.roomCode, style = MaterialTheme.typography.headlineMedium)
+                }
+                Row {
+                    Text(text = "비밀번호: ", style = MaterialTheme.typography.headlineMedium)
+                    Text(
+                        text = RoomInfo.roomPassword,
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                }
+                Button(onClick = { gameEnd = true }) {
+                    Text(text = "여행 종료", color = TextColor)
+                }
             }
         }
     }

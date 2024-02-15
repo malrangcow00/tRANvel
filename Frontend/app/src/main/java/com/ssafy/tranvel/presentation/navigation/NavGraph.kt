@@ -1,5 +1,6 @@
 package com.ssafy.tranvel.presentation.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -22,7 +23,9 @@ import com.ssafy.tranvel.presentation.screen.userInfoModification.UserInfoModify
 import com.ssafy.tranvel.presentation.screen.userWithdrawal.navigation.userWithdrawalScreen
 
 @Composable
-fun NavGraph() {
+fun NavGraph(
+    startDestination: String
+) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -31,7 +34,7 @@ fun NavGraph() {
     Scaffold { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "login_screen",
+            startDestination = startDestination,
             Modifier.padding(innerPadding)
         ) {
             announcementScreen()

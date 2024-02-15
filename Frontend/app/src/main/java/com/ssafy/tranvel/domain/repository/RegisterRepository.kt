@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface RegisterRepository {
     suspend fun getUser(userRequest: UserRequest): Flow<DataState<DataResponse<TokenDto>>>
-    suspend fun sendEmailAuth(emailInfoRequest: EmailInfoRequest): Flow<DataState<EmailInfoResponse>>
+    suspend fun sendEmailAuth(email: String): Flow<DataState<EmailInfoResponse>>
     suspend fun sendEmailAuthNum(emailAuthRequest: EmailAuthRequest): Flow<DataState<EmailAuthResponse>>
     suspend fun resetPassword(emailInfoRequest: EmailInfoRequest): Flow<DataState<EmailInfoResponse>>
     suspend fun registerUser(userRequest: UserRequest): Flow<DataState<EmailInfoResponse>>
-    suspend fun duplicateNickName(nicknameRequest: NicknameRequest): Flow<DataState<EmailInfoResponse>>
+    suspend fun duplicateNickName(nickname: String, email: String): Flow<DataState<EmailInfoResponse>>
     suspend fun getUser(accessToken:String): Flow<DataState<DataResponse<User>>>
 }

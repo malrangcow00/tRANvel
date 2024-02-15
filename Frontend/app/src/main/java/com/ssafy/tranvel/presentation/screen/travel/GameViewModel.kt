@@ -3,6 +3,11 @@ package com.ssafy.tranvel.presentation.screen.travel
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -19,6 +24,7 @@ import com.ssafy.tranvel.domain.repository.TokenRepository
 import com.ssafy.tranvel.domain.repository.TravelRepository
 import com.ssafy.tranvel.presentation.screen.login.User
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -76,11 +82,21 @@ class GameViewModel @Inject constructor(
     private val _drawState = MutableStateFlow(true)
     val drawState = _drawState.asStateFlow()
 
+    private val _drawDialogState = MutableStateFlow(false)
+    val drawDialogState = _drawDialogState.asStateFlow()
+
+    private val _drawResultDialogState = mutableStateOf(false)
+    val drawResultDialogState = _drawResultDialogState
+
     private val _attractionState = MutableStateFlow(true)
     val attractionState = _attractionState.asStateFlow()
 
     private val _foodGameData = MutableStateFlow(FoodGameDto("", "", listOf(), listOf()))
     val foodGameData = _foodGameData.asStateFlow()
+
+    private val _userData = MutableStateFlow(STOMPDto("", "", "", ""))
+    val userData = _userData.asStateFlow()
+
 
     private val _latLng = MutableStateFlow(LatLng(37.532600, 127.024612))
     val latLng = _latLng.asStateFlow()
@@ -100,6 +116,10 @@ class GameViewModel @Inject constructor(
 
     private val _enterPersonName = MutableStateFlow("")
     val enterPersonName = _enterPersonName.asStateFlow()
+
+    fun setBitmapNull() {
+        _bitmap.value = null
+    }
 
     fun setEnterPerson() {
         _enterPerson.value = false
@@ -215,6 +235,15 @@ class GameViewModel @Inject constructor(
         _foodScreen.value = false
     }
 
+    fun drawAttraction() {
+        //로딩 화면 true
+        _drawDialogState.value = true
+        _drawState.value = true
+        //sendAttractionGame
+        sendAttractionMessage("ENTER", "")
+        //draw로 여행지 뽑기
+    }
+
     @SuppressLint("CheckResult")
     fun runStomp(roomId: Long) {
 
@@ -231,12 +260,24 @@ class GameViewModel @Inject constructor(
                 Log.i("message Recieve2", topicMessage.payload)
             }
 
+        stompClient.topic("/topic/tranvel/attractiongame/$roomId")
+            .doOnError { Log.i("message Recieve1", "에러남") }
+            .subscribe { topicMessage ->
+                //로딩 화면 상태 true
+                _drawDialogState.value = true
+                _drawState.value = true
+                if (drawPerson.value) {
+                    Log.i("message Recieve65", topicMessage.payload)
+                    sendAttractionDrawMessage()
+                }
+            }
+
         stompClient.topic("/topic/tranvel/getplayer/$roomId")
             .doOnError { Log.i("message Recieve1", "에러남") }
             .subscribe { topicMessage ->
-                val a = Gson().fromJson(topicMessage.payload, STOMPDto::class.java)
+                _userData.value = Gson().fromJson(topicMessage.payload, STOMPDto::class.java)
                 _drawState.value = false
-                if (a.message == User.nickName) {
+                if (_userData.value.message == User.nickName) {
                     _drawPerson.value = true
                 }
                 Log.i("message Recieve2", topicMessage.payload)
@@ -245,12 +286,19 @@ class GameViewModel @Inject constructor(
         stompClient.topic("/topic/tranvel/attractionrandom/$roomId")
             .doOnError { Log.i("message Recieve1", "에러남") }
             .subscribe { topicMessage ->
+                // 로딩 화면 상태 false
+                // 결과 dto로 변환 후 저장
+                // 결과 다이얼로그 상태 true
                 setDrawPerson()
-                _attractionInfo.value =
-                    Gson().fromJson(topicMessage.payload, AttractionInfo::class.java)
+                viewModelScope.launch {
+                    delay(3000L)
+                    _drawDialogState.value = false
+                    _attractionInfo.value =
+                        Gson().fromJson(topicMessage.payload, AttractionInfo::class.java)
+                    _drawResultDialogState.value = true
+                }
                 _drawState.value = true
                 _attractionState.value = true
-                Log.i("message Recieve2", topicMessage.payload)
             }
 
         //음식 게임 입장
@@ -291,7 +339,7 @@ class GameViewModel @Inject constructor(
                 when (lifecycleEvent.type) {
                     LifecycleEvent.Type.OPENED -> {
                         Log.i("OPEND", "!!")
-                        sendRoomMessage("ENTER")
+                        sendRoomMessage("ENTER", "")
                     }
 
                     LifecycleEvent.Type.CLOSED -> {
@@ -318,6 +366,17 @@ class GameViewModel @Inject constructor(
         data.put("sender_id", User.id)
         data.put("message", message)
         stompClient.send("/app/tranvel/getplayer", data.toString())
+            .doOnError { Log.i("message Recieve5", "에러남") }
+            .subscribe()
+    }
+
+    fun sendAttractionMessage(type: String, message: String) {
+        val data = JSONObject()
+        data.put("type", type)
+        data.put("roomId", RoomInfo.roomID)
+        data.put("sender_id", User.id)
+        data.put("message", message)
+        stompClient.send("/app/tranvel/attractiongame", data.toString())
             .doOnError { Log.i("message Recieve5", "에러남") }
             .subscribe()
     }
@@ -367,12 +426,12 @@ class GameViewModel @Inject constructor(
             .subscribe()
     }
 
-    fun sendRoomMessage(type: String) {
+    fun sendRoomMessage(type: String, message: String) {
         val data = JSONObject()
         data.put("type", type)
         data.put("roomId", RoomInfo.roomID)
         data.put("sender_id", User.id)
-        data.put("message", "")
+        data.put("message", message)
         stompClient.send("/app/tranvel/rooms", data.toString())
             .doOnError { Log.i("message Recieve5", "에러남") }
             .subscribe()

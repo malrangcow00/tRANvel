@@ -25,13 +25,13 @@ class RegisterRepositoryImpl @Inject constructor(
             emitAll(registerDataSource.getUser(userRequest))
         }
 
-    override suspend fun getUser(accessToken:String): Flow<DataState<DataResponse<User>>> {
+    override suspend fun getUser(accessToken: String): Flow<DataState<DataResponse<User>>> {
         return registerDataSource.getUser("Bearer $accessToken")
     }
 
-    override suspend fun sendEmailAuth(emailInfoRequest: EmailInfoRequest): Flow<DataState<EmailInfoResponse>> =
+    override suspend fun sendEmailAuth(email: String): Flow<DataState<EmailInfoResponse>> =
         flow {
-            emitAll(registerDataSource.sendEmailAuth(emailInfoRequest))
+            emitAll(registerDataSource.sendEmailAuth(email))
         }
 
     override suspend fun sendEmailAuthNum(emailAuthRequest: EmailAuthRequest): Flow<DataState<EmailAuthResponse>> =
@@ -49,8 +49,11 @@ class RegisterRepositoryImpl @Inject constructor(
             emitAll(registerDataSource.registerUser(userRequest))
         }
 
-    override suspend fun duplicateNickName(nicknameRequest: NicknameRequest): Flow<DataState<EmailInfoResponse>> =
+    override suspend fun duplicateNickName(
+        nickname: String,
+        email: String
+    ): Flow<DataState<EmailInfoResponse>> =
         flow {
-            emitAll(registerDataSource.duplicateNickName(nicknameRequest))
+            emitAll(registerDataSource.duplicateNickName(nickname, email))
         }
 }

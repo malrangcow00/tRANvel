@@ -11,6 +11,6 @@ class SendEmailAuthUseCase @Inject constructor(
     private val registerRepository: RegisterRepository
 ) {
     suspend fun execute(email:String): Flow<DataState<EmailInfoResponse>> {
-        return registerRepository.sendEmailAuth(EmailInfoRequest(email))
+        return registerRepository.sendEmailAuth(email)
     }
 }

@@ -67,6 +67,8 @@ public class AdjustmentGameHistoryService {
     public int adjustment(AdjustmentGameHistoryDto adjustmentGameHistoryDto, MultipartFile image) {
         System.out.println("AdjustmentGameHistoryService.adjustment");
         RoomHistory roomHistory = roomHistoryRepository.findById(adjustmentGameHistoryDto.getRoomId()).get();
+        int balanceResult = roomHistory.getBalanceResult();
+        roomHistory.setBalanceResult(balanceResult+adjustmentGameHistoryDto.getPrice());
 //        Long miniGameCodeId = adjustmentGameHistoryDto.getMiniGameCodeId();
 //        if (miniGameCodeId != null) {
 //            RandomGame randomGame = randomGameRepository.findById(miniGameCodeId).get();
