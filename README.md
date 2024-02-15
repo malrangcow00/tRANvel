@@ -284,7 +284,6 @@
 ![ERD.png](img/ERD.png)
 
 # API 명세서
-[API 명세서 이미지]
 ![API_1.png](img/API_1.png)
 ![API_2.png](img/API_2.png)
 ![API_3.png](img/API_3.png)
