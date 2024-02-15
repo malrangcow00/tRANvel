@@ -1,9 +1,12 @@
 package com.ssafy.tranvel.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -43,4 +46,8 @@ public class AttractionList {
     @Column(name = "Image")
     @Nullable
     private String image;
+
+    @OneToMany(mappedBy = "attractionList", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
+    private List<AttractionGameHistory> attractionGameHistories;
 }
