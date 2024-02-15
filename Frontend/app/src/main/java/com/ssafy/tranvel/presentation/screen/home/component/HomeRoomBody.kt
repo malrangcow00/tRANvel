@@ -170,12 +170,18 @@ fun CreateRoomDialog(onChangeState: () -> (Unit), onCreateRoom: (String) -> (Uni
             )
         },
         text = {
-            TextField(
+            OutlinedTextField(
                 value = inputText,
                 onValueChange = {
                     inputText = it
                 },
-                label = { Text(text = "비밀번호를 입력해주세요.") }
+                label = { Text(text = "비밀번호") },
+                placeholder = { Text(text = "방 비밀번호를 입력하세요.") },
+                singleLine = true,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
             )
         },
 
@@ -210,13 +216,18 @@ fun EnterRoomDialog(onChangeState: () -> (Unit), onCreateRoom: (String) -> (Unit
             )
         },
         text = {
-            TextField(
+            OutlinedTextField(
                 value = inputPassword,
                 onValueChange = {
                     inputPassword = it
                 },
                 label = { Text(text = "비밀번호") },
-                placeholder = { Text(text = "방 비밀번호를 입력하세요.") }
+                placeholder = { Text(text = "방 비밀번호를 입력하세요.") },
+                singleLine = true,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
             )
         },
         dismissButton = {
