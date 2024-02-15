@@ -216,6 +216,21 @@ fun HistoryDetailCard(
                             }
                         }
                     }
+                    else if(matchCategory(dto?.historyCategory).equals("음식")){
+                        detailHistoryViewModel.foodList.forEach{
+                            Log.d(TAG, "HistoryDetailCard: ${it.foodName}")
+                            if(dto.contentId == it.id){
+                                Log.d(TAG, "HistoryDetailCard: 동일 ${it.foodName}")
+                                Text(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterEnd)
+                                        .fillMaxWidth(0.3f),
+                                    textAlign = TextAlign.Center,
+                                    text = it.foodName!!
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
