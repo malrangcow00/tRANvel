@@ -60,13 +60,19 @@
     | IDE | Android Studio | Hedgehog 2023.1.1 Patch 1 |
     | KSP |  | 1.9.0-1.0.12 |
     | AGP |  | 8.2.1 |
-    | Dependencies | Glide | 4.14.2 |
+    | Dependencies | Glide | 1.0.0-beta01 |
     |  | Hilt | 2.48 |
+    |  | StompProtocolAndroid | 1.6.6 |
     |  | retrofit2 | 2.9.0 |
     |  | okhttp3 | 4.10.0 |
     |  | compose | 2.5.3 |
     |  | viewmodel | 2.5.1 |
-    |  | firebase auth | 7.2.0 |
+    |  | android-roulette-wheel-view | 1.0.3 |
+    |  | viewbinding |  |
+    |  | lottie-compose | 1.4.1 |
+    |  | LazyColumnScrollbar | 1.9.0 |
+    |  | splashscreen | 1.0.1 |
+    |  | material-icons-extended |  |
 - Backend Environment
 
     |  | Environment | version                                           |
