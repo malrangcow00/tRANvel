@@ -1,12 +1,31 @@
 # tRanvel
 계획없이 여행을 떠나고 싶을 때 사용해보세요.
+## 실행 화면
+메인화면
+
+![image](/uploads/95461d4d25ca9c7b2df13e242ca4e139/image.png)
+
+여행지 뽑기
+
+![image__4_](/uploads/9828c9bbe327fe54382fbb4d92479c5b/image__4_.png)
+
+음식 입력 화면
+
+![image__3_](/uploads/30561633ecbe9ab8f8a5a258653f7d02/image__3_.png)
+
+음식 뽑기 화면
+![image__2_](/uploads/168ac2010b7a4255208defe909736344/image__2_.png)
+
+비용 작성 화면
+
+![image__1_](/uploads/25fc114c3748bce8f1213c7fb6dfa2cf/image__1_.png)
 ## 개발 환경
 ![Static Badge](https://img.shields.io/badge/test_device-Galaxy_s10-34A853)
 ![Static Badge](https://img.shields.io/badge/Android-v12-34A853?logo=Android)
 ![Static Badge](https://img.shields.io/badge/Android_Studio-Hedgehog-3DDC84?logo=AndroidStudio)
 ![Static Badge](https://img.shields.io/badge/kotlin-v1.9.0-7F52FF?logo=kotlin)
 ![Static Badge](https://img.shields.io/badge/ksp-v1.9.0~1.0.12-7F52FF)
-![Static Badge](https://img.shields.io/badge/agp-v8.2.1-7F52FF?logo=Gradle)
+![Static Badge](https://img.shields.io/badge/agp-v8.2.1-02303A?logo=Gradle)
 ![Static Badge](https://img.shields.io/badge/jetpack_compose-v2.5.3-4285F4?logo=jetpackcompose)
 ![Static Badge](https://img.shields.io/badge/minsdk-21-4285F4)
 ![Static Badge](https://img.shields.io/badge/targetsdk-34-4285F4)
