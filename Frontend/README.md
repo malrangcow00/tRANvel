@@ -18,7 +18,7 @@
     - [ui](https://developer.android.com/jetpack/androidx/releases/compose-ui?hl=ko)
     - [Material3](https://developer.android.com/jetpack/androidx/releases/compose-material3?hl=ko) - 앱의 디자인을 위해사용
     - [Material](https://developer.android.com/jetpack/androidx/releases/compose-material?hl=ko) - 앱의 디자인을 위해사용
-    - [Paging]()
+    - [Paging](https://developer.android.com/jetpack/androidx/releases/paging?hl=ko) - 사용자가 로드된 데이터의 끝까지 스크롤할 때 새로운 데이터를 요청하여 효율적인 관리하기 위해 사용 - v3.2.1
     - [Lottie](https://airbnb.io/lottie/#/android-compose) 로딩화면을 재미있게 보여주기위해 사용 - v1.4.1
     - [Glide](https://bumptech.github.io/glide/int/compose.html) 여행지에 관한 사진등 다양한 이미지를 보여주기위해 사용 - v1.0.0-beta01
     - [Lifecycle-ViewModel](https://developer.android.com/jetpack/androidx/releases/lifecycle?hl=ko)
