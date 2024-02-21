@@ -14,6 +14,7 @@
 ![image__3_](/uploads/30561633ecbe9ab8f8a5a258653f7d02/image__3_.png)
 
 음식 뽑기 화면
+
 ![image__2_](/uploads/168ac2010b7a4255208defe909736344/image__2_.png)
 
 비용 작성 화면
