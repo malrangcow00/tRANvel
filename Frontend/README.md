@@ -63,3 +63,14 @@ WEBSOCKET_URL=웹소켓 서버 주소
 S3_ADDRESS=S3 기본 주소  
 S3_BASE_URL=
 
+## Citation
+- Flaticon
+    - https://www.flaticon.com/kr/authors/creatype
+    - https://www.flaticon.com/kr/authors/freepik
+    - https://www.flaticon.com/kr/authors/chehuna
+    - https://www.flaticon.com/kr/authors/aldo-cervantes
+
+- Lottie Animation
+    - https://lottiefiles.com/animations/material-wave-loading-yt2uoeE83o
+    - https://lottiefiles.com/koycatdang
+    - https://lottiefiles.com/b.bfer
