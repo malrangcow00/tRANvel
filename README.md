@@ -2,18 +2,20 @@
 
 ## 팀 소개
 
-|<a href="https://github.com/duckddud213"><img src="https://avatars.githubusercontent.com/u/67392167?v=4" width="100" height="100"></a>|<a href="https://github.com/sungjun-an"><img src="https://avatars.githubusercontent.com/u/83396994?v=4" width="100" height="100"></a>|<a href="https://github.com/jjo2889"><img src="https://avatars.githubusercontent.com/u/139419012?v=4" width="100" height="100"></a>|<a href="https://github.com/Nam4o"><img src="https://avatars.githubusercontent.com/u/128338647?v=4" width="100" height="100"></a>|<a href="https://github.com/malrangcow00"><img src="https://avatars.githubusercontent.com/u/115908997?v=4" width="100" height="100"></a>|
+|FE|FE|BE|BE|BE|
 |:-:|:-:|:-:|:-:|:-:|
-|[프론트엔드](https://github.com/dreamingbeom)|[프론트엔드](https://github.com/JnSia)|[백엔드](https://github.com/rigoood)|[백엔드](https://github.com/Nam4o)|[백엔드](https://github.com/malrangcow00)|
+|<a href="https://github.com/duckddud213"><img src="https://avatars.githubusercontent.com/u/67392167?v=4" width="100" height="100"></a>|<a href="https://github.com/sungjun-an"><img src="https://avatars.githubusercontent.com/u/83396994?v=4" width="100" height="100"></a>|<a href="https://github.com/jjo2889"><img src="https://avatars.githubusercontent.com/u/139419012?v=4" width="100" height="100"></a>|<a href="https://github.com/Nam4o"><img src="https://avatars.githubusercontent.com/u/128338647?v=4" width="100" height="100"></a>|<a href="https://github.com/malrangcow00"><img src="https://avatars.githubusercontent.com/u/115908997?v=4" width="100" height="100"></a>|
+|[Changyeong Yeo](https://github.com/duckddud213)|[sungjun-an](https://github.com/sungjun-an)|[jy](https://github.com/jjo2889)|[Jeonghw4n](https://github.com/Nam4o)|[MalrangCow](https://github.com/malrangcow00)|
 
 
 
 ### 팀 그라운드 룰
 
-| 1. | 아침에 서로 적극적인 인사 |
+|  | 룰 |
 | --- | --- |
+| 1. | 적극적인 아침인사 나누기 |
 | 2. | 지각 시 페널티 부여 !! |
-| 3. | 출결현황 서로 챙겨주기 |
+| 3. | 출퇴근현황 서로 챙겨주기 |
 | 4. | 프로젝트 진행 상황 및 이슈 매일 공유하기 |
 
 ## 스프린트
