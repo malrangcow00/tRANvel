@@ -1,15 +1,11 @@
-# HighFive
-
-## 팀 소개
+# 팀 HighFive 소개
 
 |FE|FE|BE|BE|BE|
 |:-:|:-:|:-:|:-:|:-:|
 |<a href="https://github.com/duckddud213"><img src="https://avatars.githubusercontent.com/u/67392167?v=4" width="100" height="100"></a>|<a href="https://github.com/sungjun-an"><img src="https://avatars.githubusercontent.com/u/83396994?v=4" width="100" height="100"></a>|<a href="https://github.com/jjo2889"><img src="https://avatars.githubusercontent.com/u/139419012?v=4" width="100" height="100"></a>|<a href="https://github.com/Nam4o"><img src="https://avatars.githubusercontent.com/u/128338647?v=4" width="100" height="100"></a>|<a href="https://github.com/malrangcow00"><img src="https://avatars.githubusercontent.com/u/115908997?v=4" width="100" height="100"></a>|
 |[Changyeong Yeo](https://github.com/duckddud213)|[sungjun-an](https://github.com/sungjun-an)|[jy](https://github.com/jjo2889)|[Jeonghw4n](https://github.com/Nam4o)|[MalrangCow](https://github.com/malrangcow00)|
 
-
-
-### 팀 그라운드 룰
+## 팀 그라운드 룰
 
 |  | 룰 |
 | --- | --- |
