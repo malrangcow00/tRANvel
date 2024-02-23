@@ -1,4 +1,4 @@
-# HighFive [D203]
+# HighFive
 
 ## 팀원
 
