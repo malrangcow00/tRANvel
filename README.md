@@ -2,7 +2,7 @@
 
 ## 팀원
 
-|[![duckddud213](https://avatars.githubusercontent.com/u/67392167?v=4)](https://github.com/duckddud213)|[![sungjun-an](https://avatars.githubusercontent.com/u/83396994?v=4)](https://github.com/sungjun-an)|[![jjo2889](https://avatars.githubusercontent.com/u/139419012?v=4)](https://github.com/jjo2889)|[![Nam4o](https://avatars.githubusercontent.com/u/128338647?v=4)](https://github.com/Nam4o)|[![malrangcow00](https://avatars.githubusercontent.com/u/115908997?v=4)](https://github.com/malrangcow00)|
+|<a href="https://github.com/duckddud213"><img src="https://avatars.githubusercontent.com/u/67392167?v=4" width="100" height="100"></a>|<a href="https://github.com/sungjun-an"><img src="https://avatars.githubusercontent.com/u/83396994?v=4" width="100" height="100"></a>|<a href="https://github.com/jjo2889"><img src="https://avatars.githubusercontent.com/u/139419012?v=4" width="100" height="100"></a>|<a href="https://github.com/Nam4o"><img src="https://avatars.githubusercontent.com/u/128338647?v=4" width="100" height="100"></a>|<a href="https://github.com/malrangcow00"><img src="https://avatars.githubusercontent.com/u/115908997?v=4" width="100" height="100"></a>|
 |:-:|:-:|:-:|:-:|:-:|
 |[여창영](https://github.com/dreamingbeom)|[안성준](https://github.com/JnSia)|[장준영](https://github.com/rigoood)|[박정환](https://github.com/Nam4o)|[이재평](https://github.com/malrangcow00)|
 
