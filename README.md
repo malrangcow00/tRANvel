@@ -1,4 +1,4 @@
-# 팀 HighFive 소개
+# HighFive 소개
 
 |FE|FE|BE|BE|BE|
 |:-:|:-:|:-:|:-:|:-:|
