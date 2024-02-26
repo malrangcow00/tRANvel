@@ -1,9 +1,9 @@
 # HighFive 소개
 
-|FE|FE|BE|BE|BE|
-|:-:|:-:|:-:|:-:|:-:|
-|<a href="https://github.com/duckddud213"><img src="https://avatars.githubusercontent.com/u/67392167?v=4" width="100" height="100"></a>|<a href="https://github.com/sungjun-an"><img src="https://avatars.githubusercontent.com/u/83396994?v=4" width="100" height="100"></a>|<a href="https://github.com/jjo2889"><img src="https://avatars.githubusercontent.com/u/139419012?v=4" width="100" height="100"></a>|<a href="https://github.com/Nam4o"><img src="https://avatars.githubusercontent.com/u/128338647?v=4" width="100" height="100"></a>|<a href="https://github.com/malrangcow00"><img src="https://avatars.githubusercontent.com/u/115908997?v=4" width="100" height="100"></a>|
-|[Changyeong Yeo](https://github.com/duckddud213)|[sungjun-an](https://github.com/sungjun-an)|[jy](https://github.com/jjo2889)|[Jeonghw4n](https://github.com/Nam4o)|[MalrangCow](https://github.com/malrangcow00)|
+|                                                                   FE                                                                    |                                                                   FE                                                                   |                                                                  BE                                                                  |                                                                 BE                                                                 |                                                                    BE                                                                     |
+|:---------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------:|
+| <a href="https://github.com/duckddud213"><assets src="https://avatars.githubusercontent.com/u/67392167?v=4" width="100" height="100"></a> | <a href="https://github.com/sungjun-an"><assets src="https://avatars.githubusercontent.com/u/83396994?v=4" width="100" height="100"></a> | <a href="https://github.com/jjo2889"><assets src="https://avatars.githubusercontent.com/u/139419012?v=4" width="100" height="100"></a> | <a href="https://github.com/Nam4o"><assets src="https://avatars.githubusercontent.com/u/128338647?v=4" width="100" height="100"></a> | <a href="https://github.com/malrangcow00"><assets src="https://avatars.githubusercontent.com/u/115908997?v=4" width="100" height="100"></a> |
+|                                            [Changyeong Yeo](https://github.com/duckddud213)                                             |                                              [sungjun-an](https://github.com/sungjun-an)                                               |                                                   [jy](https://github.com/jjo2889)                                                   |                                               [Jeonghw4n](https://github.com/Nam4o)                                                |                                               [MalrangCow](https://github.com/malrangcow00)                                               |
 
 ## 팀 그라운드 룰
 
@@ -16,20 +16,20 @@
 
 ## 스프린트
 
-### <img src="img/JIRA-icon.png" width="20px" height="20px"> [JIRA](https://ssafy.atlassian.net/jira/software/c/projects/S10P12D203/boards/5238/timeline)
-![jira](img/jira.png)
+### <assets src="assets/JIRA-icon.png" width="20px" height="20px"> [JIRA](https://ssafy.atlassian.net/jira/software/c/projects/S10P12D203/boards/5238/timeline)
+![jira](assets/jira.png)
 
-### <img src="img/Gerrit-icon.png" width="20px" height="20px"> [Gerrit](https://i10d203.p.ssafy.io:8989/q/status:open+-is:wip)
-![gerrit.png](img/gerrit.png)
+### <assets src="assets/Gerrit-icon.png" width="20px" height="20px"> [Gerrit](https://i10d203.p.ssafy.io:8989/q/status:open+-is:wip)
+![gerrit.png](assets/gerrit.png)
 
-### <img src="img/conf-icon.png" width="20px" height="20px"> 회의
-![conf.png](img/conf.png)
+### <assets src="assets/conf-icon.png" width="20px" height="20px"> 회의
+![conf.png](assets/conf.png)
 
-### <img src="img/sprint-icon.png" width="20px" height="20px"> 스프린트 회고
-![sprint.png](img/sprint.png)
+### <assets src="assets/sprint-icon.png" width="20px" height="20px"> 스프린트 회고
+![sprint.png](assets/sprint.png)
 
-# <img src="img/project_name.png" width="50%">
-<img src="img/logo.png" width="300px" height="300px">
+# <assets src="assets/project_name.png" width="50%">
+<assets src="assets/logo.png" width="300px" height="300px">
 
 # 목차
 
@@ -46,19 +46,25 @@
 진행기간 : 2024.1.8 ~ 2024.1.16 (6주)
 
 [Figma](https://www.figma.com/file/SHB1VDOav5LXTBrMSOjICK/HighFive?type=design&node-id=0-1&mode=design&t=wQEv1NdNMolBqSH1-0)   
-[서비스 화면]
+
+### 서비스 화면
+![service_1.png](assets/service_1.png)
+![service_2.png](assets/service_2.png)
+![service_3.png](assets/service_3.png)
+![service_4.png](assets/service_4.png)
+![service_5.png](assets/service_5.png)  
 
 # 기능 명세서
-![기능 명세서 이미지](img/func.png)
+![기능 명세서 이미지](assets/func.png)
 
 # 개발 환경
 
 - Collaboration Tool  
-  ![Static Badge](https://img.shields.io/badge/JIRA-253858.svg?&style=flat&logo=JIRA&logoColor=2684ff)
-  ![Static Badge](https://img.shields.io/badge/Gerrit-ffaaaa.svg?&style=flat&logo=GERRIT&logoColor=aaffaa)
-  ![Static Badge](https://img.shields.io/badge/GITLAB-e14328.svg?&style=flat&logo=GITLAB&logoColor=ff9d1a)
-  ![Static Badge](https://img.shields.io/badge/NOTION-000000.svg?&style=flat&logo=NOTION&logoColor=ffffff)
-  ![Static Badge](https://img.shields.io/badge/MATTERMOST-2c4478.svg?&style=flat&logo=MATTERMOST&logoColor=ffffff)
+  ![Static Badge](https://assets.shields.io/badge/JIRA-253858.svg?&style=flat&logo=JIRA&logoColor=2684ff)
+  ![Static Badge](https://assets.shields.io/badge/Gerrit-ffaaaa.svg?&style=flat&logo=GERRIT&logoColor=aaffaa)
+  ![Static Badge](https://assets.shields.io/badge/GITLAB-e14328.svg?&style=flat&logo=GITLAB&logoColor=ff9d1a)
+  ![Static Badge](https://assets.shields.io/badge/NOTION-000000.svg?&style=flat&logo=NOTION&logoColor=ffffff)
+  ![Static Badge](https://assets.shields.io/badge/MATTERMOST-2c4478.svg?&style=flat&logo=MATTERMOST&logoColor=ffffff)
 - Frontend Environment
 
     |  | Environment | version |
@@ -110,7 +116,7 @@
 
 **서버 시스템 구성도**
 
-![서버 인프라](img/infra.png)
+![서버 인프라](assets/infra.png)
 
 # 컨벤션
 
@@ -211,7 +217,7 @@
     
   - 패키지는 계층형구조로 구성한다.
 
-     ![package.png](img/package.png)
+     ![package.png](assets/package.png)
 
       - Controller에서는 최대한 어떤 Service를 호출할지 결정하는 역할과 Exception처리만을 담당  
           Controller 단에서 로직을 구현하는 것을 지양한다.
@@ -294,10 +300,10 @@
 
 
 # ERD
-![ERD.png](img/ERD.png)
+![ERD.png](assets/ERD.png)
 
 # API 명세서
-![API_1.png](img/API_1.png)
-![API_2.png](img/API_2.png)
-![API_3.png](img/API_3.png)
-![API_4.png](img/API_4.png)
+![API_1.png](assets/API_1.png)
+![API_2.png](assets/API_2.png)
+![API_3.png](assets/API_3.png)
+![API_4.png](assets/API_4.png)
