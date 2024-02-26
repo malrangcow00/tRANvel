@@ -43,7 +43,7 @@
 # 프로젝트 개요
 
 색다른 여행 경험을 갖고 싶은 이들을 위한 랜덤 행선지 추천 서비스  
-진행기간 : 2024.1.8 ~ 2024.1.16, 6주
+진행기간 : 2024.1.8 ~ 2024.1.16 (6주)
 
 [Figma](https://www.figma.com/file/SHB1VDOav5LXTBrMSOjICK/HighFive?type=design&node-id=0-1&mode=design&t=wQEv1NdNMolBqSH1-0)   
 [서비스 화면]
