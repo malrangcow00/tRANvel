@@ -60,11 +60,11 @@
 # 개발 환경
 
 - Collaboration Tool  
-  ![Static Badge](https://assets.shields.io/badge/JIRA-253858.svg?&style=flat&logo=JIRA&logoColor=2684ff)
-  ![Static Badge](https://assets.shields.io/badge/Gerrit-ffaaaa.svg?&style=flat&logo=GERRIT&logoColor=aaffaa)
-  ![Static Badge](https://assets.shields.io/badge/GITLAB-e14328.svg?&style=flat&logo=GITLAB&logoColor=ff9d1a)
-  ![Static Badge](https://assets.shields.io/badge/NOTION-000000.svg?&style=flat&logo=NOTION&logoColor=ffffff)
-  ![Static Badge](https://assets.shields.io/badge/MATTERMOST-2c4478.svg?&style=flat&logo=MATTERMOST&logoColor=ffffff)
+  ![Static Badge](https://img.shields.io/badge/JIRA-253858.svg?&style=flat&logo=JIRA&logoColor=2684ff)
+  ![Static Badge](https://img.shields.io/badge/Gerrit-ffaaaa.svg?&style=flat&logo=GERRIT&logoColor=aaffaa)
+  ![Static Badge](https://img.shields.io/badge/GITLAB-e14328.svg?&style=flat&logo=GITLAB&logoColor=ff9d1a)
+  ![Static Badge](https://img.shields.io/badge/NOTION-000000.svg?&style=flat&logo=NOTION&logoColor=ffffff)
+  ![Static Badge](https://img.shields.io/badge/MATTERMOST-2c4478.svg?&style=flat&logo=MATTERMOST&logoColor=ffffff)
 - Frontend Environment
 
     |  | Environment | version |
