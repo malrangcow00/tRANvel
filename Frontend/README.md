@@ -3,23 +3,23 @@
 ## 실행 화면
 메인화면
 
-![image](/uploads/95461d4d25ca9c7b2df13e242ca4e139/image.png)
+![service_1.png](../assets/service_1.png)
 
 여행지 뽑기
 
-![image__4_](/uploads/9828c9bbe327fe54382fbb4d92479c5b/image__4_.png)
+![service_2.png](../assets/service_2.png)
 
 음식 입력 화면
 
-![image__3_](/uploads/30561633ecbe9ab8f8a5a258653f7d02/image__3_.png)
+![service_3.png](../assets/service_3.png)
 
 음식 뽑기 화면
 
-![image__2_](/uploads/168ac2010b7a4255208defe909736344/image__2_.png)
+![service_4.png](../assets/service_4.png)
 
 비용 작성 화면
 
-![image__1_](/uploads/25fc114c3748bce8f1213c7fb6dfa2cf/image__1_.png)
+![service_5.png](../assets/service_5.png)  
 ## 개발 환경
 ![Static Badge](https://img.shields.io/badge/test_device-Galaxy_s10-34A853)
 ![Static Badge](https://img.shields.io/badge/Android-v12-34A853?logo=Android)
