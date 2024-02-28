@@ -61,7 +61,6 @@ API_KEY= 서버 기본 주소
 NAVER_API_KEY= 네이버 지도 SDK 키 값  
 WEBSOCKET_URL=웹소켓 서버 주소  
 S3_ADDRESS=S3 기본 주소  
-S3_BASE_URL=
 
 ## Citation
 - Flaticon
