@@ -16,20 +16,20 @@
 
 ## 스프린트
 
-### <assets src="assets/JIRA-icon.png" width="20px" height="20px"> [JIRA](https://ssafy.atlassian.net/jira/software/c/projects/S10P12D203/boards/5238/timeline)
+### <img src="assets/JIRA-icon.png" width="20px" height="20px"> [JIRA](https://ssafy.atlassian.net/jira/software/c/projects/S10P12D203/boards/5238/timeline)
 ![jira](assets/jira.png)
 
-### <assets src="assets/Gerrit-icon.png" width="20px" height="20px"> [Gerrit](https://i10d203.p.ssafy.io:8989/q/status:open+-is:wip)
+### <img src="assets/Gerrit-icon.png" width="20px" height="20px"> [Gerrit](https://i10d203.p.ssafy.io:8989/q/status:open+-is:wip)
 ![gerrit.png](assets/gerrit.png)
 
-### <assets src="assets/conf-icon.png" width="20px" height="20px"> 회의
+### <img src="assets/conf-icon.png" width="20px" height="20px"> 회의
 ![conf.png](assets/conf.png)
 
-### <assets src="assets/sprint-icon.png" width="20px" height="20px"> 스프린트 회고
+### <img src="assets/sprint-icon.png" width="20px" height="20px"> 스프린트 회고
 ![sprint.png](assets/sprint.png)
 
-# <assets src="assets/project_name.png" width="50%">
-<assets src="assets/logo.png" width="300px" height="300px">
+# <img src="assets/project_name.png" width="50%">
+<img src="assets/logo.png" width="300px" height="300px">
 
 # 목차
 
